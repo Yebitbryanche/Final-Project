@@ -8,6 +8,7 @@ from models import User, Product, Cart, CartItems, Order, OrderItem
 from pydantic import EmailStr
 from auth import authenticate_user, create_access_token, get_current_user
 from db import engine, create_db_and_tables
+from fastapi.middleware.cors import CORSMiddleware
 
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
@@ -23,6 +24,14 @@ app = FastAPI()
 def not_found():
     raise HTTPException(status_code=404, detail="not found")
     
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials = True,
+    allow_methods = ["*"],
+    allow_headers = ["*"]
+)
 
 @app.on_event("startup")
 def on_startup():
