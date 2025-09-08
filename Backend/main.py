@@ -25,7 +25,7 @@ app = FastAPI()
 def not_found():
     raise HTTPException(status_code=404, detail="not found")
 
-origin = "http://localhost:5137"
+origin = "http://localhost:5173"
 app.add_middleware(
     CORSMiddleware,
     allow_origins = [origin],
