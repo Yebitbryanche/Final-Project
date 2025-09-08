@@ -50,7 +50,7 @@ class Review(SQLModel, table=True):
     id:int = Field(primary_key=True)
     user_id:int = Field(foreign_key=("User.id"))
     product_id:int = Field(foreign_key="Product.id")
-    rating:int
+    rating:int = Field(ge=1, le=5)
     comment:str
     created_at:datetime = Field(default_factory=datetime.utcnow)
 

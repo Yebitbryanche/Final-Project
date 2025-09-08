@@ -1,10 +1,11 @@
 from datetime import timedelta, datetime
 from fastapi import FastAPI,Depends, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import  OAuth2PasswordRequestForm
 from typing import Annotated, List
 from sqlmodel import Session, select, delete
 from schema import ProductCreate, ProductRead, ProductUpdate, Token, UserRead 
-from models import User, Product, Cart, CartItems, Order, OrderItem
+from models import Review, User, Product, Cart, CartItems, Order, OrderItem
 from pydantic import EmailStr
 from auth import authenticate_user, create_access_token, get_current_user
 from db import engine, create_db_and_tables
@@ -22,6 +23,15 @@ app = FastAPI()
 
 def not_found():
     raise HTTPException(status_code=404, detail="not found")
+
+origin = "http://localhost:5137"
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins = [origin],
+    allow_credentials = True,
+    allow_methods = ["*"],
+    allow_headers = ["*"]
+)
     
 
 @app.on_event("startup")
@@ -364,3 +374,60 @@ def get_order_history(user_id:int, session:SessionDep):
     
     return {"user_id": user_id, "order_history": history}
 
+
+# create a review
+
+@app.post("/products/{product_id}/review")
+def create_review(user_id:int,
+                  comment:str,
+                  rating:int,
+                  product_id:int,
+                  session:SessionDep):
+    product = session.exec(select(Product).where(Product.id == product_id)).first()
+    if not product:
+        not_found()
+
+    #checks if user already reviewed product
+    review = session.exec(
+        select(Review).where(Review.product_id == product_id, Review.user_id == user_id)
+    ).first()
+    if review:
+        raise HTTPException(status_code=400, detail="You already reviewed this product")
+    
+    new_review = Review(
+        user_id=user_id,
+        product_id=product_id,
+        rating=rating,
+        comment=comment
+    )
+
+    session.add(new_review)
+    session.commit()
+    session.refresh(new_review)
+
+    return new_review
+
+# get product rating
+@app.get("/products/{product_id}")
+def get_product_review(session:SessionDep,product_id:int):
+    product = session.exec(select(Product).where(Product.id == product_id)).first()
+    if not product:
+        not_found()
+    reviews = session.exec(select(Review).where(Review.product_id == product_id)).all()
+
+    avrage_rating = None
+    review_count = len(reviews)
+    if review_count > 0:
+        avrage_rating = round(sum(r.rating for r in reviews)/ review_count, 2)
+
+    return {
+        "id": product.id,
+        "title": product.title,
+        "description": product.description,
+        "price": product.price,
+        "stock": product.stock,
+        "image": product.image,
+        "category": product.category,
+        "average_rating": avrage_rating,
+        "review_count": review_count,
+    }   
