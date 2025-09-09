@@ -1,18 +1,31 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home/Home";
-
-
+import { BrowserRouter, Route, Routes } from "react-router-dom"
+import Navigation from "./containers/Navigation"
+import Cart from "./pages/Cart"
+import BrandNew from "./pages/Brand New"
+import Dashboard from "./pages/Dashboard/"
+import Market from "./pages/Market/Market"
+import Footer from "./containers/Footer"
+import Home from "./pages/Home/Home"
+import Login from "./pages/Auth/Login"
+import Signup from "./pages/Auth/signup/indeex"
+// import "./i18n";
 
 function App() {
   return (
     <div>
-      <p>
-        <BrowserRouter>
+      <BrowserRouter>
+        <Navigation/>
+        
         <Routes>
-          <Route  path="/" element = {<Home />} />
+          <Route path="/" element={<Home />}/>
+          <Route path="/cart" element={<Cart />}/>
+          <Route path="/market" element={<Market />}/>
+          <Route path="/dashboard" element={<Dashboard />}/>
+          <Route path="/login" element={<Login />}/>
+          <Route path="/signup" element={<Signup />}/>
         </Routes>
-        </BrowserRouter>
-      </p>
+        <Footer/>
+      </BrowserRouter>
     </div>
   )
 }
