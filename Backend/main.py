@@ -5,7 +5,7 @@ from fastapi.security import  OAuth2PasswordRequestForm
 from typing import Annotated, List
 from sqlmodel import Session, select, delete
 from schema import ProductCreate, ProductRead, ProductUpdate, Token, UserRead 
-from models import Review, User, Product, Cart, CartItems, Order, OrderItem
+from models import LoginRequest, Review, User, Product, Cart, CartItems, Order, OrderItem, UserCreate
 from pydantic import EmailStr
 from auth import authenticate_user, create_access_token, get_current_user
 from db import engine, create_db_and_tables
@@ -43,22 +43,22 @@ def on_startup():
 
 ### Register new user into the system
 @app.post("/signup", response_model=UserRead)
-def signup(user_name:str, email:EmailStr, password:str, session:SessionDep, role:bool):
-    existing_user = session.exec(select(User).where(User.user_name == user_name)).first()
+def signup(user:UserCreate, session:SessionDep):
+    existing_user = session.exec(select(User).where(User.user_name == user.user_name)).first()
     if existing_user:
         raise HTTPException(status_code=400, detail="Usename already registered")
-    user = User(user_name=user_name, email=email)
-    user.set_password(password)
-    user.set_role(role)
-    session.add(user)
+    new_user = User(user_name=user.user_name, email=user.email)
+    new_user.set_password(user.password)
+    new_user.set_role(user.role)
+    session.add(new_user)
     session.commit()
-    session.refresh(user)
-    return user
+    session.refresh(new_user)
+    return new_user
 
 
 @app.post("/login", response_model=Token)
-def login(session:SessionDep, form_data:  OAuth2PasswordRequestForm = Depends()):
-    user = authenticate_user(session, form_data.username, form_data.password)
+def login(request:LoginRequest, session:SessionDep,):
+    user = authenticate_user(session, request.user_name, request.password)
     if not user:
         raise HTTPException(status_code=401, detail="Incorrect username or password")
     access_token = create_access_token(data={"sub":user.user_name},

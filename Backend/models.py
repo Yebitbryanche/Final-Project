@@ -1,6 +1,6 @@
 from sqlmodel import SQLModel, Field
 from typing import Optional
-from pydantic import EmailStr
+from pydantic import BaseModel, EmailStr
 from passlib.context import CryptContext
 from datetime import datetime
 
@@ -108,6 +108,12 @@ class UserActivity(SQLModel, table=True):
     product_id:int = Field(foreign_key=("Product.id"))
     created_at: datetime = Field(default_factory=datetime.utcnow)
 
+class UserCreate(BaseModel):
+    user_name: str
+    email: EmailStr
+    password: str
+    role: bool = False   
+
 class Token(SQLModel):
     access_token:str
     token_type:str
@@ -115,6 +121,9 @@ class Token(SQLModel):
 class TokenData(SQLModel):
     username:Optional[str] = None
 
+class LoginRequest(BaseModel):
+    user_name:str
+    password:str
 
 
 class UserRead(SQLModel):

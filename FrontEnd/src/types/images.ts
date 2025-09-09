@@ -17,6 +17,7 @@ import icon2orange from "../assets/images/icon2orange.png"
 import icon3orange from "../assets/images/icon3orange.png"
 import icon4orange from "../assets/images/icon4orange.png"
 import chevron from "../assets/images/chevron.png"
+import google from "../assets/images/search.png"
 
 
 export default{
@@ -37,5 +38,6 @@ icon1orange,
 icon2orange,
 icon3orange,
 icon4orange,
-chevron
+chevron,
+google
 }
