@@ -1,9 +1,8 @@
-import React, { useState } from "react";
-import axios from "axios";
+import { useState } from "react";
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
-import images from "../../../types/images";
 import { useNavigate } from "react-router-dom";
-export const base_URL = "http://127.0.0.1:8000";
+import { api } from "../../../API/Registration";
+import { validateInputs } from "../../../services/validation";
 
 function Signup() {
   const [user_name, setUser_name] = useState("");
@@ -15,35 +14,6 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate()
 
-  // Regex validators
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const usernameRegex = /^[a-zA-Z0-9._]{3,20}$/;
-  const passwordRegex =
-    /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-  const validateInputs = () => {
-    if (!user_name || !password || !email) {
-      setError("All fields are required.");
-      return false;
-    }
-    if (!usernameRegex.test(user_name)) {
-      setError(
-        "Username must be 3–20 characters long and can only contain letters, numbers, . and _"
-      );
-      return false;
-    }
-    if (!emailRegex.test(email)) {
-      setError("Invalid email format.");
-      return false;
-    }
-    if (!passwordRegex.test(password)) {
-      setError(
-        "Password must be at least 8 characters, include 1 uppercase letter, 1 number, and 1 special character."
-      );
-      return false;
-    }
-    return true;
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -51,10 +21,10 @@ function Signup() {
     setError("");
     setSuccess("");
 
-    if (!validateInputs()) return; // block signup if invalid
+    if (!validateInputs(email,password,user_name)) return; // block signup if invalid
 
     try {
-      const response = await axios.post(`${base_URL}/signup`, {
+      const response = await api.post('/signup', {
         user_name,
         password,
         email,
@@ -78,12 +48,12 @@ function Signup() {
   return (
     <div className="flex justify-center items-center py-10 px-4">
       {error && (
-        <div className="absolute w-100 top-1 md:bottom-1 items-center rounded-sm text-white flex justify-between bg-red-500 left-1 p-4">
+        <div className="absolute w-100 bottom-1 items-center rounded-sm text-white flex justify-between bg-red-500 left-1 p-4">
           <p className="text-white">{error}</p>
         </div>
       )}
       {success && (
-        <div className="absolute w-100 top-1 md:bottom-1 items-center rounded-sm text-white flex justify-between bg-green-500 left-1 p-4">
+        <div className="absolute w-100 bottom-1 items-center rounded-sm text-white flex justify-between bg-green-500 left-1 p-4">
           <p className="text-white mb-2">{success}</p>
         </div>
       )}

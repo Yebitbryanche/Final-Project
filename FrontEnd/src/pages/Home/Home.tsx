@@ -5,30 +5,43 @@ import Carousel from "../../components/Carousel";
 import Rating from "../../components/Ratingstar";
 import Addtocardbutton from "../../components/Addtocardbutton";
 import Buynowbutton from "../../components/Buynowbutton";
-import axios from "axios";
 import { useEffect, useState } from "react";
-
-interface ProductProps{
-  title:string;
-  description:string;
-  price:number;
-  image:string;
-  category:string;
-}
-
+import { api } from "../../API/Registration";
+import { addToCart } from "../../services/addtoCart";
+import type UserProps from "../../types/UserRead";
+import type ProductProps from "../../types/products";
 
 const Home = () => {
-  const base_URL = "http://127.0.0.1:8000" 
-  const [message, setMessage] = useState()
+  const token = localStorage.getItem("token")
+  const [user, setUser] = useState<UserProps>()
   const [products, setProducts] =useState<ProductProps[]>([])
 
   useEffect(() =>{
-    axios.get(`${base_URL}/products`)
+    api.get('/products')
     .then((res) =>{
      console.log(res.data) 
      setProducts(res.data.slice(0,4))  
     })
+    .catch((error:any) => console.log(error.message))
   },[])
+
+  useEffect(() => {
+    api.get('/users/me', {
+  headers: {
+    Authorization: `Bearer ${token}`
+  }
+  })
+    .then((res) =>{
+      console.log(res.data)
+      setUser(res.data)
+    })
+  },[])
+
+
+
+
+
+
   return (
     <div className="p-4 md:p-10 flex flex-col items-center gap-15 md:gap-30">
       {/* hero section with carousel */}
@@ -193,7 +206,7 @@ const Home = () => {
             <div className="p-2 bg-tertiary rounded-lg max-w-80 h-110 flex flex-col gap-3">
           {/* card image */}
           <div className="rounded-lg overflow-hidden">
-            <img src={images.headphone} alt="" className="w-full h-70 object-cover"/>
+            <img src={`http://127.0.0.1:8000/${product.image}`} alt="" className="w-full h-70 object-cover"/>
           </div>
           {/* first text */}
 
@@ -225,6 +238,15 @@ const Home = () => {
             <Addtocardbutton
               title="Add to Cart"
               className="bg-white text-primary px-5 py-2 cursor-pointer"
+              onClick={() =>{
+                if(!user?.id){
+                  console.log("No users Loged in")
+                }
+                else{
+                  console.log("User ID:", user?.id, "Product ID:", product.id);
+                  addToCart(user.id, product.id)                 
+                }
+              }}
               
             />
             {/* But now button */}

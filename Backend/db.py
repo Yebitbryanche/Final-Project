@@ -1,12 +1,14 @@
-from sqlmodel import create_engine, SQLModel
+from sqlmodel import Session, create_engine, SQLModel
+from config import settings
 
 
-DB_NAME = "mboakako.db"
-DB_URL = f"sqlite:///{DB_NAME}"
 
 connect_args = {"check_same_thread":False}
-engine = create_engine(DB_URL, connect_args=connect_args)
+engine = create_engine(settings.DB_URL, connect_args=connect_args)
 
 def create_db_and_tables():
     SQLModel.metadata.create_all(engine)
-
+    
+def get_session():
+    with Session(engine) as session:
+        yield session

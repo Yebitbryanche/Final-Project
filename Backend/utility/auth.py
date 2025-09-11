@@ -3,9 +3,10 @@ from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from typing import Optional, Annotated
 from jose import jwt, JWTError
-from models import User
+from schema.models import User
 from db import engine
 from sqlmodel import select, Session
+from config import settings
 
 
 def get_session():
@@ -13,10 +14,6 @@ def get_session():
         yield session
 
 SessionDep = Annotated[Session, Depends(get_session)]
-
-
-SECRET_KEY = "741sdf852re3sdf0sdr7rtjb455s741fgas411f7896214852815rf517416"
-ALGORITHM = "HS256"
 
 
 oauth2_bearer = OAuth2PasswordBearer(tokenUrl='login')
@@ -27,7 +24,7 @@ def create_access_token(data:dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
     expire = datetime.utcnow() + (expires_delta or timedelta(minutes=15))
     to_encode.update({"exp":expire})
-    return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
 
 def get_user(session:SessionDep, username:str) -> Optional[User]:
@@ -46,7 +43,7 @@ async def get_current_user(
 ):
     credentials_exception = HTTPException(status_code=401 ,detail="Could not validate credentials",headers={"WWW-Authenticate":"Bearer"},)
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         username:str = payload.get("sub")
         if username is None:
             raise credentials_exception

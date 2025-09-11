@@ -74,6 +74,7 @@ class CartItems(SQLModel, table=True):
     cart_id:int = Field(foreign_key=("Cart.id"))
     product_id:int = Field(foreign_key=("Product.id"))
     quantity:int = Field(default=1)
+    updated_at: datetime = Field(default_factory=datetime.utcnow)
 
     
 
@@ -107,27 +108,3 @@ class UserActivity(SQLModel, table=True):
     user_id:int = Field(foreign_key=("User.id"))
     product_id:int = Field(foreign_key=("Product.id"))
     created_at: datetime = Field(default_factory=datetime.utcnow)
-
-class UserCreate(BaseModel):
-    user_name: str
-    email: EmailStr
-    password: str
-    role: bool = False   
-
-class Token(SQLModel):
-    access_token:str
-    token_type:str
-
-class TokenData(SQLModel):
-    username:Optional[str] = None
-
-class LoginRequest(BaseModel):
-    user_name:str
-    password:str
-
-
-class UserRead(SQLModel):
-    id:int
-    user_name:str
-    email:EmailStr
-    role:str

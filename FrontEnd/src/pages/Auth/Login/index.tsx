@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import { FaLock, FaUser } from 'react-icons/fa';
 import { Link,useNavigate } from 'react-router-dom';
 import images from '../../../types/images';
-import axios from 'axios';
-import { base_URL } from '../signup/indeex';
+import { api } from '../../../API/Registration';
 import { IoClose } from "react-icons/io5";
 
+
 function Login() {
+
   const [user_name, setUser_name] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -20,9 +21,10 @@ function Login() {
 
     setIsloading(true)
     try{
-       const response = await axios.post(`${base_URL}/login`,{user_name, password})
+       const response = await api.post('/login',{user_name, password})
 
        localStorage.setItem("token",response.data.access_token)
+       console.log(response.data.access_token)
         setUser_name("")
         setPassword("")
         console.log({ user_name });
