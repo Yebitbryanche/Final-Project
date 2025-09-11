@@ -1,14 +1,13 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import Navigation from "./containers/Navigation"
 import Cart from "./pages/Cart"
-import BrandNew from "./pages/Brand New"
 import Dashboard from "./pages/Dashboard/"
 import Market from "./pages/Market/Market"
 import Footer from "./containers/Footer"
 import Home from "./pages/Home/Home"
 import Login from "./pages/Auth/Login"
 import Signup from "./pages/Auth/signup/indeex"
-// import "./i18n";
+
 
 function App() {
   return (

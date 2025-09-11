@@ -12,15 +12,8 @@ class Token(SQLModel):
 class TokenData(SQLModel):
     username:Optional[str] = None
 
-
-
-class UserRead(SQLModel):
-    id:int
-    user_name:str
-    email:EmailStr
-    role:bool
-
 class ProductRead(BaseModel):
+    id:int
     title:str
     description:str
     price:float
@@ -43,3 +36,25 @@ class ProductUpdate(BaseModel):
     stock: Optional[int] = None
     image: Optional[str] = None
     category: Optional[str] = None
+
+class AddToCartRequest(BaseModel):
+    user_id: int
+    product_id: int
+
+
+class UserCreate(BaseModel):
+    user_name: str
+    email: EmailStr
+    password: str
+    role: bool = False    
+
+class LoginRequest(BaseModel):
+    user_name:str
+    password:str
+
+
+class UserRead(SQLModel):
+    id:int
+    user_name:str
+    email:EmailStr
+    role:bool
