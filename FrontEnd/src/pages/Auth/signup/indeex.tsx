@@ -1,8 +1,7 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../../API/Registration";
-import { validateInputs } from "../../../services/validation";
 
 function Signup() {
   const [user_name, setUser_name] = useState("");
@@ -14,6 +13,35 @@ function Signup() {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate()
 
+  // Regex validators
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const usernameRegex = /^[a-zA-Z0-9._]{3,20}$/;
+  const passwordRegex =
+    /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+  const validateInputs = () => {
+    if (!user_name || !password || !email) {
+      setError("All fields are required.");
+      return false;
+    }
+    if (!usernameRegex.test(user_name)) {
+      setError(
+        "Username must be 3–20 characters long and can only contain letters, numbers, . and _"
+      );
+      return false;
+    }
+    if (!emailRegex.test(email)) {
+      setError("Invalid email format.");
+      return false;
+    }
+    if (!passwordRegex.test(password)) {
+      setError(
+        "Password must be at least 8 characters, include 1 uppercase letter, 1 number, and 1 special character."
+      );
+      return false;
+    }
+    return true;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,7 +49,7 @@ function Signup() {
     setError("");
     setSuccess("");
 
-    if (!validateInputs(email,password,user_name)) return; // block signup if invalid
+    if (!validateInputs()) return; // block signup if invalid
 
     try {
       const response = await api.post('/signup', {
