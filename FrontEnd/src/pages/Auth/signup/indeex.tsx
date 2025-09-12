@@ -74,7 +74,7 @@ function Signup() {
   };
 
   return (
-    <div className="flex justify-center items-center py-10 px-4">
+    <div className="flex justify-center items-center py-10 px-4 mt-[5rem]">
       {error && (
         <div className="absolute w-100 bottom-1 items-center rounded-sm text-white flex justify-between bg-red-500 left-1 p-4">
           <p className="text-white">{error}</p>
@@ -193,7 +193,7 @@ function Signup() {
             <a
               href="/login"
               className="font-medium"
-              style={{ color: "var(--color-primary)" }}
+              style={{ color: "var(--color-secondary)" }}
             >
               Login
             </a>
