@@ -1,8 +1,6 @@
 import { api } from '../../API/Registration';
 
-
 export const addToCart = async (user_id:number, product_id:number) => {
-
   try {
     const res = await api.post(
       `/cart/add`,
@@ -11,7 +9,6 @@ export const addToCart = async (user_id:number, product_id:number) => {
         product_id,    
       }
     );
-
     console.log("Added to cart:", res.data);
     return res.data;
   } catch (err: any) {

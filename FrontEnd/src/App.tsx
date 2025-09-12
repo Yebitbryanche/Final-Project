@@ -7,6 +7,7 @@ import Footer from "./containers/Footer"
 import Home from "./pages/Home/Home"
 import Login from "./pages/Auth/Login"
 import Signup from "./pages/Auth/signup/indeex"
+import Checkout from "./pages/Checkout"
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />}/>
           <Route path="/cart" element={<Cart />}/>
+          <Route path="/checkout" element={<Checkout/>}/>
           <Route path="/market" element={<Market />}/>
           <Route path="/dashboard" element={<Dashboard />}/>
           <Route path="/login" element={<Login />}/>

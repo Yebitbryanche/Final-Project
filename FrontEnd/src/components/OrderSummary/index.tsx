@@ -1,4 +1,4 @@
-import React from "react";
+import { Link } from "react-router-dom";
 
 type Props = {
   subtotal: number;
@@ -28,13 +28,7 @@ const OrderSummary = ({ subtotal }: Props) => {
           Subtotal: <span className="font-bold">{subtotal} XAF</span>
         </p>
         <p>
-          Options:
-          <select className="ml-2 border px-2 py-1 rounded text-base">
-            <option value="MTN">MTN</option>
-          </select>
-        </p>
-        <p>
-          Service fee: <span className="font-bold">1500 XAF</span>
+          Service fee: <span className="font-bold">500 XAF</span>
         </p>
         <p>
           Total payment:{" "}
@@ -42,8 +36,8 @@ const OrderSummary = ({ subtotal }: Props) => {
         </p>
       </div>
 
-      <button className="mt-6 w-full bg-green-700 text-white py-3 rounded text-lg hover:bg-green-800 transition">
-        Proceed to Checkout
+      <button className="mt-6 w-full bg-secondary text-white py-3 rounded text-lg hover:bg-green-800 transition">
+        <Link to="/checkout">Proceed to Checkout</Link>
       </button>
     </div>
   );

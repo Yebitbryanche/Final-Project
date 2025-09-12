@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import images from "../../types/images";
 import { RxHamburgerMenu } from "react-icons/rx";
+import { BsCart } from "react-icons/bs";
 
 function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
@@ -60,7 +61,7 @@ function Navigation() {
                   : "text-secondary font-medium hover:text-primary"
               }
             >
-              Cart
+             <BsCart size={25}/>
             </NavLink>
           </li>
         </ul>
