@@ -45,7 +45,7 @@ const Home = () => {
   return (
     <div className="p-4 md:p-10 flex flex-col items-center gap-15 md:gap-30">
       {/* hero section with carousel */}
-      <div className="flex flex-col lg:flex-row justify-between">
+      <div className="flex flex-col lg:flex-row justify-between mt-[4rem]">
         <div className="flex flex-col gap-20">
           {/* first text */}
           <p className="text-primary text-3xl md:text-5xl font-bold">
