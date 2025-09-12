@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import images from "../../types/images";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { HiSquaresPlus } from "react-icons/hi2";
+import { HiOutlineSquaresPlus, HiSquaresPlus } from "react-icons/hi2";
 import { IoSearchSharp } from "react-icons/io5";
 
 function Navigation() {
@@ -95,15 +95,15 @@ function Navigation() {
               className="px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:border-primary text-sm w-[200px]"
             />
             <button className="px-3 py-2 bg-primary text-white rounded-r-md font-semibold hover:bg-primary/90 transition">
-              <IoSearchSharp size={22}/>
+              <IoSearchSharp size={21}/>
             </button>
           </div>
 
           <button
             aria-label="More options"
-            className="text-3xl cursor-pointer text-secondary hover:text-secondary/70"
+            className="text-3xl cursor-pointer text-secondary hover:text-secondary/80"
           >
-            <HiSquaresPlus />
+            <HiOutlineSquaresPlus />
           </button>
         </div>
 
