@@ -69,7 +69,8 @@ def view_cart(user_id:int, session:Session = Depends(get_session)):
             "title": product.title,
             "price": product.price,
             "quantity": cart_item.quantity,
-            "subtotal": product.price * cart_item.quantity        
+            "subtotal": product.price * cart_item.quantity,
+            "image":product.image
         })
 
     total_price = sum(item["subtotal"] for item in items)
