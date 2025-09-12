@@ -76,7 +76,7 @@ function Statistics() {
       {/* aside */}
       <aside className="bg-gradient-to-b from-secondary/70 to-primary w-full md:w-1/5 p-5 flex flex-col gap-10 shadow-2xl rounded-tr-2xl rounded-br-2xl text-white">
       {/* logo */}
-        <div className="flex justify-center md:justify-start">
+        <div className="flex justify-center md:justify-start"> 
           <p className='font-bold text-xl mt-6'>Dashboard</p>
           <img src={logo} alt="" className="w-20" />
         </div>
