@@ -82,7 +82,7 @@ function Market() {
   }
 
   return (
-    <div className="p-4 md:p-10 flex flex-col gap-10">
+    <div className="p-4 md:p-10 flex flex-col gap-10 ">
       {/* Categories */}
       <div className="flex flex-col md:flex-row gap-4 md:gap-5 justify-center items-start md:items-center mt-[4rem]">
         <p className="text-2xl font-bold text-primary">Categories:</p>
