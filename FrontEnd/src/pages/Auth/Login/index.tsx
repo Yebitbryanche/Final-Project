@@ -52,7 +52,7 @@ function Login() {
   };
 
   return (
-    <div className="flex justify-center items-center py-10 px-4">
+    <div className="flex justify-center items-center py-10 px-4 ">
       {showmessage && (
         <div
           className={`absolute w-100 bottom-5 items-center rounded-sm text-white flex justify-between left-1 p-4 ${
@@ -67,7 +67,7 @@ function Login() {
           />
         </div>
       )}
-      <div className="flex flex-col md:flex-row w-full max-w-5xl shadow-lg rounded-lg overflow-hidden">
+      <div className="flex flex-col md:flex-row w-full max-w-5xl shadow-lg rounded-lg overflow-hidden mt-[4rem]">
         {/* Left Side - Colored */}
         <div
           className="w-full md:w-1/2 flex flex-col justify-center items-center p-10 text-white 
@@ -153,7 +153,7 @@ function Login() {
             <Link
               to="/signup"
               className="font-medium"
-              style={{ color: "var(--color-primary)" }}
+              style={{ color: "var(--color-secondary)" }}
             >
               Sign Up
             </Link>

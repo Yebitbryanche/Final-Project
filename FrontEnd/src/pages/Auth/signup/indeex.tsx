@@ -86,7 +86,7 @@ function Signup() {
         </div>
       )}
 
-      <div className="flex flex-col md:flex-row w-full max-w-5xl shadow-lg rounded-lg overflow-hidden">
+      <div className="flex flex-col md:flex-row w-full max-w-5xl shadow-lg rounded-lg overflow-hidden mt-[4rem]">
         {/* Left Side */}
         <div
           className="w-full md:w-1/2 flex flex-col justify-center items-center p-10 text-white 
@@ -193,7 +193,7 @@ function Signup() {
             <a
               href="/login"
               className="font-medium"
-              style={{ color: "var(--color-primary)" }}
+              style={{ color: "var(--color-scondary)" }}
             >
               Login
             </a>
