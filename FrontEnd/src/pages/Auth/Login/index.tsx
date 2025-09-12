@@ -52,7 +52,7 @@ function Login() {
   };
 
   return (
-    <div className="flex justify-center items-center py-10 px-4">
+    <div className="flex justify-center items-center py-10 px-4 mt-[4rem]">
       {showmessage && (
         <div
           className={`absolute w-100 bottom-5 items-center rounded-sm text-white flex justify-between left-1 p-4 ${
@@ -153,7 +153,7 @@ function Login() {
             <Link
               to="/signup"
               className="font-medium"
-              style={{ color: "var(--color-primary)" }}
+              style={{ color: "var(--color-secondary)" }}
             >
               Sign Up
             </Link>
