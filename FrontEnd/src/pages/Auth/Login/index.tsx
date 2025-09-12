@@ -52,6 +52,7 @@ function Login() {
   };
 
   return (
+
     <div className="flex justify-center items-center py-10 px-4 mt-[5rem]">
       {showmessage && (
         <div
@@ -67,7 +68,7 @@ function Login() {
           />
         </div>
       )}
-      <div className="flex flex-col md:flex-row w-full max-w-5xl shadow-lg rounded-lg overflow-hidden">
+      <div className="flex flex-col md:flex-row w-full max-w-5xl shadow-lg rounded-lg overflow-hidden mt-[4rem]">
         {/* Left Side - Colored */}
         <div
           className="w-full md:w-1/2 flex flex-col justify-center items-center p-10 text-white 

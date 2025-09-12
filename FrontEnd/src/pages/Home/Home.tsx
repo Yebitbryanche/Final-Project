@@ -40,13 +40,13 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="p-4 sm:p-6 md:p-10 flex flex-col items-center gap-12 md:gap-20 ">
-      {/* Hero Section */}
-      <div className="flex flex-col lg:flex-row justify-between gap-10 w-full pt-[4rem]">
-        {/* Left Text Section */}
-        <div className="flex flex-col gap-10 w-full lg:w-3/5">
-          <p className="text-primary text-2xl sm:text-4xl md:text-5xl font-bold text-center lg:text-left">
-            Shop Anywhere, Anytime
+    <div className="p-4 md:p-10 flex flex-col items-center gap-15 md:gap-30">
+      {/* hero section with carousel */}
+      <div className="flex flex-col lg:flex-row justify-between mt-[4rem]">
+        <div className="flex flex-col gap-20">
+          {/* first text */}
+          <p className="text-primary text-3xl md:text-5xl font-bold">
+            Shop Any where Any Time
           </p>
 
           {/* Promo Section */}
