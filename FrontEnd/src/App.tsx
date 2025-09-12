@@ -19,9 +19,14 @@ function App() {
           <Route path="/" element={<Home />}/>
           <Route path="/cart" element={<Cart />}/>
           <Route path="/market" element={<Market />}/>
-          <Route path="/dashboard" element={<Dashboard />}/>
+          <Route path="/dashboard" element={<Dashboard />}>
+            <Route path="profile"/>
+            <Route path="order"/>
+            <Route path="statistics"/>
+          </Route>
           <Route path="/login" element={<Login />}/>
           <Route path="/signup" element={<Signup />}/>
+          <Route path="logout"/>
         </Routes>
         <Footer/>
       </BrowserRouter>
