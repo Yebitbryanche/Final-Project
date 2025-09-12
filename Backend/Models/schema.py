@@ -58,3 +58,11 @@ class UserRead(SQLModel):
     user_name:str
     email:EmailStr
     role:bool
+
+class ProductCreate(BaseModel):
+    title:str
+    description:str
+    price:float
+    stock:int
+    image:str
+    category:str
