@@ -8,9 +8,13 @@ import { Link } from "react-router-dom";
 import welcome from "../../assets/images/welcome.png";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { LogOut } from "lucide-react";
+import axios from "axios"
 
 function Profile() {
   const [profilePic, setProfilePic] = useState<string | null>(null);
+
+  // sate for users info from backend
+  
 
   useEffect(() => {
     const savedImage = localStorage.getItem("profilePic");

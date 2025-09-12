@@ -15,7 +15,7 @@ interface Product {
   status: "Pending" | "Complete";
 }
 
-function Dasboard() {
+function Dashboard() {
   const [Products, SetProducts] = useState<Product[]>([])
 
   // fake data set for testing
@@ -124,4 +124,4 @@ function Dasboard() {
   )
 }
 
-export default Dasboard
+export default Dashboard

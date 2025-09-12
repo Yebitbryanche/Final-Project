@@ -3,7 +3,7 @@ import { FaLock, FaUser } from 'react-icons/fa';
 import { Link,useNavigate } from 'react-router-dom';
 import images from '../../../types/images';
 import { api } from '../../../API/Registration';
-import { IoClose } from "react-icons/io5";
+import { IoClose } from "react-icons/io5"; 
 
 
 function Login() {
