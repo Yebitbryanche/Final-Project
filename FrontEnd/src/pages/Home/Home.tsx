@@ -40,9 +40,9 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="p-4 sm:p-6 md:p-10 flex flex-col items-center gap-12 md:gap-20 pt-5">
+    <div className="p-4 sm:p-6 md:p-10 flex flex-col items-center gap-12 md:gap-20 ">
       {/* Hero Section */}
-      <div className="flex flex-col lg:flex-row justify-between gap-10 w-full mt-[4rem]">
+      <div className="flex flex-col lg:flex-row justify-between gap-10 w-full pt-[4rem]">
         {/* Left Text Section */}
         <div className="flex flex-col gap-10 w-full lg:w-3/5">
           <p className="text-primary text-2xl sm:text-4xl md:text-5xl font-bold text-center lg:text-left">

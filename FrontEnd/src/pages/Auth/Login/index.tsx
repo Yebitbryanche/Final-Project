@@ -52,7 +52,7 @@ function Login() {
   };
 
   return (
-    <div className="flex justify-center items-center py-10 px-4 mt-[4rem]">
+    <div className="flex justify-center items-center py-10 px-4 mt-[5rem]">
       {showmessage && (
         <div
           className={`absolute w-100 bottom-5 items-center rounded-sm text-white flex justify-between left-1 p-4 ${
@@ -166,3 +166,4 @@ function Login() {
 }
 
 export default Login
+   
