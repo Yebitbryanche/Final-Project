@@ -1,0 +1,4 @@
+"fastapi[standard]"
+"python-jopse[cryptography]
+sqlmodel
+pydantic_settings
