@@ -34,3 +34,5 @@ app.include_router(cart.router)
 app.include_router(Order.router)
 ## products
 app.include_router(products.router)
+
+app.include_router(review.router)
