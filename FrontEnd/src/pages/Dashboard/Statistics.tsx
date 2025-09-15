@@ -73,35 +73,9 @@ function Statistics() {
   const pendingOrders = purchases.filter((p) => p.status === "Pending").length;
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200">
+    <div className="p-4 md:p-6 flex flex-col gap-10">
       {/* aside */}
-      <aside className="bg-gradient-to-b from-secondary/70 to-primary w-full md:w-1/5 p-5 flex flex-col gap-10 shadow-2xl rounded-tr-2xl rounded-br-2xl text-white">
-      {/* logo */}
-        <div className="flex justify-center md:justify-start"> 
-          <p className='font-bold text-xl mt-6'>Dashboard</p>
-          <img src={logo} alt="" className="w-20" />
-        </div>
-        {/* links */}
-        <div className="flex flex-row md:flex-col gap-4 md:gap-6 overflow-x-auto md:overflow-visible">
-          <Link to="/" className="flex gap-3 items-center px-3 py-2 hover:bg-white/20 transition rounded-lg flex-shrink-0">
-            <img src={order} alt="" className="w-5 " />
-            <p>Order</p>
-          </Link>
-          <Link to="/statistics" className="flex gap-3 items-center px-3 py-2 bg-white/20 font-semibold rounded-lg flex-shrink-0">
-            <img src={statistics} alt="" className="w-5" />
-            <p>Statistics</p>
-          </Link>
-          <Link to="/profile" className="flex gap-3 items-center px-3 py-2 hover:bg-white/20 transition rounded-lg flex-shrink-0">
-            <img src={profile} alt="" className="w-5" />
-            <p>Profile</p>
-          </Link>
-          <Link to="/logout" className="flex gap-3 items-center px-3 py-2 hover:bg-white/20 transition rounded-lg flex-shrink-0">
-            <LogOut className='w-5 h-5 text-black'/>
-            <p>Logout</p>
-          </Link>
-        </div>
-      </aside>
-
+     
       {/* main */}
      
         {/* header */}
