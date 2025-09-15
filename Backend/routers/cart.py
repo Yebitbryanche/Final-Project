@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from fastapi import APIRouter, Depends
 from sqlmodel import Session, select
 
@@ -84,23 +84,22 @@ def view_cart(user_id:int, session:Session = Depends(get_session)):
 
 # update cart
 
-
 @router.put("/cart/{user_id}/update/{product_id}")
 def update_cart_item(
-    user_id:int,
-    product_id:int,
-    update:ProductUpdate,
-    session:Session = Depends(get_session)
+    user_id: int,
+    product_id: int,
+    update: ProductUpdate,
+    session: Session = Depends(get_session),
 ):
-    cart = session.exec(select(Cart).where(Cart.user_id == user_id)).first
+    cart = session.exec(select(Cart).where(Cart.user_id == user_id)).first()
     if not cart:
         not_found("cart")
 
     cart_item = session.exec(
         select(CartItems).where(
-            CartItems.cart_id == Cart.id,
+            CartItems.cart_id == cart.id,
             CartItems.product_id == product_id
-         )
+        )
     ).first()
 
     if not cart_item:
@@ -108,13 +107,65 @@ def update_cart_item(
 
     if update.quantity <= 0:
         session.delete(cart_item)
-        session.commit()
-        return {"message":"Item removed from cart"}
     else:
         cart_item.quantity = update.quantity
-        cart_item.updated_at = datetime.utcnow() if hasattr(cart_item, "updated_at") else cart_item.quantity
+        cart_item.updated_at = datetime.utcnow()
         session.add(cart_item)
-        session.commit()
-        session.refresh(cart_item)
 
-        return {"message": "Item quantity updated", "cart_item": cart_item}
+    session.commit()
+    session.refresh(cart)
+
+    # 🔑 Return the entire cart with updated items & total
+    return cart
+
+    
+
+
+
+
+@router.delete("/cart/{user_id}/delete/{product_id}")
+def delete_from_cart(user_id: int, product_id: int, session: Session = Depends(get_session)):
+    cart = session.exec(select(Cart).where(Cart.user_id == user_id)).first()
+    if not cart:
+        not_found("cart")
+
+    cart_item = session.exec(
+        select(CartItems).where(
+            CartItems.cart_id == cart.id,
+            CartItems.product_id == product_id
+        )
+    ).first()
+    if not cart_item:
+        not_found("cart item")
+
+    session.delete(cart_item)
+    session.commit()
+
+    # re-query items so the response reflects updated cart
+    cart_items = session.exec(
+        select(CartItems, Product)
+        .join(Product, CartItems.product_id == Product.id)
+        .where(CartItems.cart_id == cart.id)
+    ).all()
+
+    items = []
+    for ci, product in cart_items:
+        items.append({
+            "cart_item_id": ci.id,
+            "product_id": product.id,
+            "title": product.title,
+            "price": product.price,
+            "quantity": ci.quantity,
+            "subtotal": product.price * ci.quantity,
+            "image": product.image
+        })
+
+    total_price = sum(i["subtotal"] for i in items)
+
+    return {
+        "cart_id": cart.id,
+        "user_id": cart.user_id,
+        "items": items,
+        "total_price": total_price
+    }
+
