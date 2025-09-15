@@ -9,23 +9,15 @@ from schema.models import Product
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
-router.post("/upload", response_model=ProductCreate)
-def upload_product(
-    title:str,
-    description:str,
-    price:float,
-    stock:int,
-    image:str,
-    category:str, 
-    session:Session = Depends(get_session),
-    ):
+@router.post("/upload", response_model=ProductCreate)
+def upload_product(product:ProductCreate ,session:Session = Depends(get_session),):
     product = Product(
-        title=title,
-        description=description,
-        price=price,
-        stock=stock,
-        image=image,
-        category=category
+        title=product.title,
+        description=product.description,
+        price=product.price,
+        stock=product.stock,
+        image=product.image,
+        category=product.category
         )
     
     session.add(product)

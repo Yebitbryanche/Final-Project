@@ -11,6 +11,8 @@ import Order from "./pages/Dashboard/Order";
 import Statistics from "./pages/Dashboard/Statistics";
 import LogoutPage from "./pages/Dashboard/LogoutPage";
 import DashboardLayout from "./pages/Dashboard/Dashboardlayout";
+import ReviewPage from "./pages/leaveReview";
+import ProductDetails from "./pages/ProductDetails";
 
 function App() {
   return (
@@ -32,9 +34,11 @@ function App() {
             <Route path="profile" element={<Profile />} />
             <Route path="logout" element={<LogoutPage />} />
           </Route>
-
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+          <Route path="product/:id" element={<ProductDetails/>}/>
+          <Route path="/login" element={<Login />}/>
+          <Route path="/signup" element={<Signup />}/>
+          <Route path="logout"/>
+          <Route path="/products/:id/review" element={<ReviewPage/>}/>
         </Routes>
 
         <Footer />
