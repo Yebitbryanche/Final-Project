@@ -6,6 +6,7 @@ import order from "../../assets/images/order.svg";
 import { Link } from "react-router-dom";
 import UserAvatar from "../../components/UseAvatar";
 import { LogOut } from "lucide-react";
+import DashboardLayout from "./Dashboardlayout";
 import {
   PieChart,
   Pie,
@@ -72,37 +73,12 @@ function Statistics() {
   const pendingOrders = purchases.filter((p) => p.status === "Pending").length;
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200">
-      {/* aside */}
-      <aside className="bg-gradient-to-b from-secondary/70 to-primary w-full md:w-1/5 p-5 flex flex-col gap-10 shadow-2xl rounded-tr-2xl rounded-br-2xl text-white">
-      {/* logo */}
-        <div className="flex justify-center md:justify-start">
-          <p className='font-bold text-xl mt-6'>Dashboard</p>
-          <img src={logo} alt="" className="w-20" />
-        </div>
-        {/* links */}
-        <div className="flex flex-row md:flex-col gap-4 md:gap-6 overflow-x-auto md:overflow-visible">
-          <Link to="/" className="flex gap-3 items-center px-3 py-2 hover:bg-white/20 transition rounded-lg flex-shrink-0">
-            <img src={order} alt="" className="w-5 " />
-            <p>Order</p>
-          </Link>
-          <Link to="/statistics" className="flex gap-3 items-center px-3 py-2 bg-white/20 font-semibold rounded-lg flex-shrink-0">
-            <img src={statistics} alt="" className="w-5" />
-            <p>Statistics</p>
-          </Link>
-          <Link to="/profile" className="flex gap-3 items-center px-3 py-2 hover:bg-white/20 transition rounded-lg flex-shrink-0">
-            <img src={profile} alt="" className="w-5" />
-            <p>Profile</p>
-          </Link>
-          <Link to="/logout" className="flex gap-3 items-center px-3 py-2 hover:bg-white/20 transition rounded-lg flex-shrink-0">
-            <LogOut className='w-5 h-5 text-black'/>
-            <p>Logout</p>
-          </Link>
-        </div>
-      </aside>
+    
+    <div className="flex flex-col gap-10 p-4  md:p-6">
+      
 
       {/* main */}
-      <main className="w-full md:w-4/5 overflow-y-auto p-4 md:p-6 flex flex-col gap-10">
+     
         {/* header */}
         <div className="flex flex-row md:flex-row justify-between items-start md:items-center bg-white rounded-xl shadow-md px-4 md:px-6 py-4 gap-4 md:gap-0">
           <div className="flex flex-col gap-2">
@@ -119,15 +95,15 @@ function Statistics() {
         <div className="flex flex-col md:flex-row gap-6">
           <div className="bg-white shadow-lg rounded-xl p-6 flex-1 text-center hover:scale-105 transition-transform">
             <p className="text-gray-500 font-semibold">Total Spent</p>
-            <p className="text-2xl font-bold text-gray-800">{totalSpent} XAF</p>
+            <p className="text-2xl font-bold text-secondary">{totalSpent} XAF</p>
           </div>
           <div className="bg-white shadow-lg rounded-xl p-6 flex-1 text-center hover:scale-105 transition-transform">
             <p className="text-gray-500 font-semibold">Completed Orders</p>
-            <p className="text-2xl font-bold text-gray-800">{completedOrders}</p>
+            <p className="text-2xl font-bold text-secondary">{completedOrders}</p>
           </div>
           <div className="bg-white shadow-lg rounded-xl p-6 flex-1 text-center hover:scale-105 transition-transform">
             <p className="text-gray-500 font-semibold">Pending Orders</p>
-            <p className="text-2xl font-bold text-gray-800">{pendingOrders}</p>
+            <p className="text-2xl font-bold text-secondary">{pendingOrders}</p>
           </div>
         </div>
 
@@ -140,7 +116,7 @@ function Statistics() {
               <XAxis dataKey="month" />
               <YAxis />
               <Tooltip />
-              <Line type="monotone" dataKey="spent" stroke="#7C3AED" strokeWidth={3} />
+              <Line type="monotone" dataKey="spent" stroke="#14452f" strokeWidth={3} />
             </LineChart>
           </ResponsiveContainer>
         </div>
@@ -153,7 +129,7 @@ function Statistics() {
           ) : (
             <table className="table-auto w-full min-w-[600px] border-collapse rounded-lg overflow-hidden shadow-sm">
               <thead>
-                <tr className="bg-primary text-white">
+                <tr className="bg-tertiary text-secondary">
                   <th className="p-3 text-left">Product</th>
                   <th className="p-3 text-left">Category</th>
                   <th className="p-3 text-left">Price</th>
@@ -201,7 +177,7 @@ function Statistics() {
             </PieChart>
           </ResponsiveContainer>
         </div>
-      </main>
+      
     </div>
   );
 }
