@@ -56,10 +56,12 @@ const Home = () => {
                 Back To School Promo <br />
                 <span className="text-secondary">15% Discount</span>
               </p>
-              <Herobutton
+              <Link to={'/market'}>
+                <Herobutton
                 title="Shop Now"
-                className="bg-primary text-white py-2 px-5 rounded-lg cursor-pointer"
-              />
+                className="bg-secondary text-white py-2 px-5 rounded-lg cursor-pointer"
+              />            
+              </Link>
             </div>
 
             {/* Category Cards */}
@@ -105,117 +107,106 @@ const Home = () => {
       {/* Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full">
         {products.map((product) => (
-          <div
-            key={product.id}
-            className="p-4 bg-tertiary rounded-lg flex flex-col gap-3 shadow-md"
-          >
-            <div className="rounded-lg overflow-hidden">
-              <img
-                src={`http://127.0.0.1:8000/${product.image}`}
-                alt={product.title}
-                className="w-full h-52 object-cover"
-              />
-            </div>
-
-            <div className="flex justify-between items-center">
-              <p className="font-bold text-lg">{product.title}</p>
-              <p className="text-primary">
-                {product.price} <span className="pl-1">XAF</span>
-              </p>
-            </div>
-
-            <p className="text-sm line-clamp-2">{product.description}</p>
-
-            <div className="flex justify-between items-center">
-              <Rating rating={0} />
-              <p className="bg-secondary text-white px-2 py-1 rounded-sm text-xs">
-                {product.category}
-              </p>
-            </div>
-
-            <div className="flex justify-between gap-2">
-              <Addtocardbutton
-                title="Add to Cart"
-                className="bg-white text-primary px-4 py-2 cursor-pointer rounded"
-                onClick={() => {
-                  if (!user?.id) {
-                    console.log("No user logged in");
-                  } else {
-                    addToCart(user.id, product.id);
-                  }
-                }}
-              />
-              <Buynowbutton
-                title="Buy now"
-                className="bg-secondary text-white px-4 py-2 cursor-pointer rounded"
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Why Choose Us Section */}
-      <div className="text-center">
-        <p className="text-xl sm:text-3xl md:text-5xl font-bold text-black">
-          Why Choose Us
-        </p>
-      </div>
-
-      {/* Rounded Images Section */}
-      <div className="flex flex-col lg:flex-row justify-between items-center gap-8 w-full">
-        {/* Text */}
-        <div className="flex flex-col gap-4 text-center lg:text-left">
-          <p className="text-lg sm:text-3xl md:text-5xl text-primary font-bold">
-            Mola We Got You Covered
-          </p>
-          <p className="text-xl sm:text-3xl md:text-4xl font-bold">
-            Active 24/7 <span className="text-secondary">pour le Continent</span>
-          </p>
-          <p className="text-lg sm:text-3xl md:text-5xl text-primary font-bold">
-            237 4 Life
-          </p>
-        </div>
-
-        {/* Rounded Images */}
-        <div className="flex flex-col sm:flex-row gap-6 items-center">
-          {[images.mola1, images.mola2, images.mola3].map((img, idx) => (
+          <Link to={`/product/${product.id}`} key={product.id}> 
             <div
-              key={idx}
-              className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 overflow-hidden"
+              className="p-4 bg-tertiary rounded-lg flex flex-col gap-3 shadow-md"
             >
-              <img
-                src={img}
-                alt="Mola"
-                className="w-full h-full object-cover rounded-full"
-              />
-            </div>
-          ))}
-        </div>
-      </div>
+            
+              <div className="rounded-lg overflow-hidden">
+                <img
+                  src={`http://127.0.0.1:8000/${product.image}`}
+                  alt={product.title}
+                  className="w-full h-52 object-cover"
+                />
+              </div>
 
-      {/* Icon Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
-        {[
-          { img: images.icon1orange, label: "Quick Delivery" },
-          { img: images.icon2orange, label: "Best Quality" },
-          { img: images.icon3orange, label: "Affordable Prices" },
-          { img: images.icon4orange, label: "Customer Support" },
-        ].map((item, idx) => (
-          <div
-            key={idx}
-            className="bg-white p-6 shadow-lg rounded-xl flex flex-col items-center text-center hover:bg-primary hover:text-white transition"
-          >
-            <img
-              src={item.img}
-              alt={item.label}
-              className="w-12 h-12 mb-2 transition group-hover:brightness-0 group-hover:invert"
-            />
-            <p className="text-sm font-bold text-primary group-hover:text-white">
-              {item.label}
-            </p>
-          </div>
+              <div className="flex justify-between items-center">
+                <p className="font-bold text-lg">{product.title}</p>
+                <p className="text-primary">
+                  {product.price} <span className="pl-1">XAF</span>
+                </p>
+              </div>
+
+              <p className="text-sm line-clamp-2">{product.description}</p>
+
+              <div className="flex justify-between items-center">
+                <Rating rating={0} />
+                <p className="bg-secondary text-white px-2 py-1 rounded-sm text-xs">
+                  {product.category}
+                </p>
+              </div>
+
+              <div className="flex justify-between gap-2">
+                <Addtocardbutton
+                  title="Add to Cart"
+                  className="bg-white text-primary px-4 py-2 cursor-pointer rounded"
+                  onClick={() => {
+                    if (!user?.id) {
+                      console.log("No user logged in");
+                    } else {
+                      addToCart(user.id, product.id);
+                    }
+                  }}
+                />
+                <Buynowbutton
+                  title="Buy now"
+                  className="bg-secondary text-white px-4 py-2 cursor-pointer rounded"
+                />
+              </div>
+            </div>
+          </Link>
         ))}
       </div>
+{/* rounded image section */} <div> {/* big text */} <p className="justify-center items-center flex text-xl md:text-5xl font-bold text-black">Why Choose Us</p> </div> {/* rounded images with text */} <div className="flex flex-col lg:flex-row justify-between lg:items-start gap-5 md:gap-10 "> {/* text */} <div className="flex flex-col gap-5 mt-10 lg:mt-50 text-center lg:text-left"> <p className="text-lg sm:text-5xl text-primary font-bold">Mola We Got you Covered</p> <p className="text-xl sm:text-4xl text-black font-bold">Active 24/7 pour le <span>Continent</span></p> <p className="text-lg sm:text-5xl text-primary font-bold">237 4 Life</p> </div> {/* rounded images */} <div className="flex flex-col sm:flex-row lg:flex-row gap-5 items-center lg:items-start"> <div className="w-40 sm:w-50 h-40 sm:h-150 overflow-hidden"> <img src={images.mola1} alt="" className="w-full h-full rounded-t-full rounded-b-full object-cover"/> </div> <div className="w-40 sm:w-50 h-40 sm:h-100 overflow-hidden mt-5 sm:mt-20"> <img src={images.mola2} alt="" className="w-full h-full rounded-t-full rounded-b-full object-cover" /> </div> <div className="w-40 sm:w-50 h-40 sm:h-150 overflow-hidden"> <img src={images.mola3} alt="" className="w-full h-full rounded-t-full rounded-b-full object-cover"/> </div> </div> </div>
+      {/* Icon Cards */}
+<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
+  {[
+    {
+      imgDefault: images.icon1orange,
+      imgHover: images.icon1white,
+      label: "Quick Delivery",
+    },
+    {
+      imgDefault: images.icon2orange,
+      imgHover: images.icon2white,
+      label: "Best Quality",
+    },
+    {
+      imgDefault: images.icon3orange,
+      imgHover: images.icon3white,
+      label: "Affordable Prices",
+    },
+    {
+      imgDefault: images.icon4orange,
+      imgHover: images.icon4white,
+      label: "Customer Support",
+    },
+  ].map((item, idx) => (
+    <div
+      key={idx}
+      className="group bg-white p-6 shadow-lg rounded-xl flex flex-col items-center text-center 
+                 hover:bg-primary hover:text-white transition duration-300 cursor-pointer"
+    >
+      {/* swap icon on hover */}
+      <img
+        src={item.imgDefault}
+        alt={item.label}
+        className="w-12 h-12 mb-2 block group-hover:hidden"
+      />
+      <img
+        src={item.imgHover}
+        alt={item.label}
+        className="w-12 h-12 mb-2 hidden group-hover:block"
+      />
+
+      {/* text */}
+      <p className="text-sm font-bold text-primary group-hover:text-white transition">
+        {item.label}
+      </p>
+    </div>
+  ))}
+</div>
+
 
       {/* Description */}
       <div className="text-center max-w-3xl">
