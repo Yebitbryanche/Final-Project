@@ -72,17 +72,17 @@ function Login() {
         {/* Left Side - Colored */}
         <div
           className="w-full md:w-1/2 flex flex-col justify-center items-center p-10 text-white 
-             md:rounded-tr-[100px] rounded-br-[100px]  "
+             md:rounded-tr-sm rounded-br-sm  "
           style={{ backgroundColor: "var(--color-primary)" }}
         >
           <h1 className="text-4xl md:text-5xl font-bold mb-4 text-center">Shop Smart</h1>
-          <p className="text-lg md:text-xl text-center">
+          <p className="text-lg md:text-xl text-center text-secondary">
             Login to your account for personalised deals
           </p>
         </div>
 
         {/* Right Side - Form */}
-        <div className="w-full md:w-1/2 bg-white flex flex-col justify-center items-center p-6 md:p-10">
+        <div className=" inset-shadow-sm w-full md:w-1/2 bg-white flex flex-col justify-center items-center p-6 md:p-10">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Login</h2>
           <form onSubmit={handleSubmit} className="w-full max-w-sm" autoComplete="off">
             {/* Email */}
@@ -142,7 +142,7 @@ function Login() {
             <button
               type="submit"
               className="px-10 cursor-pointer py-3 block mx-auto rounded-lg font-semibold text-white hover:opacity-80 transition mb-4"
-              style={{ backgroundColor: "var(--color-primary)" }}
+              style={{ backgroundColor: "var(--color-secondary)" }}
             >
               Login
             </button>
