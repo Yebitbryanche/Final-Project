@@ -8,14 +8,48 @@ import { Link } from "react-router-dom";
 import welcome from "../../assets/images/welcome.png";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { LogOut } from "lucide-react";
+import DashboardLayout from "./Dashboardlayout";
+import axios from "axios";
 
 function Profile() {
   const [profilePic, setProfilePic] = useState<string | null>(null);
 
+  // state for user info from the backend
+  const [userData, setUserData] = useState<{ user_name: string; email: string } | null>(null);
+
+
   useEffect(() => {
-    const savedImage = localStorage.getItem("profilePic");
-    if (savedImage) setProfilePic(savedImage);
-  }, []);
+  const fetchUserData = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setUserData(null);   // clear user info if logged out
+      setProfilePic(null); // clear profile pic if logged out
+      return;
+    }
+    try {
+      const response = await axios.get("http://localhost:8000/users/me", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setUserData(response.data);
+    } catch (error) {
+      console.error("Failed to fetch user data:", error);
+    }
+  };
+
+  fetchUserData();
+
+  // Listen for storage changes
+  const handleStorageChange = () => {
+    if (!localStorage.getItem("token")) {
+      setUserData(null);
+      setProfilePic(null);
+    }
+  };
+
+  window.addEventListener("storage", handleStorageChange);
+  return () => window.removeEventListener("storage", handleStorageChange);
+}, []);
+
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -35,40 +69,18 @@ function Profile() {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200">
+    <div className=" flex flex-col gap-10 p-4  md:p-6">
       {/* sidebar */}
-      <aside className="bg-gradient-to-b from-secondary/70 to-primary  w-full md:w-1/5 p-5 flex flex-col gap-10 shadow-2xl rounded-tr-2xl rounded-br-2xl text-white">
-      {/* logo */}
-        <div className="flex justify-center md:justify-start">
-          <p className='font-bold text-xl mt-6'>Dashboard</p>
-          <img src={logo} alt="" className="w-20" />
-        </div>
-        <div className="flex flex-row md:flex-col gap-4 md:gap-6 overflow-x-auto md:overflow-visible">
-          <Link to="/" className="flex gap-3 items-center px-3 py-2 hover:bg-white/20 transition rounded-lg flex-shrink-0">
-            <img src={order} alt="" className="w-5" />
-            <p>Order</p>
-          </Link>
-          <Link to="/statistics" className="flex gap-3 items-center px-3 py-2 hover:bg-white/20 transition rounded-lg flex-shrink-0">
-            <img src={statistics} alt="" className="w-5" />
-            <p>Statistics</p>
-          </Link>
-          <Link to="/profile" className="flex gap-3 items-center px-3 py-2 bg-white/20 font-semibold rounded-lg flex-shrink-0">
-            <img src={profile} alt="" className="w-5" />
-            <p>Profile</p>
-          </Link>
-          <Link to="/logout" className="flex gap-3 items-center px-3 py-2 hover:bg-white/20 transition rounded-lg flex-shrink-0">
-                      <LogOut className='w-5 h-5 text-black'/>
-                      <p>Logout</p>
-                    </Link>
-        </div>
-      </aside>
+    
+      
 
       {/* main */}
-      <main className="w-full md:w-4/5 overflow-y-auto p-4 md:p-6 flex flex-col gap-10">
+      
         {/* welcome card */}
         <div className="bg-gradient-to-r from-primary/10 to-secondary/10 backdrop-blur-md shadow-xl w-full h-40 md:h-44 rounded-3xl flex flex-row md:flex-row justify-between items-center p-4 md:p-6 border border-white/20 gap-4 md:gap-0">
           <div className="flex flex-col gap-2 text-center md:text-left">
-            <p className="text-2xl md:text-3xl font-semibold text-secondary">Hi Angela!</p>
+            <p className="text-2xl md:text-3xl font-semibold text-secondary">
+              Hi {userData?.user_name || "Loading ..." } !</p>
             <span className="text-sm text-gray-600">Welcome back to your profile</span>
           </div>
           <img src={welcome} alt="" className="w-40 md:w-62 object-cover" />
@@ -81,12 +93,12 @@ function Profile() {
             <div className="relative">
               <label
                 htmlFor="fileInput"
-                className="cursor-pointer flex items-center justify-center w-36 md:w-40 h-36 md:h-40 rounded-full border-4 border-primary shadow-xl overflow-hidden bg-gray-100 hover:scale-105 hover:shadow-2xl transition-transform duration-300 ease-in-out"
+                className="cursor-pointer flex items-center justify-center w-36 md:w-40 h-36 md:h-40 rounded-full border-4 border-secondary shadow-xl overflow-hidden bg-gray-100 hover:scale-105 hover:shadow-2xl transition-transform duration-300 ease-in-out"
               >
                 {profilePic ? (
                   <img src={profilePic} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
-                  <PlusIcon className="w-8 md:w-10 h-8 md:h-10 text-primary" />
+                  <PlusIcon className="w-8 md:w-10 h-8 md:h-10 text-secondary" />
                 )}
               </label>
               <input id="fileInput" type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
@@ -102,15 +114,15 @@ function Profile() {
 
             {/* User details */}
             <div className="flex flex-col items-center gap-2 mt-4 text-center">
-              <h2 className="text-xl md:text-2xl font-bold text-gray-900">Angela Sap</h2>
-              <p className="text-gray-500 text-xs md:text-sm">angelasap@gmail.com</p>
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900">{userData?.user_name}</h2>
+              <p className="text-gray-500 text-xs md:text-sm">{userData?.email}</p>
               <span className="mt-2 px-3 py-1 text-xs md:text-sm rounded-full bg-primary/10 text-primary font-medium">
                 Active Member
               </span>
             </div>
           </div>
         </div>
-      </main>
+      
     </div>
   );
 }
