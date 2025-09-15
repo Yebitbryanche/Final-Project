@@ -15,7 +15,7 @@ interface Product {
   status: "Pending" | "Complete";
 }
 
-function Dasboard() {
+function Dashboard() {
   const [Products, SetProducts] = useState<Product[]>([])
 
   // fake data set for testing
@@ -31,7 +31,7 @@ function Dasboard() {
   }, []);
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200 mt-[4rem]">
+    <div className="flex flex-col md:flex-row min-h-screen bg-gradient-to-br from-gray-100 via-gray-50 to-gray-200">
       {/* aside */}
       <aside className="bg-gradient-to-b from-secondary/70 to-primary w-full md:w-1/5 p-5 flex flex-col gap-10 shadow-2xl rounded-tr-2xl rounded-br-2xl text-white">
         {/* logo */}
@@ -124,4 +124,4 @@ function Dasboard() {
   )
 }
 
-export default Dasboard
+export default Dashboard
