@@ -11,7 +11,7 @@ function UserAvatar() {
   }, []);
 
   return (
-    <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-purple-500 shadow-md">
+    <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-secondary shadow-md">
       {profilePic ? (
         <img src={profilePic} alt="User Avatar" className="w-full h-full object-cover" />
       ) : (

@@ -1,5 +1,4 @@
 
-import axios from "axios";
 import Categorybutton from "../../components/Categorybutton";
 import Filterbutton from "../../components/Filterbutton";
 import Rating from "../../components/Ratingstar";
@@ -83,9 +82,9 @@ function Market() {
   }
 
   return (
-    <div className="p-4 md:p-10 flex flex-col gap-10">
+    <div className="p-4 md:p-10 flex flex-col gap-10 ">
       {/* Categories */}
-      <div className="flex flex-col md:flex-row gap-4 md:gap-5 justify-center items-start md:items-center">
+      <div className="flex flex-col md:flex-row gap-4 md:gap-5 justify-center items-start md:items-center mt-[4rem]">
         <p className="text-2xl font-bold text-primary">Categories:</p>
         <div className="flex flex-wrap md:flex-nowrap gap-2 overflow-x-auto pb-2 md:pb-0">
           {["All","perfume","Flip","bodywash","Backpacks","Jewelries","Shoes"].map((cat) => (
