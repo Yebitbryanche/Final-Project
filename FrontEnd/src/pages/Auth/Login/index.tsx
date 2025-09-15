@@ -4,6 +4,7 @@ import { Link,useNavigate } from 'react-router-dom';
 import images from '../../../types/images';
 import { api } from '../../../API/Registration';
 import { IoClose } from "react-icons/io5"; 
+import login from "../../../assets/images/login.png"
 
 
 function Login() {
@@ -68,15 +69,19 @@ function Login() {
           />
         </div>
       )}
-      <div className="flex flex-col md:flex-row w-full max-w-5xl shadow-lg rounded-lg overflow-hidden mt-[4rem]">
+      <div className="flex flex-col  md:flex-row w-full max-w-5xl shadow-lg rounded-lg overflow-hidden mt-[4rem]">
         {/* Left Side - Colored */}
         <div
-          className="w-full md:w-1/2 flex flex-col justify-center items-center p-10 text-white 
+          className="w-full bg-white  inset-shadow-sm md:w-1/2 flex flex-col justify-center items-center p-10 text-white 
              md:rounded-tr-sm rounded-br-sm  "
-          style={{ backgroundColor: "var(--color-primary)" }}
+      
         >
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-center">Shop Smart</h1>
-          <p className="text-lg md:text-xl text-center text-secondary">
+          <img src={login} alt="3D"
+          className='w-full max-w-sm '
+          style={{ perspective: "1000px" }}
+           />
+          <h1 className="text-xl md:text-2xl font-bold mb-4 text-center text-primary">Shop Smart</h1>
+          <p className="text-sm md:text-sm text-center text-secondary">
             Login to your account for personalised deals
           </p>
         </div>
