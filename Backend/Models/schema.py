@@ -58,3 +58,6 @@ class UserRead(SQLModel):
     user_name:str
     email:EmailStr
     role:bool
+
+class ProductUpdate(BaseModel):
+    quantity:int
