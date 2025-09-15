@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from routers import users, admin, cart, Order, products, review
 from db import engine, create_db_and_tables
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Depends
 
 app = FastAPI()
 
@@ -34,3 +35,6 @@ app.include_router(cart.router)
 app.include_router(Order.router)
 ## products
 app.include_router(products.router)
+
+
+
