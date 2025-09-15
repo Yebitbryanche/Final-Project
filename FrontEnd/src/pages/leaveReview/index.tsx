@@ -23,7 +23,7 @@ function ReviewPage() {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => setUser(res.data))
-      .catch(() => setError("Failed to fetch user"));
+      .catch(() => setError("You must be logged in to leave a review."));
   }, [token]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -59,7 +59,7 @@ function ReviewPage() {
       </h1>
 
       {error && <div className="absolute w-[80%] p-5 bg-red-500 bottom-15 left-1"><p className="text-white mb-3">{error}</p></div>}
-      {success && <div className="absolute w-[80%] p-5 bg-red-500 bottom-15 left-1"><p className="text-white mb-3">{success}</p></div> }
+      {success && <div className="absolute w-[80%] p-5 bg-green-500 bottom-15 left-1"><p className="text-white mb-3">{success}</p></div> }
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">

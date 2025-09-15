@@ -9,8 +9,7 @@ import { api } from "../../API/Registration";
 import { addToCart } from "../../services/addtoCart";
 import type UserProps from "../../types/UserRead";
 import { Link } from "react-router-dom";
-import { Search } from "lucide-react";
-import type { RatingProps } from "../../types/productRatings";
+import Loader from "../../components/Loader";
 
 interface ProductProps {
   id: number;
@@ -31,11 +30,13 @@ function Market() {
   const [allProducts, setAllProducts] = useState<ProductProps[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<ProductProps[]>([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<UserProps>();
-  const [ratings, setRatings] = useState<Record<number, number>>({}); // <-- per-product ratings
+  const [ratings, setRatings] = useState<Record<number, number>>({}); 
 
   // Fetch all products
   useEffect(() => {
+    setLoading(true);
     api
       .get(`/products`)
       .then((response) => {
@@ -66,7 +67,8 @@ function Market() {
             .catch(() => console.log(`Failed to load rating for product ${product.id}`));
         });
       })
-      .catch((error: any) => setError(error.message));
+      .catch((error: any) => setError(error.message))
+      .finally(() => setLoading(false));
   }, []);
 
   // Fetch logged-in user
@@ -90,6 +92,12 @@ function Market() {
   const handlePricefilter = (price: number) => {
     setFilteredProducts(allProducts.filter((item) => item.price <= price));
   };
+
+  if (loading) {
+    return (
+     <Loader/>
+    );
+  }
 
   return (
     <div className="p-4 md:p-10 flex flex-col gap-10">
@@ -140,32 +148,32 @@ function Market() {
                     className="w-full h-60 object-cover"
                   />
                 </div>
-                <div className="flex justify-between items-center">
-                  <p className="font-bold text-lg truncate">{product.title}</p>
-                  <p className="text-primary">{product.price} XAF</p>
-                </div>
-                <p className="text-sm line-clamp-2">{product.description}</p>
-                <div className="flex justify-between items-center">
-                  <Rating rating={ratings[product.id] || 0} />
-                  <p className="bg-secondary/50 text-black rounded-lg px-2 py-1 text-xs">
-                    {product.category}
-                  </p>
-                </div>
-                <div className="flex justify-between gap-2 mt-2">
-                  <Addtocardbutton
-                    onClick={() => {
-                      if (!user?.id) console.log("No user logged in");
-                      else addToCart(user.id, product.id);
-                    }}
-                    title="Add to Cart"
-                    className="bg-white text-primary px-3 py-2 flex-1 text-sm"
-                  />
-                  <Buynowbutton
-                    title="Buy now"
-                    className="bg-secondary text-white px-3 py-2 flex-1 text-sm"
-                  />
-                </div>
               </Link>
+              <div className="flex justify-between items-center">
+                <p className="font-bold text-lg truncate">{product.title}</p>
+                <p className="text-primary">{product.price} XAF</p>
+              </div>
+              <p className="text-sm line-clamp-2">{product.description}</p>
+              <div className="flex justify-between items-center">
+                <Rating rating={ratings[product.id] || 0} />
+                <p className="bg-secondary/50 text-black rounded-lg px-2 py-1 text-xs">
+                  {product.category}
+                </p>
+              </div>
+              <div className="flex justify-between gap-2 mt-2">
+                <Addtocardbutton
+                  onClick={() => {
+                    if (!user?.id) console.log("No user logged in");
+                    else addToCart(user.id, product.id);
+                  }}
+                  title="Add to Cart"
+                  className="bg-white text-primary px-3 py-2 flex-1 text-sm"
+                />
+                <Buynowbutton
+                  title="Buy now"
+                  className="bg-secondary text-white px-3 py-2 flex-1 text-sm"
+                />
+              </div>
             </div>
           ))}
         </div>
@@ -182,32 +190,32 @@ function Market() {
                     className="w-full h-60 object-cover"
                   />
                 </div>
-                <div className="flex justify-between items-center">
-                  <p className="font-bold text-lg truncate">{product.title}</p>
-                  <p className="text-primary">{product.price} XAF</p>
-                </div>
-                <p className="text-sm line-clamp-2">{product.description}</p>
-                <div className="flex justify-between items-center">
-                  <Rating rating={ratings[product.id] || 0} />
-                  <p className="bg-secondary/50 text-black rounded-lg px-2 py-1 text-xs">
-                    {product.category}
-                  </p>
-                </div>
-                <div className="flex justify-between gap-2 mt-2">
-                  <Addtocardbutton
-                    onClick={() => {
-                      if (!user?.id) console.log("No user logged in");
-                      else addToCart(user.id, product.id);
-                    }}
-                    title="Add to Cart"
-                    className="bg-white text-primary px-3 py-2 flex-1 text-sm"
-                  />
-                  <Buynowbutton
-                    title="Buy now"
-                    className="bg-secondary text-white px-3 py-2 flex-1 text-sm"
-                  />
-                </div>
               </Link>
+              <div className="flex justify-between items-center">
+                <p className="font-bold text-lg truncate">{product.title}</p>
+                <p className="text-primary">{product.price} XAF</p>
+              </div>
+              <p className="text-sm line-clamp-2">{product.description}</p>
+              <div className="flex justify-between items-center">
+                <Rating rating={ratings[product.id] || 0} />
+                <p className="bg-secondary/50 text-black rounded-lg px-2 py-1 text-xs">
+                  {product.category}
+                </p>
+              </div>
+              <div className="flex justify-between gap-2 mt-2">
+                <Addtocardbutton
+                  onClick={() => {
+                    if (!user?.id) console.log("No user logged in");
+                    else addToCart(user.id, product.id);
+                  }}
+                  title="Add to Cart"
+                  className="bg-white text-primary px-3 py-2 flex-1 text-sm"
+                />
+                <Buynowbutton
+                  title="Buy now"
+                  className="bg-secondary text-white px-3 py-2 flex-1 text-sm"
+                />
+              </div>
             </div>
           ))}
         </div>

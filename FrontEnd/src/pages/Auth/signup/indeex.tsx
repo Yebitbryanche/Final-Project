@@ -90,20 +90,20 @@ function Signup() {
         {/* Left Side */}
         <div
           className="w-full md:w-1/2 flex flex-col justify-center items-center p-10 text-white 
-             md:rounded-tr-[100px] rounded-br-[100px]"
+             md:rounded-tr-sm rounded-br-sm"
           style={{ backgroundColor: "var(--color-primary)" }}
         >
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 text-center">
+          <h1 className="text-4xl md:text-5xl  font-bold mb-4 text-center">
             Shop Smart
           </h1>
-          <p className="text-lg md:text-2xl text-center">
+          <p className="text-lg md:text-2xl text-center text-secondary">
             Create your account for personalised deals
           </p>
         </div>
 
         {/* Right Side */}
-        <div className="w-full md:w-1/2 bg-white flex flex-col justify-center items-center p-6 md:p-10">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">
+        <div className=" inset-shadow-sm  w-full md:w-1/2 bg-white flex flex-col justify-center items-center p-6 md:p-10">
+          <h2 className="text-2xl md:text-3xl font-bold text-secondary mb-6">
             Sign Up
           </h2>
 
@@ -172,7 +172,7 @@ function Signup() {
                   type="checkbox"
                   checked={role}
                   onChange={() => setRole(!role)}
-                  className="mr-2"
+                  className="mr-2 bg-secondary"
                 />
                 <label className="text-sm text-gray-600">Register as Admin</label>
               </div>
@@ -182,7 +182,7 @@ function Signup() {
             <button
               type="submit"
               className="px-10 py-3 block mx-auto rounded-lg font-semibold text-white hover:opacity-90 transition mb-4"
-              style={{ backgroundColor: "var(--color-primary)" }}
+              style={{ backgroundColor: "var(--color-secondary)" }}
             >
               Sign Up
             </button>
