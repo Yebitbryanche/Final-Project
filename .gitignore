@@ -1,3 +1,5 @@
 venv/
 dbimages/
 .env
+__pycache__/
+*.pyc
