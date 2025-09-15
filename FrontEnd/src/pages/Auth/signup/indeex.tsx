@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../../API/Registration";
+import signup from "../../../assets/images/signup.png"
 
 function Signup() {
   const [user_name, setUser_name] = useState("");
@@ -89,14 +90,18 @@ function Signup() {
       <div className="flex flex-col md:flex-row w-full max-w-5xl shadow-lg rounded-lg overflow-hidden mt-[4rem]">
         {/* Left Side */}
         <div
-          className="w-full md:w-1/2 flex flex-col justify-center items-center p-10 text-white 
+          className="w-full bg-white inset-shadow-sm md:w-1/2 flex flex-col justify-center items-center p-10 text-white 
              md:rounded-tr-sm rounded-br-sm"
-          style={{ backgroundColor: "var(--color-primary)" }}
+          
         >
-          <h1 className="text-4xl md:text-5xl  font-bold mb-4 text-center">
+          <img src={signup} alt="image"
+          className='w-full max-w-sm '
+          style={{ perspective: "1000px" }}
+           />
+          <h1 className="text-xl text-primary md:text-2xl  font-bold mb-4 text-center">
             Shop Smart
           </h1>
-          <p className="text-lg md:text-2xl text-center text-secondary">
+          <p className="text-sm md:text-sm text-center text-secondary">
             Create your account for personalised deals
           </p>
         </div>
