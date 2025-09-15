@@ -16,6 +16,10 @@ import icon1orange from "../assets/images/icon1orange.png"
 import icon2orange from "../assets/images/icon2orange.png"
 import icon3orange from "../assets/images/icon3orange.png"
 import icon4orange from "../assets/images/icon4orange.png"
+import icon1white from "../assets/images/icon1white.png"
+import icon2white from "../assets/images/icon2white.png"
+import icon3white from "../assets/images/icon3white.png"
+import icon4white from "../assets/images/icon4white.png"
 import chevron from "../assets/images/chevron.png"
 import google from "../assets/images/search.png"
 import logo from "../assets/images/Logo.png";
@@ -39,6 +43,10 @@ icon1orange,
 icon2orange,
 icon3orange,
 icon4orange,
+icon1white,
+icon2white,
+icon3white,
+icon4white,
 chevron,
 google,
 logo
