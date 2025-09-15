@@ -4,7 +4,7 @@ from sqlmodel import Session, select
 
 from schema.models import Cart, CartItems, Product, User
 from utility.exception import not_found
-from Models.schema import AddToCartRequest
+from Models.schema import AddToCartRequest, ProductUpdate
 from db import get_session
 
 router = APIRouter()
@@ -89,7 +89,7 @@ def view_cart(user_id:int, session:Session = Depends(get_session)):
 def update_cart_item(
     user_id:int,
     product_id:int,
-    quantity:int,
+    update:ProductUpdate,
     session:Session = Depends(get_session)
 ):
     cart = session.exec(select(Cart).where(Cart.user_id == user_id)).first
@@ -106,12 +106,12 @@ def update_cart_item(
     if not cart_item:
         not_found("cart items")
 
-    if quantity <= 0:
+    if update.quantity <= 0:
         session.delete(cart_item)
         session.commit()
         return {"message":"Item removed from cart"}
     else:
-        cart_item.quantity = quantity
+        cart_item.quantity = update.quantity
         cart_item.updated_at = datetime.utcnow() if hasattr(cart_item, "updated_at") else cart_item.quantity
         session.add(cart_item)
         session.commit()

@@ -15,7 +15,7 @@ export interface CartItem {
   image: string;
 }
 
-interface CartResponse {
+export interface CartResponse {
   cart_id: number;
   user_id: number;
   items: CartItem[];
