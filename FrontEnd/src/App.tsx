@@ -7,7 +7,7 @@ import Footer from "./containers/Footer"
 import Home from "./pages/Home/Home"
 import Login from "./pages/Auth/Login"
 import Signup from "./pages/Auth/signup/indeex"
-
+import AddProduct from "./pages/Upload"
 
 function App() {
   return (
@@ -20,10 +20,13 @@ function App() {
           <Route path="/cart" element={<Cart />}/>
           <Route path="/market" element={<Market />}/>
           <Route path="/dashboard" element={<Dashboard />}>
-            <Route path="profile"/>
-            <Route path="order"/>
-            <Route path="statistics"/>
-          </Route>
+           
+          <Route path="profile" />
+          <Route path="order" />
+          <Route path="statistics" />
+          
+        </Route>
+        <Route path="upload" element={<AddProduct />} /> 
           <Route path="/login" element={<Login />}/>
           <Route path="/signup" element={<Signup />}/>
           <Route path="logout"/>
