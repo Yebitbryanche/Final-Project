@@ -6,6 +6,7 @@ import { BsCart } from "react-icons/bs";
 import { api } from "../../API/Registration";
 import type UserProps from "../../types/UserRead";
 import type { CartResponse } from "../../pages/Cart";
+import { useCart } from "../../Context/Context";
 
 function Navigation() {
   const token = localStorage.getItem("token");
@@ -13,6 +14,7 @@ function Navigation() {
   const [user, setUser] = useState<UserProps | undefined>();
   const [cartItems, setCartItems] = useState<CartResponse | null>(null);
   const [error, setError] = useState("");
+ 
 
   useEffect(() => {
     api
