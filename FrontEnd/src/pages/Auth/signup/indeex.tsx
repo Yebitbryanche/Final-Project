@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FaEnvelope, FaLock, FaUser } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../../API/Registration";
-import signup from "../../../assets/images/signup.png"
+import signup from "../../../assets/images/signup.png";
 
 function Signup() {
   const [user_name, setUser_name] = useState("");
@@ -12,7 +12,7 @@ function Signup() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   // Regex validators
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -53,22 +53,34 @@ function Signup() {
     if (!validateInputs()) return; // block signup if invalid
 
     try {
-      const response = await api.post('/signup', {
+      const response = await api.post("/signup", {
         user_name,
         password,
         email,
-        role,
+        role, // true if admin is checked
       });
-      console.log(response.data)
+      console.log(response.data);
+
+      // Save to localStorage *after successful signup*
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          user_name,
+          email,
+          role,
+          avatar: "/Avatar.png",
+        })
+      );
 
       setSuccess("Account created successfully! 🎉");
       setUser_name("");
       setPassword("");
       setEmail("");
       setRole(false);
-        setTimeout(()=>{
-            navigate("/login")
-        },2000)
+
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
     } catch (err: any) {
       setError(err.response?.data?.detail || "Signup failed");
     }
@@ -89,16 +101,14 @@ function Signup() {
 
       <div className="flex flex-col md:flex-row w-full max-w-5xl shadow-lg rounded-lg overflow-hidden mt-[4rem]">
         {/* Left Side */}
-        <div
-          className="w-full bg-white inset-shadow-sm md:w-1/2 flex flex-col justify-center items-center p-10 text-white 
-             md:rounded-tr-sm rounded-br-sm"
-          
-        >
-          <img src={signup} alt="image"
-          className='w-full max-w-sm '
-          style={{ perspective: "1000px" }}
-           />
-          <h1 className="text-xl text-primary md:text-2xl  font-bold mb-4 text-center">
+        <div className="w-full bg-white inset-shadow-sm md:w-1/2 flex flex-col justify-center items-center p-10 text-white md:rounded-tr-sm rounded-br-sm">
+          <img
+            src={signup}
+            alt="image"
+            className="w-full max-w-sm transform transition-transform duration-500 hover:rotate-y-12 hover:scale-105"
+            style={{ perspective: "1000px" }}
+          />
+          <h1 className="text-xl text-primary md:text-2xl font-bold mb-4 text-center">
             Shop Smart
           </h1>
           <p className="text-sm md:text-sm text-center text-secondary">
@@ -107,7 +117,7 @@ function Signup() {
         </div>
 
         {/* Right Side */}
-        <div className=" inset-shadow-sm  w-full md:w-1/2 bg-white flex flex-col justify-center items-center p-6 md:p-10">
+        <div className="inset-shadow-sm w-full md:w-1/2 bg-white flex flex-col justify-center items-center p-6 md:p-10">
           <h2 className="text-2xl md:text-3xl font-bold text-secondary mb-6">
             Sign Up
           </h2>
@@ -160,7 +170,7 @@ function Signup() {
               />
             </div>
 
-             <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between">
               <div className="flex items-center mb-4">
                 <input
                   type="checkbox"
@@ -181,7 +191,7 @@ function Signup() {
                 />
                 <label className="text-sm text-gray-600">Register as Admin</label>
               </div>
-             </div>
+            </div>
 
             {/* Sign Up button */}
             <button
@@ -199,7 +209,6 @@ function Signup() {
               href="/login"
               className="font-medium"
               style={{ color: "var(--color-secondary)" }}
-
             >
               Login
             </a>
