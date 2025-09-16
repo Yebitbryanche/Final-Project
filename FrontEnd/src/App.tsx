@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Navigation from "./containers/Navigation";
 import Cart from "./pages/Cart";
 import Market from "./pages/Market/Market";
@@ -13,6 +13,19 @@ import LogoutPage from "./pages/Dashboard/LogoutPage";
 import DashboardLayout from "./pages/Dashboard/Dashboardlayout";
 import ReviewPage from "./pages/leaveReview";
 import ProductDetails from "./pages/ProductDetails";
+import AddProduct from "./pages/Upload";
+import type { JSX } from "react";
+
+// Protected Route for Admins
+const AdminRoute = ({ children }: { children: JSX.Element }) => {
+  const storedUser = localStorage.getItem("user");
+  if (!storedUser) return <Navigate to="/signup" />;
+
+  const user = JSON.parse(storedUser);
+  if (!user.role) return <Navigate to="/signup" />; // role=false means not admin
+
+  return children;
+};
 
 function App() {
   return (
@@ -34,11 +47,22 @@ function App() {
             <Route path="profile" element={<Profile />} />
             <Route path="logout" element={<LogoutPage />} />
           </Route>
-          <Route path="product/:id" element={<ProductDetails/>}/>
-          <Route path="/login" element={<Login />}/>
-          <Route path="/signup" element={<Signup />}/>
-          <Route path="logout"/>
-          <Route path="/products/:id/review" element={<ReviewPage/>}/>
+
+          <Route path="product/:id" element={<ProductDetails />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="logout" />
+
+          <Route
+            path="/upload"
+            element={
+              <AdminRoute>
+                <AddProduct />
+              </AdminRoute>
+            }
+          />
+
+          <Route path="/products/:id/review" element={<ReviewPage />} />
         </Routes>
 
         <Footer />

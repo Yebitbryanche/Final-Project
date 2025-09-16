@@ -5,7 +5,6 @@ import { RxHamburgerMenu } from "react-icons/rx";
 import { HiOutlineSquaresPlus, HiSquaresPlus } from "react-icons/hi2";
 import { IoSearchSharp } from "react-icons/io5";
 
-
 function Navigation() {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -35,18 +34,7 @@ function Navigation() {
               Brand New
             </NavLink>
           </li>
-          <li>
-            <NavLink
-              to="upload"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-primary font-semibold border-b-2 border-primary pb-1"
-                  : "text-secondary font-medium hover:text-primary"
-              }
-            >
-              Upload
-            </NavLink>
-          </li>
+
           <li>
             <NavLink
               to="/market"
@@ -108,17 +96,16 @@ function Navigation() {
               className="px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:border-primary text-sm w-[200px]"
             />
             <button className="px-3 py-2 bg-secondary text-white rounded-r-md font-semibold hover:bg-secondary/90 transition">
-
-              <IoSearchSharp size={21}/>
+              <IoSearchSharp size={21} />
             </button>
           </div>
 
-          <button
-            aria-label="More options"
+          <Link
+            to="/upload"
             className="text-3xl cursor-pointer text-secondary hover:text-secondary/70"
           >
             <HiSquaresPlus />
-          </button>
+          </Link>
         </div>
 
         {/* Mobile Hamburger */}
@@ -209,7 +196,7 @@ function Navigation() {
               className="w-full px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:border-primary text-sm"
             />
             <button className="px-3 py-2 bg-primary text-white rounded-r-md font-semibold hover:bg-primary/90 transition">
-              <IoSearchSharp/>
+              <IoSearchSharp />
             </button>
           </div>
         </div>

@@ -50,9 +50,8 @@ def update_product(id: int, product_update: ProductUpdate, session: Session = De
 def delete_product( id:int, session:Session = Depends(get_session)):
     product = session.get(Product, id)
     if  not product:
-        not_found()
-    
+         raise HTTPException(status_code=404, detail="Product not found")
     session.delete(product)
     session.commit()
-    return {"message":"product deleted successfully"}
-
+    return {"message": "Product deleted successfully"}
+        
