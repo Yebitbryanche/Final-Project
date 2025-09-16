@@ -61,3 +61,16 @@ class UserRead(SQLModel):
 
 class ProductUpdate(BaseModel):
     quantity:int
+class ProductCreate(BaseModel):
+    title:str
+    description:str
+    price:float
+    stock:int
+    image:str
+    category:str
+
+
+class CreateReview(BaseModel):
+    comment:str
+    rating:int
+    product_id:int

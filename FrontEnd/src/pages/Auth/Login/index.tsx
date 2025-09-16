@@ -3,7 +3,7 @@ import { FaLock, FaUser } from 'react-icons/fa';
 import { Link,useNavigate } from 'react-router-dom';
 import images from '../../../types/images';
 import { api } from '../../../API/Registration';
-import { IoClose } from "react-icons/io5";
+import { IoClose } from "react-icons/io5"; 
 
 
 function Login() {
@@ -52,7 +52,8 @@ function Login() {
   };
 
   return (
-    <div className="flex justify-center items-center py-10 px-4">
+
+    <div className="flex justify-center items-center py-10 px-4 mt-[5rem]">
       {showmessage && (
         <div
           className={`absolute w-100 bottom-5 items-center rounded-sm text-white flex justify-between left-1 p-4 ${
@@ -67,21 +68,21 @@ function Login() {
           />
         </div>
       )}
-      <div className="flex flex-col md:flex-row w-full max-w-5xl shadow-lg rounded-lg overflow-hidden">
+      <div className="flex flex-col md:flex-row w-full max-w-5xl shadow-lg rounded-lg overflow-hidden mt-[4rem]">
         {/* Left Side - Colored */}
         <div
           className="w-full md:w-1/2 flex flex-col justify-center items-center p-10 text-white 
-             md:rounded-tr-[100px] rounded-br-[100px]  "
+             md:rounded-tr-sm rounded-br-sm  "
           style={{ backgroundColor: "var(--color-primary)" }}
         >
           <h1 className="text-4xl md:text-5xl font-bold mb-4 text-center">Shop Smart</h1>
-          <p className="text-lg md:text-xl text-center">
+          <p className="text-lg md:text-xl text-center text-secondary">
             Login to your account for personalised deals
           </p>
         </div>
 
         {/* Right Side - Form */}
-        <div className="w-full md:w-1/2 bg-white flex flex-col justify-center items-center p-6 md:p-10">
+        <div className=" inset-shadow-sm w-full md:w-1/2 bg-white flex flex-col justify-center items-center p-6 md:p-10">
           <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-6">Login</h2>
           <form onSubmit={handleSubmit} className="w-full max-w-sm" autoComplete="off">
             {/* Email */}
@@ -141,7 +142,7 @@ function Login() {
             <button
               type="submit"
               className="px-10 cursor-pointer py-3 block mx-auto rounded-lg font-semibold text-white hover:opacity-80 transition mb-4"
-              style={{ backgroundColor: "var(--color-primary)" }}
+              style={{ backgroundColor: "var(--color-secondary)" }}
             >
               Login
             </button>
@@ -153,7 +154,7 @@ function Login() {
             <Link
               to="/signup"
               className="font-medium"
-              style={{ color: "var(--color-primary)" }}
+              style={{ color: "var(--color-secondary)" }}
             >
               Sign Up
             </Link>
@@ -166,3 +167,4 @@ function Login() {
 }
 
 export default Login
+   

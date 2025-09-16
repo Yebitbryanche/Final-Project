@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 
+from Models.schema import CreateReview
 from db import get_session
 from schema.models import Product, Review
 from utility.exception import not_found
@@ -10,28 +11,26 @@ router = APIRouter()
 
 # create a review
 
-@router.post("/products/{product_id}/review")
+@router.post("/products/{product_id}/review/{user_id}")
 def create_review(user_id:int,
-                  comment:str,
-                  rating:int,
-                  product_id:int,
+                  create_review:CreateReview,
                   session:Session = Depends(get_session)):
-    product = session.exec(select(Product).where(Product.id == product_id)).first()
+    product = session.exec(select(Product).where(Product.id == create_review.product_id)).first()
     if not product:
         not_found("product")
 
     #checks if user already reviewed product
     review = session.exec(
-        select(Review).where(Review.product_id == product_id, Review.user_id == user_id)
+        select(Review).where(Review.product_id == create_review.product_id, Review.user_id == user_id)
     ).first()
     if review:
         raise HTTPException(status_code=400, detail="You already reviewed this product")
     
     new_review = Review(
         user_id=user_id,
-        product_id=product_id,
-        rating=rating,
-        comment=comment
+        product_id=create_review.product_id,
+        rating=create_review.rating,
+        comment=create_review.comment
     )
 
     session.add(new_review)
