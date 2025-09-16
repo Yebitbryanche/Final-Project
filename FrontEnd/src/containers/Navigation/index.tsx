@@ -1,13 +1,49 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import images from "../../types/images";
 import { RxHamburgerMenu } from "react-icons/rx";
+import { BsCart } from "react-icons/bs";
+import { api } from "../../API/Registration";
+import type UserProps from "../../types/UserRead";
+import type { CartResponse } from "../../pages/Cart";
+import { useCart } from "../../Context/Context";
 import { HiOutlineSquaresPlus, HiSquaresPlus } from "react-icons/hi2";
 import { IoSearchSharp } from "react-icons/io5";
 
 
 function Navigation() {
+  const token = localStorage.getItem("token");
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<UserProps | undefined>();
+  const [cartItems, setCartItems] = useState<CartResponse | null>(null);
+  const [error, setError] = useState("");
+ 
+
+  useEffect(() => {
+    api
+      .get("/users/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        setUser(res.data);
+      })
+      .catch(() => setError("Failed to fetch user"));
+  }, []);
+
+    useEffect(() => {
+      if (!user?.id) return;
+  
+      api
+        .get(`/cart/${user.id}/view`)
+        .then((res) => {
+          setCartItems(res.data);
+        })
+        .catch((err: any) => {
+          setError(err.message);
+        });
+    }, [user]);
 
   return (
     <nav className="shadow-md bg-white fixed top-0 left-0 right-0 z-50">
@@ -35,7 +71,7 @@ function Navigation() {
               Brand New
             </NavLink>
           </li>
-          <li>
+          <li className="p-5">
             <NavLink
               to="upload"
               className={({ isActive }) =>
@@ -59,7 +95,7 @@ function Navigation() {
               Market
             </NavLink>
           </li>
-          <li>
+          <li className="p-5">
             <NavLink
               to="/dashboard"
               className={({ isActive }) =>
@@ -71,7 +107,8 @@ function Navigation() {
               Dashboard
             </NavLink>
           </li>
-          <li>
+          <li className="relative p-5">
+             <div className="absolute top-0 right-0 py-1 px-[6px] rounded-full bg-secondary text-white">{cartItems?.items.length === 0? null: <p className="text-xs">{cartItems?.items.length}</p>}</div>
             <NavLink
               to="/cart"
               className={({ isActive }) =>
@@ -80,7 +117,7 @@ function Navigation() {
                   : "text-secondary font-medium hover:text-primary transition"
               }
             >
-              Cart
+             <BsCart size={25}/>
             </NavLink>
           </li>
         </ul>
