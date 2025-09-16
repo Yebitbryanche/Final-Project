@@ -82,8 +82,8 @@ def view_cart(user_id:int, session:Session = Depends(get_session)):
         "total_price": total_price
     }
 
-# update cart
 
+# update cart item quantity
 @router.put("/cart/{user_id}/update/{product_id}")
 def update_cart_item(
     user_id: int,
@@ -103,21 +103,25 @@ def update_cart_item(
     ).first()
 
     if not cart_item:
-        not_found("cart items")
+        not_found("cart item")
 
     if update.quantity <= 0:
         session.delete(cart_item)
+        session.commit()
+        return {"message": "Item removed from cart"}
     else:
         cart_item.quantity = update.quantity
+        # 👇 make sure subtotal is recalculated every time
+        product = session.exec(select(Product).where(Product.id == product_id)).first()
+        cart_item.subtotal = cart_item.quantity * product.price  
         cart_item.updated_at = datetime.utcnow()
+
         session.add(cart_item)
+        session.commit()
+        session.refresh(cart_item)
 
-    session.commit()
-    session.refresh(cart)
-
-    # 🔑 Return the entire cart with updated items & total
-    return cart
-
+        # 👇 return just the updated item
+        return cart_item
     
 
 
