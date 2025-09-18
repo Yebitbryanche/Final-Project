@@ -130,7 +130,7 @@ const handleQuantityChange = (productId: number, newQuantity: number) => {
     cartItems?.items.reduce((sum, item) => sum + item.subtotal, 0) || 0;
 
   return (
-    <div className="bg-[#F5F5F5] min-h-screen p-6">
+    <div className="bg-[#F5F5F5] min-h-screen p-6 md:mt-[5rem]">
       <h2 className="text-2xl font-medium text-black mb-6">
         {user?.user_name}'s <span>Shopping Cart</span>
       </h2>
