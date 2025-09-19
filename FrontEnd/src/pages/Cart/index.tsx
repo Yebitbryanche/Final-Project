@@ -31,17 +31,17 @@ const Cart = () => {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
-  // ✅ Fetch user
+  //  Fetch user
   useEffect(() => {
     api
       .get("/users/me", {
         headers: { Authorization: `Bearer ${token}` },
       })
-      .then((res) => setUser(res.data))
+      .then((res) =>{ setUser(res.data); console.log(error||message)})
       .catch(() => setError("Failed to fetch user"));
   }, []);
 
-  // ✅ Fetch cart when user is known
+  //  Fetch cart when user is known
   useEffect(() => {
     if (!user?.id) return;
 
@@ -52,7 +52,7 @@ const Cart = () => {
   }, [user]);
 
   
-// ✅ Update item quantity (delete if <= 0)
+//  Update item quantity (delete if <= 0)
 const handleQuantityChange = (productId: number, newQuantity: number) => {
   if (!user?.id) return;
 
@@ -97,17 +97,18 @@ const handleQuantityChange = (productId: number, newQuantity: number) => {
               ...prev,
               items: prev.items.map((item) =>
                 item.product_id === updatedItem.product_id
-                  ? updatedItem
+                  ? { ...item, quantity: updatedItem.quantity, subtotal: updatedItem.subtotal }
                   : item
               ),
             }
           : prev
       );
+
     })
     .catch((err) => setError(err.message));
 };
 
-  // ✅ Delete product
+  // Delete product
   const handleDelete = (product_id: number) => {
     if (!user?.id) return;
 
@@ -122,10 +123,10 @@ const handleQuantityChange = (productId: number, newQuantity: number) => {
         setMessage(res.data.message);
         setCartItems(res.data); // backend should return updated cart
       })
-      .catch((error: any) => setError(error.message));
+      .catch((error: any) => {setError(error.message);  console.log(error)});
   };
 
-  // ✅ Calculate subtotal
+  //  Calculate subtotal
   const subtotal =
     cartItems?.items.reduce((sum, item) => sum + item.subtotal, 0) || 0;
 
@@ -135,7 +136,6 @@ const handleQuantityChange = (productId: number, newQuantity: number) => {
         {user?.user_name}'s <span>Shopping Cart</span>
       </h2>
 
-      {error && <p className="text-red-500">{error}</p>}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       
