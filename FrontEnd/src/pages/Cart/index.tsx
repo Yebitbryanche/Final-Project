@@ -103,7 +103,6 @@ const handleQuantityChange = (productId: number, newQuantity: number) => {
             }
           : prev
       );
-
     })
     .catch((err) => setError(err.message));
 };
