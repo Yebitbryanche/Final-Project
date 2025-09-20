@@ -6,6 +6,8 @@ import { MdDelete } from "react-icons/md";
 import { BsCartDash, BsCartPlus } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import images from "../../types/images";
+import { checkout } from "../../services/cart_quantity";
+import Addtocardbutton from "../../components/Addtocardbutton";
 
 export interface CartItem {
   cart_item_id: number;
@@ -201,6 +203,16 @@ const handleQuantityChange = (productId: number, newQuantity: number) => {
               </Link>
             </div>
           )}
+          <Addtocardbutton
+            title="Checkout"
+            onClick={() => {
+              if (!user?.id) {
+                alert("User must be logged in");
+              } else {
+                checkout(user.id);
+              }
+            }}
+          />
         </div>
 
 
