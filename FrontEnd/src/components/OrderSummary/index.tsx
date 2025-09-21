@@ -1,14 +1,29 @@
-import { Link } from "react-router-dom";
 import Addtocardbutton from "../Addtocardbutton";
 import { checkout } from "../../services/cart_quantity";
+import { useEffect, useState } from "react";
+import type UserProps from "../../types/UserRead";
+import { api } from "../../API/Registration";
 
 type Props = {
   subtotal: number;
 };
 
 const OrderSummary = ({ subtotal }: Props) => {
-  const serviceFee = 1500;
+  const token = localStorage.getItem("token");
+  const serviceFee = 500;
+  const [user, setUser] = useState<UserProps | undefined>();
+  const [error, setError] = useState("");
   const total = subtotal + serviceFee;
+
+    //  Fetch user
+    useEffect(() => {
+      api
+        .get("/users/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) =>{ setUser(res.data); console.log(error)})
+        .catch(() => setError("Failed to fetch user"));
+    }, []);
 
   return (
     <div className="bg-white p-6 md:p-8 rounded-xl shadow-md w-full md:w-[350px] lg:w-[400px] h-auto md:h-[500px] flex flex-col justify-between">
@@ -42,13 +57,16 @@ const OrderSummary = ({ subtotal }: Props) => {
       </div>
 
       {/* Checkout Button */}
-      <Link
-        to="/checkout"
-        className="mt-auto w-full bg-primary text-white py-3 rounded-lg text-lg font-semibold text-center hover:bg-primary/90 transition"
-      >
-        Proceed to Checkout
-      </Link>
-      <Addtocardbutton title="Checkout" onClick={() =>checkout}/>
+      <Addtocardbutton
+        title="Checkout"
+        onClick={() => {
+          if (!user?.id) {
+            alert("User must be logged in");
+          } else {
+            checkout(user.id);
+          }
+        }}
+      />
     </div>
   );
 };

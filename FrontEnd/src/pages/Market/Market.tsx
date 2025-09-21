@@ -175,6 +175,12 @@ useEffect(() => {
                 <Buynowbutton
                   title="Buy now"
                   className="bg-secondary text-white px-3 py-2 flex-1 text-sm"
+                  onClick={() => {
+                    if (!user?.id) console.log("No user logged in");
+                    else addToCart(user.id, product.id);
+                  }
+                    
+                  }
                 />
               </div>
             </div>

@@ -6,8 +6,7 @@ import { BsCart } from "react-icons/bs";
 import { api } from "../../API/Registration";
 import type UserProps from "../../types/UserRead";
 import type { CartResponse } from "../../pages/Cart";
-import { useCart } from "../../Context/Context";
-import { HiOutlineSquaresPlus, HiSquaresPlus } from "react-icons/hi2";
+import {  HiSquaresPlus } from "react-icons/hi2";
 import { IoSearchSharp } from "react-icons/io5";
 
 
@@ -41,6 +40,7 @@ function Navigation() {
           setCartItems(res.data);
         })
         .catch((err: any) => {
+          console.log(error)
           setError(err.message);
         });
     }, [user]);
@@ -71,19 +71,8 @@ function Navigation() {
               Brand New
             </NavLink>
           </li>
+
           <li className="p-5">
-            <NavLink
-              to="upload"
-              className={({ isActive }) =>
-                isActive
-                  ? "text-primary font-semibold border-b-2 border-primary pb-1"
-                  : "text-secondary font-medium hover:text-primary"
-              }
-            >
-              Upload
-            </NavLink>
-          </li>
-          <li>
             <NavLink
               to="/market"
               className={({ isActive }) =>
@@ -95,6 +84,7 @@ function Navigation() {
               Market
             </NavLink>
           </li>
+
           <li className="p-5">
             <NavLink
               to="/dashboard"

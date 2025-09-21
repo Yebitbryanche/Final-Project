@@ -17,6 +17,7 @@ const Home = () => {
   const [user, setUser] = useState<UserProps>();
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState<ProductProps[]>([]);
+  const [ratings, setRatings] = useState<Record<number, number>>({}); 
 
   useEffect(() => {
     setLoading(true);
@@ -28,6 +29,24 @@ const Home = () => {
       .catch((error: any) => console.log(error.message))
       .finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    if (products.length === 0) return;
+
+    products.forEach((product) => {
+      api
+        .get(`/products/${product.id}`)
+        .then((res) => {
+          setRatings((prev) => ({
+            ...prev,
+            [product.id]: res.data.average_rating || 0,
+          }));
+        })
+        .catch(() =>
+          console.log(`Failed to load rating for product ${product.id}`)
+        );
+    });
+  }, [products]);
 
 
   useEffect(() => {
@@ -118,7 +137,7 @@ const Home = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full">
         {products.map((product) => ( 
             <div
-              className="p-4 bg-tertiary rounded-lg flex flex-col gap-3 shadow-md"
+              className="p-2 bg-tertiary rounded-lg flex flex-col gap-3"
             >
              <Link to={`/product/${product.id}`} key={product.id}>
               <div className="rounded-lg overflow-hidden">
@@ -140,7 +159,7 @@ const Home = () => {
               <p className="text-sm line-clamp-2">{product.description}</p>
 
               <div className="flex justify-between items-center">
-                <Rating rating={0} />
+                <Rating rating={ratings[product.id]} />
                 <p className="bg-secondary text-white px-2 py-1 rounded-sm text-xs">
                   {product.category}
                 </p>
@@ -149,7 +168,7 @@ const Home = () => {
               <div className="flex justify-between gap-2">
                 <Addtocardbutton
                   title="Add to Cart"
-                  className="bg-white text-primary px-4 py-2 cursor-pointer rounded"
+                  className="bg-white text-primary px-3 py-2 flex-1 text-sm"
                   onClick={() => {
                     if (!user?.id) {
                       console.log("No user logged in");
@@ -160,7 +179,11 @@ const Home = () => {
                 />
                 <Buynowbutton
                   title="Buy now"
-                  className="bg-secondary text-white px-4 py-2 cursor-pointer rounded"
+                  className="bg-secondary text-white px-3 py-2 flex-1 text-sm"
+                  onClick={() => {
+                    if (!user?.id) console.log("No user logged in");
+                    else addToCart(user.id, product.id);
+                  }}
                 />
               </div>
             </div>
