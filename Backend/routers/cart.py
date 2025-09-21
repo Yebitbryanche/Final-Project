@@ -8,42 +8,58 @@ from Models.schema import AddToCartRequest, ProductUpdate
 from db import get_session
 
 router = APIRouter()
-
 @router.post("/cart/add")
 def add_to_cart(
-    request:AddToCartRequest,
-    session:Session = Depends(get_session),
+    request: AddToCartRequest,
+    session: Session = Depends(get_session),
 ):
     user = session.get(User, request.user_id)
     if not user:
         not_found("user")
 
-
     product = session.get(Product, request.product_id)
     if not product:
         not_found("product")
 
-
+    # 🔍 Get or create cart
     cart = session.exec(select(Cart).where(Cart.user_id == request.user_id)).first()
-    if not cart:    # creates cart for user if not exist 
-        cart = Cart(user_id = request.user_id)
+    if not cart:
+        cart = Cart(user_id=request.user_id)
         session.add(cart)
         session.commit()
         session.refresh(cart)
 
+    # 🔍 Check if product already in cart
     cart_item = session.exec(
         select(CartItems).where(
             CartItems.cart_id == cart.id,
             CartItems.product_id == request.product_id
-                                )
+        )
     ).first()
 
-    cart_item = CartItems(cart_id=cart.id, product_id = request.product_id)
-    session.add(cart_item)
-    session.commit()
-    session.refresh(cart_item)
-
-    return {"message": "Item added to cart", "cart_item": cart_item}
+    if cart_item:
+        # ⚠️ Already in cart → increment quantity instead of duplicating
+        cart_item.quantity += 1
+        cart_item.subtotal = cart_item.quantity * product.price
+        cart_item.updated_at = datetime.utcnow()
+        session.add(cart_item)
+        session.commit()
+        session.refresh(cart_item)
+        return {"message": "Product has been added to cart", "cart_item": cart_item}
+    else:
+        # 🛒 Add as new item
+        cart_item = CartItems(
+            cart_id=cart.id,
+            product_id=request.product_id,
+            quantity=1,
+            subtotal=product.price,
+            created_at=datetime.utcnow(),
+            updated_at=datetime.utcnow()
+        )
+        session.add(cart_item)
+        session.commit()
+        session.refresh(cart_item)
+        return {"message": "Item added to cart", "cart_item": cart_item}
 
 
 # view Cart

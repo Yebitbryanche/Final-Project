@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import Addtocardbutton from "../Addtocardbutton";
+import { checkout } from "../../services/cart_quantity";
 
 type Props = {
   subtotal: number;
@@ -46,6 +48,7 @@ const OrderSummary = ({ subtotal }: Props) => {
       >
         Proceed to Checkout
       </Link>
+      <Addtocardbutton title="Checkout" onClick={() =>checkout}/>
     </div>
   );
 };

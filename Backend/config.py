@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     ACCESS_TOKEN_EXPIRE_MINUTES:int = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
     ALGORITHM:str = os.getenv("ALGORITHM")
     DB_URL:str = os.getenv("DB_URL")
+    STRIPE_SECRET_KEY:str = os.getenv("STRIPE_SECRET_KEY")
 
     class Config:
         env_file = ".env"
