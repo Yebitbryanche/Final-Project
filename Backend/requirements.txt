@@ -1,9 +1,6 @@
 "fastapi[standard]"
 "python-jopse[cryptography]
 sqlmodel
-<<<<<<< HEAD
 pydantic_settings
-stripe>=12.0.0
-=======
-pydantic_settings
->>>>>>> 851ad1249d8c4d0a09da4025898afd5b9ab8b1d3
+stripe
+
