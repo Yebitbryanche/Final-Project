@@ -6,6 +6,8 @@ import { MdDelete } from "react-icons/md";
 import { BsCartDash, BsCartPlus } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import images from "../../types/images";
+import { checkout } from "../../services/cart_quantity";
+import Addtocardbutton from "../../components/Addtocardbutton";
 
 export interface CartItem {
   cart_item_id: number;
@@ -31,17 +33,17 @@ const Cart = () => {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
-  // ✅ Fetch user
+  //  Fetch user
   useEffect(() => {
     api
       .get("/users/me", {
         headers: { Authorization: `Bearer ${token}` },
       })
-      .then((res) => setUser(res.data))
+      .then((res) =>{ setUser(res.data); console.log(error||message)})
       .catch(() => setError("Failed to fetch user"));
   }, []);
 
-  // ✅ Fetch cart when user is known
+  //  Fetch cart when user is known
   useEffect(() => {
     if (!user?.id) return;
 
@@ -52,7 +54,7 @@ const Cart = () => {
   }, [user]);
 
   
-// ✅ Update item quantity (delete if <= 0)
+//  Update item quantity (delete if <= 0)
 const handleQuantityChange = (productId: number, newQuantity: number) => {
   if (!user?.id) return;
 
@@ -97,7 +99,7 @@ const handleQuantityChange = (productId: number, newQuantity: number) => {
               ...prev,
               items: prev.items.map((item) =>
                 item.product_id === updatedItem.product_id
-                  ? updatedItem
+                  ? { ...item, quantity: updatedItem.quantity, subtotal: updatedItem.subtotal }
                   : item
               ),
             }
@@ -107,7 +109,7 @@ const handleQuantityChange = (productId: number, newQuantity: number) => {
     .catch((err) => setError(err.message));
 };
 
-  // ✅ Delete product
+  // Delete product
   const handleDelete = (product_id: number) => {
     if (!user?.id) return;
 
@@ -122,20 +124,19 @@ const handleQuantityChange = (productId: number, newQuantity: number) => {
         setMessage(res.data.message);
         setCartItems(res.data); // backend should return updated cart
       })
-      .catch((error: any) => setError(error.message));
+      .catch((error: any) => {setError(error.message);  console.log(error)});
   };
 
-  // ✅ Calculate subtotal
+  //  Calculate subtotal
   const subtotal =
     cartItems?.items.reduce((sum, item) => sum + item.subtotal, 0) || 0;
 
   return (
-    <div className="bg-[#F5F5F5] min-h-screen p-6">
+    <div className="bg-[#F5F5F5] min-h-screen p-6 md:mt-[5rem]">
       <h2 className="text-2xl font-medium text-black mb-6">
         {user?.user_name}'s <span>Shopping Cart</span>
       </h2>
 
-      {error && <p className="text-red-500">{error}</p>}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       
@@ -202,6 +203,16 @@ const handleQuantityChange = (productId: number, newQuantity: number) => {
               </Link>
             </div>
           )}
+          <Addtocardbutton
+            title="Checkout"
+            onClick={() => {
+              if (!user?.id) {
+                alert("User must be logged in");
+              } else {
+                checkout(user.id);
+              }
+            }}
+          />
         </div>
 
 
