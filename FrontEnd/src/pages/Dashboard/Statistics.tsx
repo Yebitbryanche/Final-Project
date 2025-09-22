@@ -1,12 +1,5 @@
-import React, { useEffect, useState } from "react";
-import logo from "../../assets/images/mboakakologo.png";
-import statistics from "../../assets/images/statistics.svg";
-import profile from "../../assets/images/profile.svg";8
-import order from "../../assets/images/order.svg";
-import { Link } from "react-router-dom";
-import UserAvatar from "../../components/UseAvatar";
-import { LogOut } from "lucide-react";
-import DashboardLayout from "./Dashboardlayout";
+import  { useEffect, useState } from "react";
+
 import {
   PieChart,
   Pie,
@@ -19,6 +12,7 @@ import {
   YAxis,
   CartesianGrid,
 } from "recharts";
+import UserAvatar from "../../components/UseAvatar";
 
 interface Purchase {
   id: number;
@@ -168,7 +162,7 @@ function Statistics() {
           <ResponsiveContainer width="100%" height={250}>
             <PieChart>
               <Pie data={categoryData} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={80} label>
-                {categoryData.map((entry, index) => (
+                {categoryData.map(( index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, NavLink } from "react-router-dom";
 import images from "../../types/images";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { HiOutlineSquaresPlus, HiSquaresPlus } from "react-icons/hi2";
+import {  HiSquaresPlus } from "react-icons/hi2";
 import { IoSearchSharp } from "react-icons/io5";
 
 function Navigation() {

@@ -1,12 +1,14 @@
-from fastapi import APIRouter, Depends
+from typing import List
+from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
 from utility.exception import not_found
 from db import get_session
-from Models.schema import ProductCreate, ProductUpdate
+from Models.schema import ProductCreate, ProductRead, ProductUpdate
 from schema.models import Product
 
 
 router = APIRouter(prefix="/users", tags=["Users"])
+
 
 
 @router.post("/upload", response_model=ProductCreate)
@@ -17,7 +19,8 @@ def upload_product(product:ProductCreate ,session:Session = Depends(get_session)
         price=product.price,
         stock=product.stock,
         image=product.image,
-        category=product.category
+        category=product.category,
+        admin_id = product.admin_id
         )
     
     session.add(product)
@@ -27,9 +30,9 @@ def upload_product(product:ProductCreate ,session:Session = Depends(get_session)
 
 # product update
 
-@router.put("/update/{id}", response_model=ProductCreate)
-def update_product(id: int, product_update: ProductUpdate, session: Session = Depends(get_session)):
-    product = session.exec(select(Product).where(Product.id == id)).first()
+@router.put("/update/{product_id}", response_model=ProductCreate)
+def update_product(product_id: int, product_update: ProductUpdate, session: Session = Depends(get_session)):
+    product = session.exec(select(Product).where(product_id == Product.id)).first()
     if not product:
         not_found("product")
 
@@ -46,12 +49,25 @@ def update_product(id: int, product_update: ProductUpdate, session: Session = De
 
 #productt delete
 
-@router.delete("/delete/{id}")
-def delete_product( id:int, session:Session = Depends(get_session)):
-    product = session.get(Product, id)
+@router.delete("/delete/{product_id}")
+def delete_product( product_id:int, session:Session = Depends(get_session)):
+    product = session.get(Product, product_id)
     if  not product:
          raise HTTPException(status_code=404, detail="Product not found")
     session.delete(product)
     session.commit()
     return {"message": "Product deleted successfully"}
         
+
+
+@router.get("/products/{admin_id}", response_model=List[ProductRead])
+def get_admin_products(admin_id: int, session: Session = Depends(get_session)):
+    # Query products for this admin
+    products = session.exec(
+        select(Product).where(Product.admin_id == admin_id)
+    ).all()
+
+    if not products:
+        raise HTTPException(status_code=404, detail="No products found for this admin")
+
+    return products
