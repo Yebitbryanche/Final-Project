@@ -4,12 +4,11 @@ import images from "../../types/images";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { BsCart } from "react-icons/bs";
 import { api } from "../../API/Registration";
-import type UserProps from "../../types/UserRead";
+import type {UserProps }from "../../types/UserRead";
 import type { CartResponse } from "../../pages/Cart";
 import { useCart } from "../../Context/Context";
 import { HiOutlineSquaresPlus, HiSquaresPlus } from "react-icons/hi2";
 import { IoSearchSharp } from "react-icons/io5";
-
 
 function Navigation() {
   const token = localStorage.getItem("token");
@@ -145,17 +144,16 @@ function Navigation() {
               className="px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:border-primary text-sm w-[200px]"
             />
             <button className="px-3 py-2 bg-secondary text-white rounded-r-md font-semibold hover:bg-secondary/90 transition">
-
-              <IoSearchSharp size={21}/>
+              <IoSearchSharp size={21} />
             </button>
           </div>
 
-          <button
-            aria-label="More options"
+          <Link
+            to="/upload"
             className="text-3xl cursor-pointer text-secondary hover:text-secondary/70"
           >
             <HiSquaresPlus />
-          </button>
+          </Link>
         </div>
 
         {/* Mobile Hamburger */}
@@ -246,7 +244,7 @@ function Navigation() {
               className="w-full px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:border-primary text-sm"
             />
             <button className="px-3 py-2 bg-primary text-white rounded-r-md font-semibold hover:bg-primary/90 transition">
-              <IoSearchSharp/>
+              <IoSearchSharp />
             </button>
           </div>
         </div>
