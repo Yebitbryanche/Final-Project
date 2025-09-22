@@ -7,7 +7,7 @@ import Buynowbutton from "../../components/Buynowbutton";
 import { useEffect, useState } from "react";
 import { api } from "../../API/Registration";
 import { addToCart } from "../../services/addtoCart";
-import type UserProps from "../../types/UserRead";
+import type {UserProps} from "../../types/UserRead";
 import { Link } from "react-router-dom";
 import Loader from "../../components/Loader";
 
@@ -30,7 +30,7 @@ function Market() {
   const token = localStorage.getItem("token");
   const [allProducts, setAllProducts] = useState<ProductProps[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<ProductProps[]>([]);
-  const [error, setError] = useState("");
+  const [, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<UserProps>();
   const [ratings, setRatings] = useState<Record<number, number>>({}); 
