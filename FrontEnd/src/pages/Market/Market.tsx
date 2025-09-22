@@ -7,11 +7,12 @@ import Buynowbutton from "../../components/Buynowbutton";
 import { useEffect, useState } from "react";
 import { api } from "../../API/Registration";
 import { addToCart } from "../../services/addtoCart";
-import type UserProps from "../../types/UserRead";
+import type {UserProps} from "../../types/UserRead";
 import { Link } from "react-router-dom";
 import Loader from "../../components/Loader";
 
 interface ProductProps {
+  average_rating: number;
   id: number;
   title: string;
   description: string;
@@ -29,33 +30,32 @@ function Market() {
   const token = localStorage.getItem("token");
   const [allProducts, setAllProducts] = useState<ProductProps[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<ProductProps[]>([]);
-  const [error, setError] = useState("");
+  const [, setError] = useState("");
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<UserProps>();
   const [ratings, setRatings] = useState<Record<number, number>>({}); 
 
   // Fetch all products
-  useEffect(() => {
-    setLoading(true);
-    api
-      .get(`/products`)
-      .then((response) => {
-        const productsWithDiscount = response.data.map((product: ProductProps) => {
-          const discount = 20;
-          const newPrice = product.price - (product.price * discount) / 100;
-          return {
-            ...product,
-            oldprice: product.price,
-            newprice: newPrice,
-            discountrate: discount,
-          };
-        });
-
-        setAllProducts(productsWithDiscount);
-        setFilteredProducts(productsWithDiscount);
-
-        // Fetch ratings for each product
-        productsWithDiscount.forEach((product: ProductProps) => {
+useEffect(() => {
+  setLoading(true);
+  api
+    .get(`/products`)
+    .then((response) => {
+      const productsWithDiscount = response.data.map((product: ProductProps) => {
+        const discount = 20;
+        const newPrice = product.price - (product.price * discount) / 100;
+        return {
+          ...product,
+          oldprice: product.price,
+          newprice: newPrice,
+          discountrate: discount,
+          rating: product.average_rating || 0, // ✅ Already included
+        };
+      });
+      console.log(response.data)
+      setAllProducts(productsWithDiscount);
+      setFilteredProducts(productsWithDiscount);
+       productsWithDiscount.forEach((product: ProductProps) => {
           api
             .get(`/products/${product.id}`)
             .then((res) => {
@@ -66,10 +66,10 @@ function Market() {
             })
             .catch(() => console.log(`Failed to load rating for product ${product.id}`));
         });
-      })
-      .catch((error: any) => setError(error.message))
-      .finally(() => setLoading(false));
-  }, []);
+    })
+    .catch((error: any) => setError(error.message))
+    .finally(() => setLoading(false));
+}, []);
 
   // Fetch logged-in user
   useEffect(() => {
@@ -101,11 +101,14 @@ function Market() {
 
   return (
     <div className="p-4 md:p-10 flex flex-col gap-10">
+      {error?
+      <p className="absolute w-100 bottom-5 items-center rounded-sm text-white flex justify-between left-1 p-4 bg-red-500">error</p>:
+      null}
       {/* Categories */}
       <div className="flex flex-col md:flex-row gap-4 md:gap-5 justify-center items-start md:items-center mt-[4rem]">
         <p className="text-2xl font-bold text-primary">Categories:</p>
         <div className="flex flex-wrap md:flex-nowrap gap-2 overflow-x-auto pb-2 md:pb-0">
-          {["All", "perfume", "Flip", "bodywash", "Backpacks", "Jewelries", "Shoes"].map(
+          {["All", "perfume", "Flip", "bodywash", "Backpacks", "Jewelries", "Shoes","Topwear","Bags","Belts","Headwear","Innerwear","bottomwear","Wallets","Fragrance","Nails","Eyewear","Ties"].map(
             (cat) => (
               <Categorybutton
                 key={cat}

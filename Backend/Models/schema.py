@@ -59,6 +59,8 @@ class UserRead(SQLModel):
     email:EmailStr
     role:bool
 
+class ProductUpdate(BaseModel):
+    quantity:int
 class ProductCreate(BaseModel):
     title:str
     description:str
@@ -66,6 +68,7 @@ class ProductCreate(BaseModel):
     stock:int
     image:str
     category:str
+    admin_id:int
 
 
 class CreateReview(BaseModel):
