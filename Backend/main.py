@@ -6,6 +6,7 @@ from db import engine, create_db_and_tables
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Depends
 
+
 app = FastAPI()
 
 origin = "http://localhost:5173"

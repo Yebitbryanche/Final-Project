@@ -2,3 +2,4 @@
 "python-jopse[cryptography]
 sqlmodel
 pydantic_settings
+stripe>=12.0.0

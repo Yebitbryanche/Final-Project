@@ -23,6 +23,7 @@ import icon4white from "../assets/images/icon4white.png"
 import chevron from "../assets/images/chevron.png"
 import google from "../assets/images/search.png"
 import logo from "../assets/images/Logo.png";
+import empty_card from "../assets/images/empty-cart.png"
 
 
 export default{
@@ -49,5 +50,6 @@ icon3white,
 icon4white,
 chevron,
 google,
-logo
+logo,
+empty_card
 }

@@ -59,6 +59,8 @@ class UserRead(SQLModel):
     email:EmailStr
     role:bool
 
+class ProductUpdate(BaseModel):
+    quantity:int
 class ProductCreate(BaseModel):
     title:str
     description:str
