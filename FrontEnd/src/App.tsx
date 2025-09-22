@@ -13,19 +13,7 @@ import LogoutPage from "./pages/Dashboard/LogoutPage";
 import DashboardLayout from "./pages/Dashboard/Dashboardlayout";
 import ReviewPage from "./pages/leaveReview";
 import ProductDetails from "./pages/ProductDetails";
-import AddProduct from "./pages/Upload";
-import type { JSX } from "react";
-
-// Protected Route for Admins
-const AdminRoute = ({ children }: { children: JSX.Element }) => {
-  const storedUser = localStorage.getItem("user");
-  if (!storedUser) return <Navigate to="/signup" />;
-
-  const user = JSON.parse(storedUser);
-  if (!user.role) return <Navigate to="/signup" />; // role=false means not admin
-
-  return children;
-};
+import Checkout from "./pages/Checkout";
 
 function App() {
   return (
@@ -34,6 +22,10 @@ function App() {
         <Navigation />
 
         <Routes>
+          <Route path="/" element={<Home />}/>
+          <Route path="/cart" element={<Cart />}/>
+          <Route path="/checkout" element={<Checkout/>}/>
+          <Route path="/market" element={<Market />}/>
           <Route path="/" element={<Home />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/market" element={<Market />} />
@@ -53,14 +45,6 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="logout" />
 
-          <Route
-            path="/upload"
-            element={
-              <AdminRoute>
-                <AddProduct />
-              </AdminRoute>
-            }
-          />
 
           <Route path="/products/:id/review" element={<ReviewPage />} />
         </Routes>

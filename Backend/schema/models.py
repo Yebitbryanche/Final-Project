@@ -63,6 +63,7 @@ class Cart(SQLModel, table=True):
 
     id:int = Field(primary_key=True, default=None)
     user_id:int = Field(foreign_key= "User.id")
+    total_price:float = 0.0
     created_at : datetime = Field(default_factory=datetime.utcnow)
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
@@ -75,6 +76,7 @@ class CartItems(SQLModel, table=True):
     cart_id:int = Field(foreign_key=("Cart.id"))
     product_id:int = Field(foreign_key=("Product.id"))
     quantity:int = Field(default=1)
+    subtotal: float = 0.0 
     updated_at: datetime = Field(default_factory=datetime.utcnow)
 
     
