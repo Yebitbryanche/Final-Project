@@ -8,7 +8,7 @@ function Signup() {
   const [user_name, setUser_name] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [role, setRole] = useState(false);
+  const [role, setRole] = useState(false); // false by default (not admin)
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -20,6 +20,7 @@ function Signup() {
   const passwordRegex =
     /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
+  // Validate inputs
   const validateInputs = () => {
     if (!user_name || !password || !email) {
       setError("All fields are required.");
@@ -44,30 +45,31 @@ function Signup() {
     return true;
   };
 
+  // Handle form submit
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setError("");
     setSuccess("");
 
-    if (!validateInputs()) return; // block signup if invalid
+    if (!validateInputs()) return;
 
     try {
+      // Send boolean role to backend
       const response = await api.post("/signup", {
         user_name,
         password,
         email,
-        role, // true if admin is checked
+        role, // boolean
       });
       console.log(response.data);
 
-      // Save to localStorage *after successful signup*
+      // Save string role to localStorage for frontend check
       localStorage.setItem(
         "user",
         JSON.stringify({
           user_name,
           email,
-          role,
+          role: role ? "admin" : "user", // <-- key fix
           avatar: "/Avatar.png",
         })
       );
@@ -78,6 +80,7 @@ function Signup() {
       setEmail("");
       setRole(false);
 
+      // Redirect after 2 seconds
       setTimeout(() => {
         navigate("/login");
       }, 2000);
@@ -88,11 +91,13 @@ function Signup() {
 
   return (
     <div className="flex justify-center items-center py-10 px-4 mt-[5rem]">
+      {/* Error Toast */}
       {error && (
         <div className="absolute w-100 bottom-1 items-center rounded-sm text-white flex justify-between bg-red-500 left-1 p-4">
           <p className="text-white">{error}</p>
         </div>
       )}
+      {/* Success Toast */}
       {success && (
         <div className="absolute w-100 bottom-1 items-center rounded-sm text-white flex justify-between bg-green-500 left-1 p-4">
           <p className="text-white mb-2">{success}</p>

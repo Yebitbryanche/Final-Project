@@ -1,37 +1,27 @@
-// src/pages/AddProduct.tsx
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { FaPlus, FaTrash, FaUserCircle } from "react-icons/fa";
-import axios from "axios";
+import { api } from "../../API/Registration";
+import type ProductProps from "../../types/products";
+import type { Admin, UserProps } from "../../types/UserRead";
+import { useNavigate } from "react-router-dom";
 
-interface Product {
-  id: number;
-  title: string;
-  price: number;
-  image: string;
-  stock: number;
-  category: string;
-  description: string;
-}
-
-interface Admin {
-  id: number;
-  name: string;
-  avatar: string;
-  uploadedAt: string;
-}
 
 function AddProduct() {
-  const [productName, setProductName] = useState("");
+
+  const token = localStorage.getItem("token")
+  const [user, setUser] = useState<UserProps>()
+  const navigate = useNavigate();
+  const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [stock, setStock] = useState<number | "">("");
   const [price, setPrice] = useState<number | "">("");
-  const [description, setDescription] = useState("");
-  const [images, setImages] = useState<File[]>([]);
-  const [previewImages, setPreviewImages] = useState<string[]>([]);
   const [admins, setAdmins] = useState<Admin[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
-  const [editingProductId, setEditingProductId] = useState<number | null>(null);
-
+  const [description, setDescription] = useState("");
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [image, setImageUrl] = useState("");
+  const [deleteProduct, setDeleteProduct] = useState<ProductProps | null>(null)
+  const [editingProduct, setEditingProduct] = useState<ProductProps | null>(null);
+  const [products,setProducts] = useState<ProductProps[]>([])
   const [toast, setToast] = useState<{
     message: string;
     type: "success" | "error";
@@ -42,120 +32,138 @@ function AddProduct() {
     visible: false,
   });
 
+const handleEdit = async () => {
+  if (!editingProduct?.id) return;
+
+  try {
+    const response = await api.put(`/users/update/${editingProduct.id}`, {
+      title,
+      description,
+      price,
+      stock,
+      image,
+      category,
+    });
+
+    const updatedProduct = response.data;
+
+    // ✅ update only the edited product
+    setProducts((prev) =>
+      prev.map((p) =>
+        p.id === editingProduct.id ? updatedProduct : p
+      )
+    );
+
+    showToast("Product updated successfully", "success");
+    resetForm();
+    setEditingProduct(null);
+  } catch (error: any) {
+    console.error("Failed to update product:", error.message);
+    showToast("Failed to update product", "error");
+  }
+};
+
+console.log(editingProduct?.id)
+
+
+
+    const resetForm = () => {
+    setTitle("");
+    setCategory("");
+    setStock("");
+    setPrice("");
+    setImageUrl("")
+    setDescription("");
+    setPreviewImages([]);
+     };
+
+  useEffect(() => {
+    api
+      .get("/users/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        const storedUser = localStorage.getItem("user"); 
+        if (storedUser) { const user = JSON.parse(storedUser); 
+          if (user.role === "admin") { 
+            setAdmins([ 
+              { id: Date.now(), name: user.user_name, avatar: user.avatar || "/Avatar.png", uploadedAt: "Just now", }, 
+            ]); } 
+            else { 
+              navigate("/signup", { replace: true }); } } else { navigate("/signup", { replace: true }); 
+            }
+        setUser(res.data);
+      });
+  }, []);
+
+    
+  const upload = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  if (!user) {
+    showToast("User not logged in", "error");
+    return;
+  }
+  try {
+    const res = await api.post("/users/upload", {
+      title,
+      description,
+      price,
+      stock,
+      image,
+      category,
+      admin_id: user.id, // guaranteed to exist
+    });
+    console.log("added successfully", res.data);
+    resetForm();
+    showToast("Product uploaded successfully", "success");
+  } catch (err: any) {
+    console.log(err.message);
+    showToast("Failed to upload product", "error");
+  }
+};
+
+
+useEffect(() => {
+  if (!user) return;
+
+  api.get(`/users/products/${user.id}`)
+    .then(res => {
+      console.log("Fetched products:", res.data);
+      setProducts(res.data); // ✅ actually store in state
+      setEditingProduct(res.data)
+      setDeleteProduct(res.data)
+    })
+    .catch(err => console.log(err));
+}, [user]);
+
+// delete function
+const handleDelete = async (productId: number) => {
+  if (!productId) return;
+
+  try {
+    await api.delete(`/users/delete/${productId}`);
+
+    // Remove the deleted product from state so UI updates
+    setProducts((prev) => prev.filter((p) => p.id !== productId));
+
+    showToast("Product deleted successfully", "success");
+  } catch (err: any) {
+    console.error("Failed to delete product:", err.message);
+    showToast("Failed to delete product", "error");
+  }
+};
+
+
+
+
   const showToast = (message: string, type: "success" | "error") => {
     setToast({ message, type, visible: true });
     setTimeout(() => setToast((prev) => ({ ...prev, visible: false })), 3000);
   };
 
-  // Retrieve logged-in admin
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      const user = JSON.parse(storedUser);
-      if (user.role) {
-        setAdmins([
-          {
-            id: Date.now(),
-            name: user.user_name,
-            avatar: user.avatar || "/Avatar.png",
-            uploadedAt: "Just now",
-          },
-        ]);
-      } else {
-        setAdmins([]);
-      }
-    }
-  }, []);
-
-  // Handle image upload
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) return;
-    const files = Array.from(e.target.files);
-    setImages(files);
-    const previews = files.map((file) => URL.createObjectURL(file));
-    setPreviewImages(previews);
-  };
-
-  const resetForm = () => {
-    setProductName("");
-    setCategory("");
-    setStock("");
-    setPrice("");
-    setDescription("");
-    setImages([]);
-    setPreviewImages([]);
-    setEditingProductId(null);
-  };
-
-  const handleSubmit = async () => {
-    if (!productName || !category || !price || !stock) {
-      showToast("⚠️ Please fill all required fields!", "error");
-      return;
-    }
-
-    try {
-      const payload = {
-        title: productName,
-        category,
-        stock,
-        price,
-        description,
-        image: previewImages[0] || "https://via.placeholder.com/150",
-      };
-
-      if (editingProductId) {
-        // Update existing product
-        const res = await axios.put(
-          `http://127.0.0.1:8000/users/update/${editingProductId}`,
-          payload
-        );
-        setProducts((prev) =>
-          prev.map((p) => (p.id === editingProductId ? res.data : p))
-        );
-        showToast("✅ Product updated successfully!", "success");
-      } else {
-        // Add new product
-        const res = await axios.post(
-          "http://127.0.0.1:8000/users/upload",
-          payload
-        );
-        setProducts((prev) => [...prev, res.data]);
-        showToast("✅ Product added successfully!", "success");
-      }
-
-      resetForm();
-    } catch (error) {
-      console.error(error);
-      showToast("Failed to upload product", "error");
-    }
-  };
-
-  const handleEdit = (product: Product) => {
-    setEditingProductId(product.id);
-    setProductName(product.title);
-    setCategory(product.category);
-    setStock(product.stock);
-    setPrice(product.price);
-    setDescription(product.description);
-    setPreviewImages([product.image]);
-  };
-  
-
-  const handleDelete = async (id: number) => {
-    if (!id || isNaN(id)) {
-      console.error("Invalid product id:", id);
-      return;
-    }
-
-    try {
-      await axios.delete(`http://127.0.0.1:8000/users/delete/${id}`);
-      setProducts((prev) => prev.filter((p) => p.id !== id));
-      showToast("🗑️ Product deleted successfully!", "success");
-    } catch (error) {
-      console.error("Delete failed:", error);
-      showToast("❌ Failed to delete product", "error");
-    }
-  };
 
 
   return (
@@ -193,14 +201,7 @@ function AddProduct() {
                   className="w-full h-24 object-cover rounded-lg border border-tertiary"
                 />
                 <button
-                  className="absolute top-1 right-1 bg-white p-1 rounded-full shadow-md"
-                  onClick={() => {
-                    setPreviewImages((prev) =>
-                      prev.filter((_, idx) => idx !== i)
-                    );
-                    setImages((prev) => prev.filter((_, idx) => idx !== i));
-                  }}
-                >
+                  className="absolute top-1 right-1 bg-white p-1 rounded-full shadow-md">
                   <FaTrash className="text-[--color-primary] text-xs" />
                 </button>
               </div>
@@ -211,50 +212,8 @@ function AddProduct() {
                 type="file"
                 multiple
                 className="hidden"
-                onChange={handleImageUpload}
               />
             </label>
-          </div>
-        </div>
-
-        {/* Uploaded Products */}
-        <div className="bg-white rounded-lg p-4 shadow border border-tertiary lg:col-span-1">
-          <h3 className="font-semibold text-lg mb-3 text-secondary">
-            Uploaded Products
-          </h3>
-          <div className="space-y-3">
-            {products.length === 0 ? (
-              <p className="text-gray-500 text-sm">No products uploaded yet.</p>
-            ) : (
-              products.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex items-center gap-3 border border-tertiary rounded-lg p-2 hover:bg-tertiary/40"
-                >
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-12 h-12 object-cover rounded"
-                  />
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">{item.title}</p>
-                    <p className="text-primary text-xs">{item.price} XAF</p>
-                  </div>
-                  <button
-                    onClick={() => handleEdit(item)}
-                    className="px-2 py-1 bg-primary text-white text-xs rounded"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(item.id)}
-                    className="px-2 py-1 bg-red-500 text-white text-xs rounded"
-                  >
-                    Delete
-                  </button>
-                </div>
-              ))
-            )}
           </div>
         </div>
 
@@ -264,39 +223,22 @@ function AddProduct() {
             Admin Activity
           </h3>
           <div className="space-y-3">
-            {admins.map((admin) => (
-              <div
-                key={admin.id}
-                className="flex items-center gap-3 border border-tertiary rounded-lg p-2 hover:bg-tertiary/40"
-              >
-                <img
-                  src={admin.avatar}
-                  alt=""
-                  className="w-10 h-10 rounded-full object-cover border-2 border-primary"
-                />
-                <div>
-                  <p className="text-sm font-medium">{admin.name}</p>
-                  <p className="text-gray-500 text-xs">
-                    Uploaded {admin.uploadedAt}
-                  </p>
-                </div>
-              </div>
-            ))}
+            {admins.map((admin) => ( <div key={admin.id} className="flex items-center gap-3 border border-tertiary rounded-lg p-2 hover:bg-tertiary/40" > <img src={admin.avatar} alt="" className="w-10 h-10 rounded-full object-cover border-2 border-primary" /> <div> <p className="text-sm font-medium">{admin.name}</p> <p className="text-gray-500 text-xs"> Uploaded {admin.uploadedAt} </p> </div> </div> ))}
           </div>
         </div>
 
         {/* Product Form */}
-        <div className="lg:col-span-3 bg-white rounded-lg p-6 shadow-xl border border-tertiary">
+        <form className="lg:col-span-3 bg-white rounded-lg p-6 shadow-xl border border-tertiary"
+        onSubmit={upload}>
           <h3 className="text-lg font-semibold mb-4 text-secondary">
-            {editingProductId ? "Edit Product" : "Product Details"}
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <input
               type="text"
               placeholder="Product Name *"
               className="border border-tertiary p-3 rounded-lg focus:ring-2 focus:ring-primary"
-              value={productName}
-              onChange={(e) => setProductName(e.target.value)}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
             <select
               className="border border-tertiary p-3 rounded-lg focus:ring-2 focus:ring-primary"
@@ -316,14 +258,24 @@ function AddProduct() {
               placeholder="Stock *"
               className="border border-tertiary p-3 rounded-lg focus:ring-2 focus:ring-primary"
               value={stock}
-              onChange={(e) => setStock(Number(e.target.value))}
+              onChange={(e) => setStock(parseInt(e.target.value))}
             />
             <input
               type="number"
               placeholder="Price *"
               className="border border-tertiary p-3 rounded-lg focus:ring-2 focus:ring-primary"
               value={price}
-              onChange={(e) => setPrice(Number(e.target.value))}
+              onChange={(e) => setPrice(parseFloat(e.target.value))}
+            />
+
+            <input
+              type="text"
+              placeholder=" enter image URL"
+              className="border border-tertiary p-3 rounded-lg w-full focus:ring-2 focus:ring-primary"
+              value={image}
+              onChange={(e) => {
+                setImageUrl(e.target.value);
+              }}
             />
           </div>
 
@@ -343,13 +295,25 @@ function AddProduct() {
               Cancel
             </button>
             <button
-              onClick={handleSubmit}
-              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-orange-600"
+              onClick={editingProduct ? handleEdit : undefined} // only call handleEdit if editingProduct exists
+              disabled={!editingProduct}                        // disable button if no product
+              className={`px-4 py-2 rounded-lg text-white hover:bg-orange-600 ${
+                editingProduct
+                  ? "bg-primary"
+                  : "bg-primary/30 cursor-not-allowed"
+              }`}
             >
-              {editingProductId ? "Update" : "Publish"}
+              Save Changes
+            </button>
+
+            <button
+              type="submit"
+              className="px-4 py-2 bg-secondary text-white rounded-lg hover:bg-orange-600"
+            >
+              Upload
             </button>
           </div>
-        </div>
+        </form>
       </main>
 
       {/* Toast Notification */}
@@ -362,11 +326,69 @@ function AddProduct() {
           {toast.message}
         </div>
       )}
+
+      {/* Uploaded Products */}
+      <div className="bg-white rounded-lg p-4 shadow border border-tertiary lg:col-span-1">
+        <h3 className="font-semibold text-lg mb-3 text-secondary">
+          Uploaded Products
+        </h3>
+{products.length === 0 ? (
+  <p className="text-gray-500 text-sm text-center py-4">
+    No products uploaded yet.
+  </p>
+) : (
+  <div className="space-y-4">
+    {products.map((item) => (
+      <div
+        key={item.id}
+        className="flex items-center bg-tertiary justify-between rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 p-4"
+      >
+        {/* Product Image */}
+        <img
+          src={`http://127.0.0.1:8000/images/${item.image}`}
+          alt={item.title}
+          className="w-24 h-24 object-cover rounded-md mr-4"
+        />
+
+        {/* Product Details */}
+        <div className="flex-1">
+          <p className="text-lg font-semibold text-primary">{item.title}</p>
+          <p className="text-secondary text-sm mt-1">{item.price} XAF</p>
+          <p className="text-gray-500 text-xs mt-1">{item.category}</p>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-col gap-2">
+        <button
+          onClick={() => {
+            setEditingProduct(item);
+            setTitle(item.title);
+            setCategory(item.category);
+            setStock(item.stock);
+            setPrice(item.price);
+            setImageUrl(item.image);
+            setDescription(item.description);
+          }}
+          className="px-3 py-1 bg-primary text-white text-sm rounded hover:bg-primary/90 transition-colors"
+        >
+          Edit
+        </button>
+
+          <button
+          onClick={() => handleDelete(item.id)}
+            className="px-3 py-1 bg-secondary text-white text-sm rounded hover:bg-secondary/90 transition-colors"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    ))}
+  </div>
+)}
+
+      </div>
     </div>
   );
 }
 
 export default AddProduct;
-function res() {
-  throw new Error("Function not implemented.");
-}

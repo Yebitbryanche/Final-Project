@@ -15,7 +15,7 @@ function Login() {
   const [message, setMessage] = useState("")
   const [showmessage, setShowmessage] = useState(false)
   const navigate = useNavigate()
-  const [isloading, setIsloading] = useState(false)
+  const [, setIsloading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

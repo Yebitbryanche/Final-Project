@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import welcome from "../../assets/images/welcome.png";
 import { PlusIcon } from "@heroicons/react/24/solid";
 
@@ -76,7 +75,7 @@ function Profile() {
       <div className="bg-gradient-to-r from-primary/10 to-secondary/10 backdrop-blur-md shadow-xl w-full h-40 md:h-44 rounded-3xl flex flex-row md:flex-row justify-between items-center p-4 md:p-6 border border-white/20 gap-4 md:gap-0">
         <div className="flex flex-col gap-2 text-center md:text-left">
           <p className="text-2xl md:text-3xl font-semibold text-secondary">
-            Hi {userData?.user_name || "Loading ..."} !
+            Hi {userData?.user_name || "user ..."} !
           </p>
           <span className="text-sm text-gray-600">Welcome back to your profile</span>
         </div>
