@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import Navigation from "./containers/Navigation";
 import Cart from "./pages/Cart";
 import Market from "./pages/Market/Market";
@@ -39,11 +39,14 @@ function App() {
             <Route path="profile" element={<Profile />} />
             <Route path="logout" element={<LogoutPage />} />
           </Route>
-          <Route path="product/:id" element={<ProductDetails/>}/>
-          <Route path="/login" element={<Login />}/>
-          <Route path="/signup" element={<Signup />}/>
-          <Route path="logout"/>
-          <Route path="/products/:id/review" element={<ReviewPage/>}/>
+
+          <Route path="product/:id" element={<ProductDetails />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="logout" />
+
+
+          <Route path="/products/:id/review" element={<ReviewPage />} />
         </Routes>
 
         <Footer />
