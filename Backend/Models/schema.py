@@ -68,6 +68,7 @@ class ProductCreate(BaseModel):
     stock:int
     image:str
     category:str
+    admin_id:int
 
 
 class CreateReview(BaseModel):

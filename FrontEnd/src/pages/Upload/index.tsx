@@ -1,38 +1,27 @@
-// src/pages/AddProduct.tsx
-import React, { useState, useEffect } from "react";
-import { FaPlus, FaTrash, FaEdit } from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { FaPlus, FaTrash, FaUserCircle } from "react-icons/fa";
+import { api } from "../../API/Registration";
+import type ProductProps from "../../types/products";
+import type { Admin, UserProps } from "../../types/UserRead";
+import { useNavigate } from "react-router-dom";
 
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  stock: number;
-  category: string;
-  description: string;
-}
 
-interface Admin {
-  id: number;
-  name: string;
-  avatar: string;
-  uploadedAt: string;
-}
+function AddProduct() {
 
-const AddProduct: React.FC = () => {
-  const [productName, setProductName] = useState("");
+  const token = localStorage.getItem("token")
+  const [user, setUser] = useState<UserProps>()
+  const navigate = useNavigate();
+  const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [stock, setStock] = useState<number | "">("");
   const [price, setPrice] = useState<number | "">("");
-  const [description, setDescription] = useState("");
-  const [images, setImages] = useState<File[]>([]);
-  const [previewImages, setPreviewImages] = useState<string[]>([]);
-  const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
   const [admins, setAdmins] = useState<Admin[]>([]);
-  const [products, setProducts] = useState<Product[]>([]);
-  const [editingProductId, setEditingProductId] = useState<number | null>(null);
-
-  // Toast state
+  const [description, setDescription] = useState("");
+  const [previewImages, setPreviewImages] = useState<string[]>([]);
+  const [image, setImageUrl] = useState("");
+  const [deleteProduct, setDeleteProduct] = useState<ProductProps | null>(null)
+  const [editingProduct, setEditingProduct] = useState<ProductProps | null>(null);
+  const [products,setProducts] = useState<ProductProps[]>([])
   const [toast, setToast] = useState<{
     message: string;
     type: "success" | "error";
@@ -43,137 +32,155 @@ const AddProduct: React.FC = () => {
     visible: false,
   });
 
-  // Show toast helper
-  const showToast = (message: string, type: "success" | "error") => {
-    setToast({ message, type, visible: true });
-    setTimeout(() => {
-      setToast((prev) => ({ ...prev, visible: false }));
-    }, 3000);
-  };
+const handleEdit = async () => {
+  if (!editingProduct?.id) return;
 
-  // Fetch related products
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const res = await fetch("https://fakestoreapi.com/products?limit=3");
-        const data = await res.json();
-        const formatted = data.map((p: any) => ({
-          id: p.id,
-          name: p.title,
-          price: p.price,
-          image: p.image,
-          stock: 0,
-          category: p.category || "Uncategorized",
-          description: p.description || "",
-        }));
-        setRelatedProducts(formatted);
-      } catch (error) {
-        console.error("Failed to fetch related products", error);
-      }
-    };
-    fetchProducts();
-  }, []);
+  try {
+    const response = await api.put(`/users/update/${editingProduct.id}`, {
+      title,
+      description,
+      price,
+      stock,
+      image,
+      category,
+    });
 
-  // Fake admins
-  useEffect(() => {
-    setAdmins([
-      { id: 1, name: "Donfack", avatar: "/Avatar.png", uploadedAt: "2 mins ago" },
-      { id: 2, name: "Angela", avatar: "/Avatar.png", uploadedAt: "10 mins ago" },
-      { id: 3, name: "Darios", avatar: "/Ellipse 1.png", uploadedAt: "1 hour ago" },
-    ]);
-  }, []);
+    const updatedProduct = response.data;
 
-  // Handle image upload
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) return;
-    const files = Array.from(e.target.files);
-    setImages(files);
-    const previews = files.map((file) => URL.createObjectURL(file));
-    setPreviewImages(previews);
-  };
+    // ✅ update only the edited product
+    setProducts((prev) =>
+      prev.map((p) =>
+        p.id === editingProduct.id ? updatedProduct : p
+      )
+    );
 
-  // Reset form
-  const resetForm = () => {
-    setProductName("");
+    showToast("Product updated successfully", "success");
+    resetForm();
+    setEditingProduct(null);
+  } catch (error: any) {
+    console.error("Failed to update product:", error.message);
+    showToast("Failed to update product", "error");
+  }
+};
+
+console.log(editingProduct?.id)
+
+
+
+    const resetForm = () => {
+    setTitle("");
     setCategory("");
     setStock("");
     setPrice("");
+    setImageUrl("")
     setDescription("");
-    setImages([]);
     setPreviewImages([]);
-    setEditingProductId(null);
-  };
+     };
 
-  // Handle submit
-  const handleSubmit = () => {
-    if (!productName || !category || !price || !stock) {
-      showToast("⚠️ Please fill all required fields!", "error");
-      return;
-    }
+  useEffect(() => {
+    api
+      .get("/users/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        const storedUser = localStorage.getItem("user"); 
+        if (storedUser) { const user = JSON.parse(storedUser); 
+          if (user.role === "admin") { 
+            setAdmins([ 
+              { id: Date.now(), name: user.user_name, avatar: user.avatar || "/Avatar.png", uploadedAt: "Just now", }, 
+            ]); } 
+            else { 
+              navigate("/signup", { replace: true }); } } else { navigate("/signup", { replace: true }); 
+            }
+        setUser(res.data);
+      });
+  }, []);
 
-    if (editingProductId) {
-      // Update product
-      setProducts((prev) =>
-        prev.map((p) =>
-          p.id === editingProductId
-            ? {
-                ...p,
-                name: productName,
-                price: Number(price),
-                stock: Number(stock),
-                category,
-                description,
-                image: previewImages.length > 0 ? previewImages[0] : p.image,
-              }
-            : p
-        )
-      );
-      showToast("✅ Product updated successfully!", "success");
-    } else {
-      // Add new product
-      const newProduct: Product = {
-        id: Date.now(),
-        name: productName,
-        price: Number(price),
-        stock: Number(stock),
-        category,
-        description,
-        image:
-          previewImages.length > 0
-            ? previewImages[0]
-            : "https://via.placeholder.com/150",
-      };
-      setProducts((prev) => [...prev, newProduct]);
-      showToast("✅ Product added successfully!", "success");
-    }
-
+    
+  const upload = async (e: React.FormEvent<HTMLFormElement>) => {
+  e.preventDefault();
+  if (!user) {
+    showToast("User not logged in", "error");
+    return;
+  }
+  try {
+    const res = await api.post("/users/upload", {
+      title,
+      description,
+      price,
+      stock,
+      image,
+      category,
+      admin_id: user.id, // guaranteed to exist
+    });
+    console.log("added successfully", res.data);
     resetForm();
+    showToast("Product uploaded successfully", "success");
+  } catch (err: any) {
+    console.log(err.message);
+    showToast("Failed to upload product", "error");
+  }
+};
+
+
+useEffect(() => {
+  if (!user) return;
+
+  api.get(`/users/products/${user.id}`)
+    .then(res => {
+      console.log("Fetched products:", res.data);
+      setProducts(res.data); // ✅ actually store in state
+      setEditingProduct(res.data)
+      setDeleteProduct(res.data)
+    })
+    .catch(err => console.log(err));
+}, [user]);
+
+// delete function
+const handleDelete = async (productId: number) => {
+  if (!productId) return;
+
+  try {
+    await api.delete(`/users/delete/${productId}`);
+
+    // Remove the deleted product from state so UI updates
+    setProducts((prev) => prev.filter((p) => p.id !== productId));
+
+    showToast("Product deleted successfully", "success");
+  } catch (err: any) {
+    console.error("Failed to delete product:", err.message);
+    showToast("Failed to delete product", "error");
+  }
+};
+
+
+
+
+  const showToast = (message: string, type: "success" | "error") => {
+    setToast({ message, type, visible: true });
+    setTimeout(() => setToast((prev) => ({ ...prev, visible: false })), 3000);
   };
 
-  // Handle edit
-  const handleEdit = (product: Product) => {
-    setEditingProductId(product.id);
-    setProductName(product.name);
-    setCategory(product.category);
-    setStock(product.stock);
-    setPrice(product.price);
-    setDescription(product.description);
-    setPreviewImages([product.image]);
-  };
 
-  // Handle delete
-  const handleDelete = (id: number) => {
-    setProducts((prev) => prev.filter((p) => p.id !== id));
-    showToast("🗑️ Product deleted successfully!", "success");
-  };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#b0c4aa] text-secondary">
+    <div className="min-h-screen flex flex-col bg-tertiary/70 text-secondary mt-[5rem]">
       {/* Top Navbar */}
       <header className="flex justify-between items-center px-6 py-4 bg-secondary text-white shadow">
         <h1 className="text-xl font-bold">Add Products</h1>
         <div className="flex items-center gap-4">
-          <img src="/YEMELE.png" alt="profile" className="w-10 h-10 rounded-full border-2 " />
+          {localStorage.getItem("profilePic") ? (
+            <img
+              src={localStorage.getItem("profilePic") as string}
+              alt="Profile"
+              className="w-10 h-10 rounded-full border-2 object-cover"
+            />
+          ) : (
+            <FaUserCircle className="w-10 h-10 text-gray-500" />
+          )}
           <span className="font-medium">My Account</span>
         </div>
       </header>
@@ -182,7 +189,9 @@ const AddProduct: React.FC = () => {
       <main className="flex-1 p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Product Images */}
         <div className="bg-white rounded-lg p-4 shadow border border-tertiary">
-          <h3 className="font-semibold text-lg mb-3 text-secondary">Product Images</h3>
+          <h3 className="font-semibold text-lg mb-3 text-secondary">
+            Product Images
+          </h3>
           <div className="grid grid-cols-2 gap-2">
             {previewImages.map((img, i) => (
               <div key={i} className="relative">
@@ -192,77 +201,44 @@ const AddProduct: React.FC = () => {
                   className="w-full h-24 object-cover rounded-lg border border-tertiary"
                 />
                 <button
-                  className="absolute top-1 right-1 bg-white p-1 rounded-full shadow-md"
-                  onClick={() => {
-                    setPreviewImages((prev) => prev.filter((_, idx) => idx !== i));
-                    setImages((prev) => prev.filter((_, idx) => idx !== i));
-                  }}
-                >
+                  className="absolute top-1 right-1 bg-white p-1 rounded-full shadow-md">
                   <FaTrash className="text-[--color-primary] text-xs" />
                 </button>
               </div>
             ))}
             <label className="w-full h-24 border-2 border-dashed border-secondary rounded-lg flex items-center justify-center cursor-pointer hover:bg-tertiary">
               <FaPlus className="text-secondary" />
-              <input type="file" multiple className="hidden" onChange={handleImageUpload} />
+              <input
+                type="file"
+                multiple
+                className="hidden"
+              />
             </label>
           </div>
         </div>
 
-        {/* Related Items */}
-        <div className="bg-white rounded-lg p-4 shadow border border-tertiary">
-          <h3 className="font-semibold text-lg mb-3 text-secondary">Related Items</h3>
-          <div className="space-y-3">
-            {relatedProducts.map((item) => (
-              <div
-                key={item.id}
-                className="flex items-center gap-3 border border-tertiary rounded-lg p-2 hover:bg-tertiary/40"
-              >
-                <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded" />
-                <div className="flex-1">
-                  <p className="text-sm font-medium truncate">{item.name}</p>
-                  <p className="text-primary text-xs">${item.price}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* Admin Activity */}
-        <div className="bg-white rounded-lg p-4 shadow border border-tertiary">
-          <h3 className="font-semibold text-lg mb-3 text-secondary">Admin Activity</h3>
+        <div className="bg-white rounded-lg p-4 shadow border border-tertiary lg:col-span-1">
+          <h3 className="font-semibold text-lg mb-3 text-secondary">
+            Admin Activity
+          </h3>
           <div className="space-y-3">
-            {admins.map((admin) => (
-              <div
-                key={admin.id}
-                className="flex items-center gap-3 border border-tertiary rounded-lg p-2 hover:bg-tertiary/40"
-              >
-                <img
-                  src={admin.avatar}
-                  alt={admin.name}
-                  className="w-10 h-10 rounded-full object-cover border-2 border-primary"
-                />
-                <div>
-                  <p className="text-sm font-medium">{admin.name}</p>
-                  <p className="text-gray-500 text-xs">Uploaded {admin.uploadedAt}</p>
-                </div>
-              </div>
-            ))}
+            {admins.map((admin) => ( <div key={admin.id} className="flex items-center gap-3 border border-tertiary rounded-lg p-2 hover:bg-tertiary/40" > <img src={admin.avatar} alt="" className="w-10 h-10 rounded-full object-cover border-2 border-primary" /> <div> <p className="text-sm font-medium">{admin.name}</p> <p className="text-gray-500 text-xs"> Uploaded {admin.uploadedAt} </p> </div> </div> ))}
           </div>
         </div>
 
         {/* Product Form */}
-        <div className="lg:col-span-3 bg-white rounded-lg p-6 shadow-xl border border-tertiary">
+        <form className="lg:col-span-3 bg-white rounded-lg p-6 shadow-xl border border-tertiary"
+        onSubmit={upload}>
           <h3 className="text-lg font-semibold mb-4 text-secondary">
-            {editingProductId ? "Edit Product" : "Product Details"}
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <input
               type="text"
               placeholder="Product Name *"
               className="border border-tertiary p-3 rounded-lg focus:ring-2 focus:ring-primary"
-              value={productName}
-              onChange={(e) => setProductName(e.target.value)}
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
             />
             <select
               className="border border-tertiary p-3 rounded-lg focus:ring-2 focus:ring-primary"
@@ -282,15 +258,24 @@ const AddProduct: React.FC = () => {
               placeholder="Stock *"
               className="border border-tertiary p-3 rounded-lg focus:ring-2 focus:ring-primary"
               value={stock}
-              onChange={(e) => setStock(Number(e.target.value))}
+              onChange={(e) => setStock(parseInt(e.target.value))}
             />
-
             <input
               type="number"
               placeholder="Price *"
               className="border border-tertiary p-3 rounded-lg focus:ring-2 focus:ring-primary"
               value={price}
-              onChange={(e) => setPrice(Number(e.target.value))}
+              onChange={(e) => setPrice(parseFloat(e.target.value))}
+            />
+
+            <input
+              type="text"
+              placeholder=" enter image URL"
+              className="border border-tertiary p-3 rounded-lg w-full focus:ring-2 focus:ring-primary"
+              value={image}
+              onChange={(e) => {
+                setImageUrl(e.target.value);
+              }}
             />
           </div>
 
@@ -310,70 +295,25 @@ const AddProduct: React.FC = () => {
               Cancel
             </button>
             <button
-              onClick={handleSubmit}
-              className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-orange-600"
+              onClick={editingProduct ? handleEdit : undefined} // only call handleEdit if editingProduct exists
+              disabled={!editingProduct}                        // disable button if no product
+              className={`px-4 py-2 rounded-lg text-white hover:bg-orange-600 ${
+                editingProduct
+                  ? "bg-primary"
+                  : "bg-primary/30 cursor-not-allowed"
+              }`}
             >
-              {editingProductId ? "Update" : "Publish"}
+              Save Changes
+            </button>
+
+            <button
+              type="submit"
+              className="px-4 py-2 bg-secondary text-white rounded-lg hover:bg-orange-600"
+            >
+              Upload
             </button>
           </div>
-        </div>
-
-        {/* Uploaded Products Table */}
-        <div className="lg:col-span-3 bg-white rounded-lg p-6 shadow-xl border border-tertiary mt-6">
-          <h3 className="text-lg font-semibold mb-4 text-secondary">Uploaded Products</h3>
-          {products.length === 0 ? (
-            <p className="text-gray-500 text-sm">No products uploaded yet.</p>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full border border-tertiary rounded-lg overflow-hidden">
-                <thead className="bg-secondary text-white">
-                  <tr>
-                    <th className="p-3 text-left">Image</th>
-                    <th className="p-3 text-left">Name</th>
-                    <th className="p-3 text-left">Category</th>
-                    <th className="p-3 text-left">Price</th>
-                    <th className="p-3 text-left">Stock</th>
-                    <th className="p-3 text-center">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {products.map((p) => (
-                    <tr
-                      key={p.id}
-                      className="border-t border-tertiary hover:bg-tertiary/30"
-                    >
-                      <td className="p-3">
-                        <img
-                          src={p.image}
-                          alt={p.name}
-                          className="w-12 h-12 object-cover rounded"
-                        />
-                      </td>
-                      <td className="p-3">{p.name}</td>
-                      <td className="p-3">{p.category}</td>
-                      <td className="p-3">${p.price}</td>
-                      <td className="p-3">{p.stock}</td>
-                      <td className="p-3 flex gap-3 justify-center">
-                        <button
-                          onClick={() => handleEdit(p)}
-                          className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-                        >
-                          <FaEdit />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(p.id)}
-                          className="p-2 bg-red-500 text-white rounded hover:bg-red-600"
-                        >
-                          <FaTrash />
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
+        </form>
       </main>
 
       {/* Toast Notification */}
@@ -386,8 +326,69 @@ const AddProduct: React.FC = () => {
           {toast.message}
         </div>
       )}
+
+      {/* Uploaded Products */}
+      <div className="bg-white rounded-lg p-4 shadow border border-tertiary lg:col-span-1">
+        <h3 className="font-semibold text-lg mb-3 text-secondary">
+          Uploaded Products
+        </h3>
+{products.length === 0 ? (
+  <p className="text-gray-500 text-sm text-center py-4">
+    No products uploaded yet.
+  </p>
+) : (
+  <div className="space-y-4">
+    {products.map((item) => (
+      <div
+        key={item.id}
+        className="flex items-center bg-tertiary justify-between rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 p-4"
+      >
+        {/* Product Image */}
+        <img
+          src={`http://127.0.0.1:8000/images/${item.image}`}
+          alt={item.title}
+          className="w-24 h-24 object-cover rounded-md mr-4"
+        />
+
+        {/* Product Details */}
+        <div className="flex-1">
+          <p className="text-lg font-semibold text-primary">{item.title}</p>
+          <p className="text-secondary text-sm mt-1">{item.price} XAF</p>
+          <p className="text-gray-500 text-xs mt-1">{item.category}</p>
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex flex-col gap-2">
+        <button
+          onClick={() => {
+            setEditingProduct(item);
+            setTitle(item.title);
+            setCategory(item.category);
+            setStock(item.stock);
+            setPrice(item.price);
+            setImageUrl(item.image);
+            setDescription(item.description);
+          }}
+          className="px-3 py-1 bg-primary text-white text-sm rounded hover:bg-primary/90 transition-colors"
+        >
+          Edit
+        </button>
+
+          <button
+          onClick={() => handleDelete(item.id)}
+            className="px-3 py-1 bg-secondary text-white text-sm rounded hover:bg-secondary/90 transition-colors"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    ))}
+  </div>
+)}
+
+      </div>
     </div>
   );
-};
+}
 
 export default AddProduct;
