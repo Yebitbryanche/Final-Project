@@ -97,9 +97,12 @@ def get_order_items(order_id:int, session:Session = Depends(get_session)):
             "price": order_item.price,
             "quantity": order_item.quantity,
             "subtotal": order_item.price * order_item.quantity
+            
         }
         for order_item, product in order_items
     ]
+
+
 
 
 # user order history

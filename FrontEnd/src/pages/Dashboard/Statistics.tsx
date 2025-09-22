@@ -120,7 +120,7 @@ function Statistics() {
           </ResponsiveContainer>
         </div>
 
-        {/* purchases table */}
+        {/* purchases table
         <div className="bg-white shadow-lg rounded-xl p-6 overflow-x-auto">
           <p className="font-bold text-gray-700 mb-4">Recent Purchases</p>
           {purchases.length === 0 ? (
@@ -160,7 +160,7 @@ function Statistics() {
               </tbody>
             </table>
           )}
-        </div>
+        </div> */}
 
         {/* pie chart */}
         <div className="bg-white shadow-lg rounded-xl p-6 w-full overflow-x-auto">
