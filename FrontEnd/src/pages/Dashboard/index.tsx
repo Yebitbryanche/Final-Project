@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import logo from "../../assets/images/mboakakologo.png"
 import statistics from "../../assets/images/statistics.svg"
 import profile from "../../assets/images/profile.svg"

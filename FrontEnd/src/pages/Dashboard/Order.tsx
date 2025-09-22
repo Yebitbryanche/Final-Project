@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import logo from "../../assets/images/mboakakologo.png";
+import { useEffect, useState } from 'react';
 import UserAvatar from '../../components/UseAvatar';
 
 interface Product {

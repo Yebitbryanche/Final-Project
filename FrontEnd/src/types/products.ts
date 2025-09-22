@@ -5,4 +5,5 @@ export default interface ProductProps{
   price:number;
   image:string;
   category:string;
+  stock:number
 }

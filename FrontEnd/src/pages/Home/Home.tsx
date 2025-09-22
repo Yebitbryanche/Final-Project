@@ -10,21 +10,25 @@ import { api } from "../../API/Registration";
 import { addToCart } from "../../services/addtoCart";
 import type UserProps from "../../types/UserRead";
 import type ProductProps from "../../types/products";
+import Loader from "../../components/Loader";
 
 const Home = () => {
   const token = localStorage.getItem("token");
   const [user, setUser] = useState<UserProps>();
+  const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState<ProductProps[]>([]);
 
   useEffect(() => {
+    setLoading(true);
     api
       .get("/products")
       .then((res) => {
-        console.log(res.data);
         setProducts(res.data.slice(0, 4));
       })
-      .catch((error: any) => console.log(error.message));
+      .catch((error: any) => console.log(error.message))
+      .finally(() => setLoading(false));
   }, []);
+
 
   useEffect(() => {
     api
@@ -38,6 +42,12 @@ const Home = () => {
         setUser(res.data);
       });
   }, []);
+
+  if (loading) {
+    return (
+          <Loader/>
+    );
+  }
 
   return (
     <div className="p-4 md:p-10 flex flex-col items-center gap-15 md:gap-30">
@@ -106,12 +116,11 @@ const Home = () => {
 
       {/* Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full">
-        {products.map((product) => (
-          <Link to={`/product/${product.id}`} key={product.id}> 
+        {products.map((product) => ( 
             <div
               className="p-4 bg-tertiary rounded-lg flex flex-col gap-3 shadow-md"
             >
-            
+             <Link to={`/product/${product.id}`} key={product.id}>
               <div className="rounded-lg overflow-hidden">
                 <img
                   src={`http://127.0.0.1:8000/${product.image}`}
@@ -119,6 +128,7 @@ const Home = () => {
                   className="w-full h-52 object-cover"
                 />
               </div>
+              </Link>
 
               <div className="flex justify-between items-center">
                 <p className="font-bold text-lg">{product.title}</p>
@@ -154,7 +164,6 @@ const Home = () => {
                 />
               </div>
             </div>
-          </Link>
         ))}
       </div>
 {/* rounded image section */} <div> {/* big text */} <p className="justify-center items-center flex text-xl md:text-5xl font-bold text-black">Why Choose Us</p> </div> {/* rounded images with text */} <div className="flex flex-col lg:flex-row justify-between lg:items-start gap-5 md:gap-10 "> {/* text */} <div className="flex flex-col gap-5 mt-10 lg:mt-50 text-center lg:text-left"> <p className="text-lg sm:text-5xl text-primary font-bold">Mola We Got you Covered</p> <p className="text-xl sm:text-4xl text-black font-bold">Active 24/7 pour le <span>Continent</span></p> <p className="text-lg sm:text-5xl text-primary font-bold">237 4 Life</p> </div> {/* rounded images */} <div className="flex flex-col sm:flex-row lg:flex-row gap-5 items-center lg:items-start"> <div className="w-40 sm:w-50 h-40 sm:h-150 overflow-hidden"> <img src={images.mola1} alt="" className="w-full h-full rounded-t-full rounded-b-full object-cover"/> </div> <div className="w-40 sm:w-50 h-40 sm:h-100 overflow-hidden mt-5 sm:mt-20"> <img src={images.mola2} alt="" className="w-full h-full rounded-t-full rounded-b-full object-cover" /> </div> <div className="w-40 sm:w-50 h-40 sm:h-150 overflow-hidden"> <img src={images.mola3} alt="" className="w-full h-full rounded-t-full rounded-b-full object-cover"/> </div> </div> </div>

@@ -90,7 +90,7 @@ function Checkout() {
       {/* Right Section */}
       <div className="flex-1 flex justify-center">
         <div className="w-full md:w-[80%] shadow-md rounded-lg overflow-hidden">
-          <div className="bg-primary text-white rounded-t-lg">
+          <div className="bg-secondary/80 text-white rounded-t-lg">
             <div className="flex justify-between p-3 text-sm sm:text-base">
               <p>Bryan</p>
               <p>15/10/2022</p>
