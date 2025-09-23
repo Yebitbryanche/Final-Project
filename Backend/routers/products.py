@@ -16,3 +16,11 @@ def get_all_products(session:Session = Depends(get_session)):
    if not product:
        not_found("product")
    return product
+
+
+@router.get("/products/{product_id}", response_model=ProductRead)
+def get_product_by_id(product_id: int, session: Session = Depends(get_session)):
+    product = session.get(Product, product_id)
+    if not product:
+        not_found("product")
+    return product

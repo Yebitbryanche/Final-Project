@@ -1,4 +1,3 @@
-
 import Categorybutton from "../../components/Categorybutton";
 import Filterbutton from "../../components/Filterbutton";
 import Rating from "../../components/Ratingstar";
@@ -10,6 +9,7 @@ import type {UserProps} from "../../types/UserRead";
 import { Link } from "react-router-dom";
 import Loader from "../../components/Loader";
 import { useCart } from "../../Context/Context";
+import { addToCart } from "../../services/addtoCart";
 
 interface ProductProps {
   average_rating: number;
@@ -23,8 +23,6 @@ interface ProductProps {
   oldprice?: number;
   newprice?: number;
   discountrate?: number;
-
-
 }
 function Market() {
   const token = localStorage.getItem("token");
@@ -35,6 +33,7 @@ function Market() {
   const [user, setUser] = useState<UserProps>();
   const [ratings, setRatings] = useState<Record<number, number>>({}); 
   const { cart, addToCart } = useCart()
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   // Fetch all products
 useEffect(() => {
@@ -84,6 +83,7 @@ useEffect(() => {
   }, [token]);
 
   const handleFilter = (category: string) => {
+    setSelectedCategory(category); // ✅ Update selected category
     if (category === "All") setFilteredProducts(allProducts);
     else
       setFilteredProducts(
@@ -92,6 +92,7 @@ useEffect(() => {
   };
 
   const handlePricefilter = (price: number) => {
+    setSelectedCategory("PriceFilter"); // ✅ Hide hero when price filter applied
     setFilteredProducts(allProducts.filter((item) => item.price <= price));
   };
 
@@ -200,6 +201,49 @@ useEffect(() => {
                 <div className="rounded-lg overflow-hidden">
                   <img
                     src={`http://127.0.0.1:8000/images/${product.image}`}
+                    alt={product.title}
+                    className="w-full h-60 object-cover"
+                  />
+                </div>
+              </Link>
+              <div className="flex justify-between items-center">
+                <p className="font-bold text-lg truncate">{product.title}</p>
+                <p className="text-primary">{product.price} XAF</p>
+              </div>
+              <p className="text-sm line-clamp-2">{product.description}</p>
+              <div className="flex justify-between items-center">
+                <Rating rating={ratings[product.id] || 0} />
+                <p className="bg-secondary/50 text-black rounded-lg px-2 py-1 text-xs">
+                  {product.category}
+                </p>
+              </div>
+              <div className="flex justify-between gap-2 mt-2">
+                <Addtocardbutton
+                  onClick={() => {
+                    if (!user?.id) console.log("No user logged in");
+                    else addToCart(user.id, product.id);
+                  }}
+                  title="Add to Cart"
+                  className="bg-white text-primary px-3 py-2 flex-1 text-sm"
+                />
+                <Buynowbutton
+                  title="Buy now"
+                  className="bg-secondary text-white px-3 py-2 flex-1 text-sm"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Popular Products */}
+        <p className="text-2xl md:text-3xl font-bold text-secondary">Popular Products</p>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {filteredProducts.map((product) => (
+            <div key={product.id} className="p-2 bg-tertiary rounded-lg flex flex-col gap-3">
+              <Link to={`/product/${product.id}`}>
+                <div className="rounded-lg overflow-hidden">
+                  <img
+                    src={`http://127.0.0.1:8000/${product.image}`}
                     alt={product.title}
                     className="w-full h-60 object-cover"
                   />
