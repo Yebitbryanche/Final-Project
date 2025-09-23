@@ -1,7 +1,7 @@
 import Addtocardbutton from "../Addtocardbutton";
 import { checkout } from "../../services/cart_quantity";
 import { useEffect, useState } from "react";
-import type UserProps from "../../types/UserRead";
+import type {UserProps} from "../../types/UserRead";
 import { api } from "../../API/Registration";
 
 type Props = {
@@ -47,7 +47,7 @@ const OrderSummary = ({ subtotal }: Props) => {
           </div>
           <div className="flex justify-between">
             <span>Service fee:</span>
-            <span className="font-semibold">1,500 XAF</span>
+            <span className="font-semibold">500 XAF</span>
           </div>
           <div className="flex justify-between border-t border-gray-200 pt-2 mt-2 text-lg font-bold">
             <span>Total payment:</span>

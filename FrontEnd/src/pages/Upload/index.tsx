@@ -152,6 +152,7 @@ const handleDelete = async (productId: number) => {
     showToast("Product deleted successfully", "success");
   } catch (err: any) {
     console.error("Failed to delete product:", err.message);
+    console.log(deleteProduct)
     showToast("Failed to delete product", "error");
   }
 };
