@@ -43,6 +43,7 @@ const handleEdit = async () => {
       stock,
       image,
       category,
+      admin_id:user?.id
     });
 
     const updatedProduct = response.data;
@@ -296,7 +297,8 @@ const handleDelete = async (productId: number) => {
               Cancel
             </button>
             <button
-              onClick={editingProduct ? handleEdit : undefined} // only call handleEdit if editingProduct exists
+            type="button"
+              onClick={handleEdit} // only call handleEdit if editingProduct exists
               disabled={!editingProduct}                        // disable button if no product
               className={`px-4 py-2 rounded-lg text-white hover:bg-orange-600 ${
                 editingProduct
