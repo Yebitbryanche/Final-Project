@@ -10,6 +10,7 @@ function AddProduct() {
 
   const token = localStorage.getItem("token")
   const [user, setUser] = useState<UserProps>()
+  const categories = ["All", "perfume", "Flip", "bodywash", "Backpacks", "Jewelries", "Shoes","Topwear","Bags","Belts","Headwear","Innerwear","bottomwear","Wallets","Fragrance","Nails","Eyewear","Ties"]
   const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
@@ -247,12 +248,11 @@ const handleDelete = async (productId: number) => {
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >
-              <option value="">Category *</option>
-              <option value="Perfume">Perfume</option>
-              <option value="Body Wash">Body Wash</option>
-              <option value="Backpacks">Backpacks</option>
-              <option value="Jewelry">Jewelry</option>
-              <option value="Shoes">Shoes</option>
+              {
+                categories.map((category) =>(
+                  <option value={category}>{category}</option>
+                ))
+              }
             </select>
 
             <input
