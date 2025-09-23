@@ -6,3 +6,18 @@ export default interface ProductProps{
   image:string;
   category:string;
 }
+export interface OrderItem {
+  product_id: number;
+  title: string;
+  price: number;
+  quantity: number;
+  subtotal: number;
+}
+
+export interface Order {
+  id: number;
+  user_id: number;
+  created_at: string;
+  status: string;
+  items: OrderItem[]; 
+}
