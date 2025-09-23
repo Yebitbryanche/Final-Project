@@ -63,9 +63,6 @@ function App() {
             <Route path="product/:id" element={<ProductDetails />} />
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
-            <Route path="logout" />
-
-
             <Route path="/products/:id/review" element={<ReviewPage />} />
           </Routes>
 
