@@ -54,7 +54,7 @@ def checkout(user_id: int, session: Session = Depends(get_session)):
             {
                 "price_data": {
                     "currency": "xaf",
-                    "unit_amount": int(product.price * 100),  # cents
+                    "unit_amount": int(product.price),  # normal price
                     "product_data": {"name": product.title},
                 },
                 "quantity": cart_item.quantity,

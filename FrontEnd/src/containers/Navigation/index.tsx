@@ -8,6 +8,7 @@ import type {UserProps }from "../../types/UserRead";
 import type { CartResponse } from "../../pages/Cart";
 import {  HiSquaresPlus } from "react-icons/hi2";
 import { IoSearchSharp } from "react-icons/io5";
+import { useCart } from "../../Context/Context";
 
 function Navigation() {
   const token = localStorage.getItem("token");
@@ -15,6 +16,7 @@ function Navigation() {
   const [user, setUser] = useState<UserProps | undefined>();
   const [cartItems, setCartItems] = useState<CartResponse | null>(null);
   const [error, setError] = useState("");
+  const { cart} = useCart()
  
 
   useEffect(() => {
@@ -37,6 +39,7 @@ function Navigation() {
         .get(`/cart/${user.id}/view`)
         .then((res) => {
           setCartItems(res.data);
+          console.log(cartItems)
         })
         .catch((err: any) => {
           console.log(error)
@@ -97,7 +100,7 @@ function Navigation() {
             </NavLink>
           </li>
           <li className="relative p-5">
-             <div className="absolute top-0 right-0 py-1 px-[6px] rounded-full bg-secondary text-white">{cartItems?.items.length === 0? null: <p className="text-xs">{cartItems?.items.length}</p>}</div>
+             <div className="absolute top-0 right-0 py-1 px-[6px] rounded-full bg-secondary text-white">{cart.length <= 0? null: <p className="text-xs">{cart.length}</p>}</div>
             <NavLink
               to="/cart"
               className={({ isActive }) =>

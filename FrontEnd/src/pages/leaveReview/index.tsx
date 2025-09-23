@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { api } from "../../API/Registration";
-import type UserProps from "../../types/UserRead";
+import type {UserProps} from "../../types/UserRead";
 import Rating from "../../components/Ratingstar";
 
 function ReviewPage() {

@@ -7,10 +7,10 @@ import Addtocardbutton from "../../components/Addtocardbutton";
 import Buynowbutton from "../../components/Buynowbutton";
 import { useEffect, useState } from "react";
 import { api } from "../../API/Registration";
-import { addToCart } from "../../services/addtoCart";
-import type UserProps from "../../types/UserRead";
+import type {UserProps} from "../../types/UserRead";
 import type ProductProps from "../../types/products";
 import Loader from "../../components/Loader";
+import { useCart } from "../../Context/Context";
 
 const Home = () => {
   const token = localStorage.getItem("token");
@@ -18,12 +18,14 @@ const Home = () => {
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState<ProductProps[]>([]);
   const [ratings, setRatings] = useState<Record<number, number>>({}); 
+  const { cart, addToCart } = useCart()
 
   useEffect(() => {
     setLoading(true);
     api
       .get("/products")
       .then((res) => {
+        console.log(cart)
         setProducts(res.data.slice(0, 4));
       })
       .catch((error: any) => console.log(error.message))
@@ -131,7 +133,7 @@ const Home = () => {
         <div className="w-full lg:w-2/5">
           <Carousel />
         </div>
-      </div>
+      </div> 
 
       {/* Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full">
@@ -142,7 +144,7 @@ const Home = () => {
              <Link to={`/product/${product.id}`} key={product.id}>
               <div className="rounded-lg overflow-hidden">
                 <img
-                  src={`http://127.0.0.1:8000/${product.image}`}
+                  src={`http://127.0.0.1:8000/images/${product.image}`}
                   alt={product.title}
                   className="w-full h-52 object-cover"
                 />
