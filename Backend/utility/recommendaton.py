@@ -5,7 +5,7 @@ from sqlmodel import Session, select
 from schema.models import Product, Review
 from db import engine
 
-class ContentRecommenderWithReviews:
+class ContentRecommenderWithReviews: 
     def __init__(self):
         # Load products
         with Session(engine) as session:

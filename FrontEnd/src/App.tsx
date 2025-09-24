@@ -21,6 +21,7 @@ import { CartProvider } from "./Context/Context";
 import { useEffect, useState } from "react";
 import { api } from "./API/Registration";
 import type { UserProps } from "./types/UserRead";
+import Portfolio from "./portfolio/Portfolio";
 
 function App() {
   const [user, setUser] = useState<UserProps>()
@@ -49,6 +50,8 @@ function App() {
             <Route path="/success" element={<PaymentSuccess />} />
             <Route path="/error" element={<PaymentError />} />
             <Route path="/upload" element={<AddProduct />} />
+            <Route path="/portfolio" element={<Portfolio />} />
+
 
             {/* Dashboard nested routes */}
             <Route path="/dashboard" element={<DashboardLayout />}>
