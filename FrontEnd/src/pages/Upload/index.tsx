@@ -12,7 +12,7 @@ function AddProduct() {
 
   const token = localStorage.getItem("token")
   const [user, setUser] = useState<UserProps>()
-  const navigate = useNavigate();
+  const categories = ["All", "perfume", "Flip", "bodywash", "Backpacks", "Jewelries", "Shoes","Topwear","Bags","Belts","Headwear","Innerwear","bottomwear","Wallets","Fragrance","Nails","Eyewear","Ties"]
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [stock, setStock] = useState<number | "">("");
@@ -51,6 +51,7 @@ const handleEdit = async () => {
       stock,
       image,
       category,
+      admin_id:user?.id
     });
 
     const updatedProduct = response.data;
@@ -94,15 +95,6 @@ console.log(editingProduct?.id)
       })
       .then((res) => {
         console.log(res.data);
-        const storedUser = localStorage.getItem("user"); 
-        if (storedUser) { const user = JSON.parse(storedUser); 
-          if (user.role === "admin") { 
-            setAdmins([ 
-              { id: Date.now(), name: user.user_name, avatar: user.avatar || "/Avatar.png", uploadedAt: "Just now", }, 
-            ]); } 
-            else { 
-              navigate("/signup", { replace: true }); } } else { navigate("/signup", { replace: true }); 
-            }
         setUser(res.data);
       });
   }, []);
@@ -254,12 +246,11 @@ const handleDelete = async (productId: number) => {
               value={category}
               onChange={(e) => setCategory(e.target.value)}
             >
-              <option value="">Category *</option>
-              <option value="Perfume">Perfume</option>
-              <option value="Body Wash">Body Wash</option>
-              <option value="Backpacks">Backpacks</option>
-              <option value="Jewelry">Jewelry</option>
-              <option value="Shoes">Shoes</option>
+              {
+                categories.map((category) =>(
+                  <option value={category}>{category}</option>
+                ))
+              }
             </select>
 
             <input
@@ -304,7 +295,8 @@ const handleDelete = async (productId: number) => {
               Cancel
             </button>
             <button
-              onClick={editingProduct ? handleEdit : undefined} // only call handleEdit if editingProduct exists
+            type="button"
+              onClick={handleEdit} // only call handleEdit if editingProduct exists
               disabled={!editingProduct}                        // disable button if no product
               className={`px-4 py-2 rounded-lg text-white hover:bg-orange-600 ${
                 editingProduct

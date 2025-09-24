@@ -31,7 +31,7 @@ def upload_product(product:ProductCreate ,session:Session = Depends(get_session)
 # product update
 
 @router.put("/update/{product_id}", response_model=ProductCreate)
-def update_product(product_id: int, product_update: ProductUpdate, session: Session = Depends(get_session)):
+def update_product(product_id: int, product_update: ProductCreate, session: Session = Depends(get_session)):
     product = session.exec(select(Product).where(product_id == Product.id)).first()
     if not product:
         not_found("product")
