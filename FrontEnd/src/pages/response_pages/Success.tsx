@@ -22,16 +22,11 @@ export default function PaymentSuccess() {
           Payment Successful
         </h2>
 
-        {/* Order Details */}
-        <p className="text-gray-600 text-sm sm:text-base mb-1">
-          Order <span className="font-semibold">#12345</span> |{" "}
-          <span className="font-semibold">$99</span> | Visa ending in{" "}
-          <span className="font-semibold">1234</span>
-        </p>
+        
 
         {/* Thank you message */}
         <p className="text-gray-500 text-sm sm:text-base mb-6">
-          Thank you for your payment. Your order will be processed shortly.
+          Thank you for trusting MboaKako. Your order will be processed shortly.
         </p>
 
         {/* CTA Button */}

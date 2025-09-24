@@ -1,10 +1,22 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { useState } from "react";
+import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import orderIcon from "../../assets/images/order.svg";
 import statisticsIcon from "../../assets/images/statistics.svg";
 import profileIcon from "../../assets/images/profile.svg";
 import { LogOut, LayoutDashboard } from "lucide-react";
+import Modal from "../../components/Modal";
 
 export default function DashboardLayout() {
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");      // clear login token
+    localStorage.removeItem("profilePic"); // clear profile picture
+    setShowLogoutModal(false);
+    navigate("/dashboard/logout");         
+  };
+
   return (
     <div className="flex flex-col md:flex-row min-h-screen mt-20">
       {/* Sidebar */}
@@ -51,23 +63,14 @@ export default function DashboardLayout() {
             <p>Profile</p>
           </NavLink>
 
-          <NavLink
-  to="/dashboard/logout"
-  className={({ isActive }) =>
-    isActive
-      ? "flex gap-3 items-center px-3 py-2 font-semibold rounded-lg bg-primary/20"
-      : "flex gap-3 items-center px-3 py-2 hover: transition rounded-lg"
-  }
-  onClick={() => {
-    localStorage.removeItem("token");      // clear login token
-    localStorage.removeItem("profilePic"); // clear profile picture
-            
-  }}
->
-  <LogOut className="w-5 h-5" />
-  <p>Logout</p>
-</NavLink>
-
+          {/*  triggers modal */}
+          <button
+            onClick={() => setShowLogoutModal(true)}
+            className="flex gap-3 items-center px-3 py-2 hover:bg-gray-100 transition rounded-lg"
+          >
+            <LogOut className="w-5 h-5" />
+            <p>Logout</p>
+          </button>
         </div>
       </aside>
 
@@ -75,6 +78,17 @@ export default function DashboardLayout() {
       <main className="flex-1 overflow-y-auto p-4 md:p-6">
         <Outlet />
       </main>
+
+      {/* Logout Confirmation Modal */}
+      <Modal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleLogout}
+        title="Confirm Logout"
+        message="Are you sure you want to log out?"
+        confirmText="Yes, Logout"
+        cancelText="Cancel"
+      />
     </div>
   );
 }

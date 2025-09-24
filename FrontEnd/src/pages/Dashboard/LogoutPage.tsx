@@ -42,7 +42,7 @@ function LogoutPage() {
             >
               <ShoppingBag className="w-4 h-4" />
               Continue Shopping
-            </Link>
+            </Link> 
           </div>
         </div>
     

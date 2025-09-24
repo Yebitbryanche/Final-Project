@@ -6,6 +6,7 @@ import { MdDelete } from "react-icons/md";
 import { BsCartDash, BsCartPlus } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import images from "../../types/images";
+import Modal from "../../components/Modal";
 
 export interface CartItem {
   cart_item_id: number;
@@ -30,6 +31,11 @@ const Cart = () => {
   const [cartItems, setCartItems] = useState<CartResponse | null>(null);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+
+
+   // Modal states
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [cartItemToDelete, setCartItemToDelete] = useState<CartItem | null>(null);
 
   //  Fetch user
   useEffect(() => {
@@ -179,7 +185,10 @@ const handleQuantityChange = (productId: number, newQuantity: number) => {
                   <MdDelete
                     size={25}
                     className="cursor-pointer text-secondary hover:text-red-400"
-                    onClick={() => handleDelete(item.product_id)}
+                    onClick={() => {
+                      setCartItemToDelete(item);
+                      setShowDeleteModal(true);
+                    }}
                   />
                 </div>
               </div>
@@ -207,6 +216,23 @@ const handleQuantityChange = (productId: number, newQuantity: number) => {
         {/* Order Summary */}
         <OrderSummary subtotal={subtotal} />
       </div>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={() => {
+          if (cartItemToDelete) {
+            handleDelete(cartItemToDelete.product_id);
+            setShowDeleteModal(false);
+            setCartItemToDelete(null);
+          }
+        }}
+        title="Remove Item"
+        message={`Are you sure you want to remove "${cartItemToDelete?.title}" from your shopping cart?`}
+        confirmText="Yes, Remove"
+        cancelText="Cancel"
+      />
     </div>
   );
 };
