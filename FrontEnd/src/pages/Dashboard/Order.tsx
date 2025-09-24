@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 import UserAvatar from "../../components/UseAvatar";
 import { api } from "../../API/Registration";
 import type { UserProps } from "../../types/UserRead";
-import type { Order, OrderItem } from "../../types/products";
+import type { OrderProps, OrderItem } from "../../types/products";
 
 function Order() {
   const [user, setUser] = useState<UserProps | undefined>();
   const [error, setError] = useState<string | null>(null);
-  const [orders, setOrders] = useState<(Order & { items: OrderItem[] })[]>([]);
+  const [orders, setOrders] = useState<(OrderProps & { items: OrderItem[] })[]>([]);
   const token = localStorage.getItem("token");
 
   // Fetch user
@@ -28,7 +28,7 @@ function Order() {
       .get(`/orders/${user.id}`)
       .then(async (res) => {
         // Take only the last 5 orders
-        const latestOrders: Order[] = res.data.slice(-5).reverse();
+        const latestOrders: OrderProps[] = res.data.slice(-5).reverse();
 
 
         // Fetch items for each order

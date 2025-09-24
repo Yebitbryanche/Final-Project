@@ -3,7 +3,6 @@ import { FaPlus, FaTrash, FaUserCircle } from "react-icons/fa";
 import { api } from "../../API/Registration";
 import type ProductProps from "../../types/products";
 import type { Admin, UserProps } from "../../types/UserRead";
-import { useNavigate } from "react-router-dom";
 import Modal from "../../components/Modal";
 
 
@@ -98,6 +97,18 @@ console.log(editingProduct?.id)
         setUser(res.data);
       });
   }, []);
+
+  useEffect(() =>{
+    const adminData = localStorage.getItem("user")
+    if(adminData){
+      const userAdmin = JSON.parse(adminData);
+      if (userAdmin.role){
+        setAdmins([ 
+        { id: Date.now(), name: userAdmin.user_name, avatar: userAdmin.avatar || "/Avatar.png", uploadedAt: "Just now", }
+        ]);
+      }
+    }
+  },[])
 
     
   const upload = async (e: React.FormEvent<HTMLFormElement>) => {
