@@ -19,5 +19,6 @@ export interface Order {
   user_id: number;
   created_at: string;
   status: string;
-  items: OrderItem[]; 
+  items: OrderItem[];
+  total_amount:number; 
 }

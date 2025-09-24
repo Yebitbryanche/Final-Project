@@ -27,8 +27,9 @@ function Order() {
     api
       .get(`/orders/${user.id}`)
       .then(async (res) => {
-        // Take only last 5 orders
-        const latestOrders: Order[] = res.data.slice(0, 5);
+        // Take only the last 5 orders
+        const latestOrders: Order[] = res.data.slice(-5).reverse();
+
 
         // Fetch items for each order
         const withItems = await Promise.all(
@@ -65,7 +66,7 @@ function Order() {
         ) : orders.length === 0 ? (
           <p className="text-center text-gray-500 py-6 text-lg">No orders found</p>
         ) : (
-          orders.map((order) => (
+          orders.map((order,index) => (
             <div
               key={order.id}
               className="bg-white rounded-xl shadow-lg p-4 overflow-x-auto"
@@ -74,7 +75,7 @@ function Order() {
               <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
                 <div>
                   <h2 className="font-semibold text-lg text-gray-800">
-                    Order #{order.id}
+                    Order #{index+1}
                   </h2>
                   <p className="text-sm text-gray-500">
                     Placed on {new Date(order.created_at).toLocaleDateString()}

@@ -77,7 +77,7 @@ def checkout(user_id: int, session: Session = Depends(get_session)):
 def get_orders(user_id:int, session:Session = Depends(get_session)):
     orders = session.exec(select(Order).where(Order.user_id == user_id)).all()
     if not orders:
-        not_found("orders")
+        return []
     return orders
 
 @router.get("/orders/{order_id}/items")
