@@ -143,7 +143,7 @@ function Navigation() {
 
           <Link
             to="/upload"
-            className="text-3xl cursor-pointer text-secondary hover:text-secondary/70"
+            className={user?.role?`text-3xl cursor-pointer text-secondary hover:text-secondary/70`:`hidden`}
           >
             <HiSquaresPlus />
           </Link>
