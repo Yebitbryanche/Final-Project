@@ -14,40 +14,61 @@ import DashboardLayout from "./pages/Dashboard/Dashboardlayout";
 import ReviewPage from "./pages/leaveReview";
 import ProductDetails from "./pages/ProductDetails";
 import Checkout from "./pages/Checkout";
+import AddProduct from "./pages/Upload";
+import PaymentSuccess from "./pages/response_pages/Success";
+import PaymentError from "./pages/response_pages/Failure";
+import { CartProvider } from "./Context/Context";
+import { useEffect, useState } from "react";
+import { api } from "./API/Registration";
+import type { UserProps } from "./types/UserRead";
 
 function App() {
+  const [user, setUser] = useState<UserProps>()
+  const [error, setError] = useState("")
+  const token = localStorage.getItem("token")
+    //  Fetch user
+    useEffect(() => {
+      api
+        .get("/users/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) =>{ setUser(res.data); console.log(error)})
+        .catch(() => setError("Failed to fetch user"));
+    }, []);
   return (
     <div>
-      <BrowserRouter>
-        <Navigation />
+      <CartProvider userId={user?.id}>
+        <BrowserRouter>
+          <Navigation />
 
-        <Routes>
-          <Route path="/" element={<Home />}/>
-          <Route path="/cart" element={<Cart />}/>
-          <Route path="/checkout" element={<Checkout/>}/>
-          <Route path="/market" element={<Market />}/>
-          <Route path="/" element={<Home />} />
-          <Route path="/cart" element={<Cart />} />
-          <Route path="/market" element={<Market />} />
+          <Routes>
+            <Route path="/" element={<Home />}/>
+            <Route path="/cart" element={<Cart />}/>
+            <Route path="/checkout" element={<Checkout/>}/>
+            <Route path="/market" element={<Market />}/>
+            <Route path="/success" element={<PaymentSuccess />} />
+            <Route path="/error" element={<PaymentError />} />
+            <Route path="/upload" element={<AddProduct />} />
 
-          {/* Dashboard nested routes */}
-          <Route path="/dashboard" element={<DashboardLayout />}>
-            <Route index element={<Order />} />{" "}
-            {/* Default page for /dashboard */}
-            <Route path="order" element={<Order />} />
-            <Route path="statistics" element={<Statistics />} />
-            <Route path="profile" element={<Profile />} />
-            <Route path="logout" element={<LogoutPage />} />
-          </Route>
-          <Route path="product/:id" element={<ProductDetails/>}/>
-          <Route path="/login" element={<Login />}/>
-          <Route path="/signup" element={<Signup />}/>
-          <Route path="logout"/>
-          <Route path="/products/:id/review" element={<ReviewPage/>}/>
-        </Routes>
+            {/* Dashboard nested routes */}
+            <Route path="/dashboard" element={<DashboardLayout />}>
+              <Route index element={<Order />} />{" "}
+              {/* Default page for /dashboard */}
+              <Route path="order" element={<Order />} />
+              <Route path="statistics" element={<Statistics />} />
+              <Route path="profile" element={<Profile />} />
+              <Route path="logout" element={<LogoutPage />} />
+            </Route>
 
-        <Footer />
-      </BrowserRouter>
+            <Route path="product/:id" element={<ProductDetails />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/products/:id/review" element={<ReviewPage />} />
+          </Routes>
+
+          <Footer />
+        </BrowserRouter>
+      </CartProvider>
     </div>
   );
 }

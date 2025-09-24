@@ -6,7 +6,7 @@ import { CartProvider } from './Context/Context.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <CartProvider>
+    <CartProvider >
       <App />
     </CartProvider>
   </StrictMode>,

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import OrderSummary from "../../components/OrderSummary";
-import type UserProps from "../../types/UserRead";
+import type {UserProps} from "../../types/UserRead";
 import { api } from "../../API/Registration";
 import { MdDelete } from "react-icons/md";
 import { BsCartDash, BsCartPlus } from "react-icons/bs";
@@ -150,7 +150,7 @@ const handleQuantityChange = (productId: number, newQuantity: number) => {
                 <div className="flex items-center gap-4">
                   <img
                     className="w-20 h-20 object-cover rounded-sm"
-                    src={`http://127.0.0.1:8000/${item.image}`}
+                    src={`http://127.0.0.1:8000/images/${item.image}`}
                     alt={item.title}
                   />
                   <div>

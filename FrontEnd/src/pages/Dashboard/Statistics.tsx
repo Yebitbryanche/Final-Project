@@ -11,7 +11,7 @@ import {
   BarChart,
 } from "recharts";
 import { api } from "../../API/Registration";
-import type UserProps from "../../types/UserRead";
+import type {UserProps} from "../../types/UserRead";
 import type { Order } from "../../types/products";
 
 

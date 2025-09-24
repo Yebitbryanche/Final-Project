@@ -1,5 +1,4 @@
 import { NavLink, Outlet } from "react-router-dom";
-import logo from "../../assets/images/mboakakologo.png";
 import orderIcon from "../../assets/images/order.svg";
 import statisticsIcon from "../../assets/images/statistics.svg";
 import profileIcon from "../../assets/images/profile.svg";
