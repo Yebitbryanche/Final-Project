@@ -86,35 +86,35 @@ function Statistics() {
 
         <div className="flex flex-col md:flex-row gap-6">
           {/* Total Spent */}
-          <div className="bg-gradient-to-r from-green-400 to-green-600 shadow-lg rounded-2xl p-6 flex-1 flex items-center gap-4 text-white transform hover:scale-105 transition-transform">
-            <div className="bg-white/20 p-3 rounded-full">
-              <FaCoins size={24} />
+          <div className="bg-white shadow-lg rounded-2xl p-6 flex-1 flex items-center gap-4 text-white transform hover:scale-105 transition-transform">
+            <div className="bg-secondary/20 p-3 rounded-full">
+              <FaCoins size={24} className="text-secondary"/>
             </div>
             <div className="text-left">
-              <p className="text-sm font-medium opacity-90">Total Spent</p>
-              <p className="text-2xl font-bold">{totalSpent} XAF</p>
+              <p className="text-sm font-medium opacity-90 text-primary">Total Spent</p>
+              <p className="text-2xl font-bold text-secondary">{totalSpent} XAF</p>
             </div>
           </div>
 
           {/* Completed Orders */}
-          <div className="bg-gradient-to-r from-blue-400 to-blue-600 shadow-lg rounded-2xl p-6 flex-1 flex items-center gap-4 text-white transform hover:scale-105 transition-transform">
-            <div className="bg-white/20 p-3 rounded-full">
-              <FaCheckCircle size={24} />
+          <div className="bg-white shadow-lg rounded-2xl p-6 flex-1 flex items-center gap-4 text-white transform hover:scale-105 transition-transform">
+            <div className="bg-secondary/20 p-3 rounded-full">
+              <FaCheckCircle size={24} className="text-secondary"/>
             </div>
             <div className="text-left">
-              <p className="text-sm font-medium opacity-90">Completed Orders</p>
-              <p className="text-2xl font-bold">{completedOrders}</p>
+              <p className="text-sm font-medium opacity-90 text-primary">Total Spent</p>
+              <p className="text-2xl font-bold text-secondary">{completedOrders}</p>
             </div>
           </div>
 
           {/* Pending Orders */}
-          <div className="bg-gradient-to-r from-yellow-400 to-yellow-600 shadow-lg rounded-2xl p-6 flex-1 flex items-center gap-4 text-white transform hover:scale-105 transition-transform">
-            <div className="bg-white/20 p-3 rounded-full">
-              <FaClock size={24} />
+          <div className="bg-white shadow-lg rounded-2xl p-6 flex-1 flex items-center gap-4 text-white transform hover:scale-105 transition-transform">
+            <div className="bg-secondary/20 p-3 rounded-full">
+              <FaClock size={24} className="text-secondary" />
             </div>
             <div className="text-left">
-              <p className="text-sm font-medium opacity-90">Pending Orders</p>
-              <p className="text-2xl font-bold">{pendingOrders}</p>
+              <p className="text-sm font-medium opacity-90 text-primary">Pending Orders</p>
+              <p className="text-2xl font-bold text-secondary">{pendingOrders}</p>
             </div>
           </div>
         </div>
