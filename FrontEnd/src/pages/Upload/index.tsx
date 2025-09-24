@@ -3,7 +3,7 @@ import { FaPlus, FaTrash, FaUserCircle } from "react-icons/fa";
 import { api } from "../../API/Registration";
 import type ProductProps from "../../types/products";
 import type { Admin, UserProps } from "../../types/UserRead";
-import { useNavigate } from "react-router-dom";
+
 
 
 function AddProduct() {
@@ -11,7 +11,6 @@ function AddProduct() {
   const token = localStorage.getItem("token")
   const [user, setUser] = useState<UserProps>()
   const categories = ["All", "perfume", "Flip", "bodywash", "Backpacks", "Jewelries", "Shoes","Topwear","Bags","Belts","Headwear","Innerwear","bottomwear","Wallets","Fragrance","Nails","Eyewear","Ties"]
-  const navigate = useNavigate();
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [stock, setStock] = useState<number | "">("");
@@ -88,15 +87,6 @@ console.log(editingProduct?.id)
       })
       .then((res) => {
         console.log(res.data);
-        const storedUser = localStorage.getItem("user"); 
-        if (storedUser) { const user = JSON.parse(storedUser); 
-          if (user.role === "admin") { 
-            setAdmins([ 
-              { id: Date.now(), name: user.user_name, avatar: user.avatar || "/Avatar.png", uploadedAt: "Just now", }, 
-            ]); } 
-            else { 
-              navigate("/signup", { replace: true }); } } else { navigate("/signup", { replace: true }); 
-            }
         setUser(res.data);
       });
   }, []);
