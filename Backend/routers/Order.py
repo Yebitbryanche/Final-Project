@@ -94,7 +94,7 @@ def checkout(user_id: int, session: Session = Depends(get_session)):
 def get_orders(user_id:int, session:Session = Depends(get_session)):
     orders = session.exec(select(Order).where(Order.user_id == user_id)).all()
     if not orders:
-        not_found("orders")
+        return []
     return orders
 
 @router.get("/orders/{order_id}/items")
@@ -114,9 +114,12 @@ def get_order_items(order_id:int, session:Session = Depends(get_session)):
             "price": order_item.price,
             "quantity": order_item.quantity,
             "subtotal": order_item.price * order_item.quantity
+            
         }
         for order_item, product in order_items
     ]
+
+
 
 
 # user order history
