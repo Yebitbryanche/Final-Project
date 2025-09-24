@@ -21,10 +21,7 @@ export default function PaymentError() {
         </h2>
 
         
-        <p className="text-gray-600 mb-1">
-          Order <span className="font-semibold">#12345</span> |{" "}
-          <span className="font-semibold">$99.99</span>
-        </p>
+        
 
       
         <p className="text-gray-500 mb-6">
