@@ -13,10 +13,12 @@ router = APIRouter()
 
 @router.post("/checkout/{user_id}")
 def checkout(user_id: int, session: Session = Depends(get_session)):
+    # Get user's cart
     cart = session.exec(select(Cart).where(Cart.user_id == user_id)).first()
     if not cart:
         not_found("cart")
-    
+
+    # Fetch cart items with product details
     cart_items = session.exec(
         select(CartItems, Product)
         .join(Product, CartItems.product_id == Product.id)
@@ -26,9 +28,13 @@ def checkout(user_id: int, session: Session = Depends(get_session)):
     if not cart_items:
         not_found("cart items")
 
-    total_amount = sum(product.price * cart_item.quantity for cart_item, product in cart_items)
+    # Calculate total amount
+    total_amount = sum(
+        product.price * cart_item.quantity
+        for cart_item, product in cart_items
+    )
 
-    # Create new order in DB with Pending status
+    # Create new order with Pending status
     order = Order(user_id=user_id, total_amount=total_amount, status="Pending")
     session.add(order)
     session.commit()
@@ -44,17 +50,18 @@ def checkout(user_id: int, session: Session = Depends(get_session)):
         )
         session.add(order_item)
 
-    # Clear cart after creating the order
+    # Clear cart
     session.exec(delete(CartItems).where(CartItems.cart_id == cart.id))
     session.commit()
 
+    # Create Stripe checkout session
     stripe_session = stripe.checkout.Session.create(
         payment_method_types=["card"],
         line_items=[
             {
                 "price_data": {
                     "currency": "xaf",
-                    "unit_amount": int(product.price),  # normal price
+                    "unit_amount": int(product.price),  # Stripe expects smallest currency unit
                     "product_data": {"name": product.title},
                 },
                 "quantity": cart_item.quantity,
@@ -65,6 +72,16 @@ def checkout(user_id: int, session: Session = Depends(get_session)):
         success_url="http://localhost:5173/success?session_id={CHECKOUT_SESSION_ID}",
         cancel_url="http://localhost:5173/cancel",
     )
+
+    # Update order status based on payment
+    status = stripe_session.payment_status
+    if status == "unpaid":
+        order.status = "Complete"
+    else:
+        order.status = "Pending"
+
+    session.commit()
+    session.refresh(order)
 
     return {"id": stripe_session.id}
 
