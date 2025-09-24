@@ -4,11 +4,11 @@ import images from "../../types/images";
 import { RxHamburgerMenu } from "react-icons/rx";
 import { BsCart } from "react-icons/bs";
 import { api } from "../../API/Registration";
-import type UserProps from "../../types/UserRead";
+import type {UserProps }from "../../types/UserRead";
 import type { CartResponse } from "../../pages/Cart";
 import {  HiSquaresPlus } from "react-icons/hi2";
 import { IoSearchSharp } from "react-icons/io5";
-
+import { useCart } from "../../Context/Context";
 
 function Navigation() {
   const token = localStorage.getItem("token");
@@ -16,6 +16,7 @@ function Navigation() {
   const [user, setUser] = useState<UserProps | undefined>();
   const [cartItems, setCartItems] = useState<CartResponse | null>(null);
   const [error, setError] = useState("");
+  const { cart} = useCart()
  
 
   useEffect(() => {
@@ -38,6 +39,7 @@ function Navigation() {
         .get(`/cart/${user.id}/view`)
         .then((res) => {
           setCartItems(res.data);
+          console.log(cartItems)
         })
         .catch((err: any) => {
           console.log(error)
@@ -98,7 +100,7 @@ function Navigation() {
             </NavLink>
           </li>
           <li className="relative p-5">
-             <div className="absolute top-0 right-0 py-1 px-[6px] rounded-full bg-secondary text-white">{cartItems?.items.length === 0? null: <p className="text-xs">{cartItems?.items.length}</p>}</div>
+             <div className="absolute top-0 right-0 py-1 px-[6px] rounded-full bg-secondary text-white">{cart.length <= 0? null: <p className="text-xs">{cart.length}</p>}</div>
             <NavLink
               to="/cart"
               className={({ isActive }) =>
@@ -135,17 +137,16 @@ function Navigation() {
               className="px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:border-primary text-sm w-[200px]"
             />
             <button className="px-3 py-2 bg-secondary text-white rounded-r-md font-semibold hover:bg-secondary/90 transition">
-
-              <IoSearchSharp size={21}/>
+              <IoSearchSharp size={21} />
             </button>
           </div>
 
-          <button
-            aria-label="More options"
-            className="text-3xl cursor-pointer text-secondary hover:text-secondary/70"
+          <Link
+            to="/upload"
+            className={user?.role?`text-3xl cursor-pointer text-secondary hover:text-secondary/70`:`hidden`}
           >
             <HiSquaresPlus />
-          </button>
+          </Link>
         </div>
 
         {/* Mobile Hamburger */}
@@ -236,7 +237,7 @@ function Navigation() {
               className="w-full px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:border-primary text-sm"
             />
             <button className="px-3 py-2 bg-primary text-white rounded-r-md font-semibold hover:bg-primary/90 transition">
-              <IoSearchSharp/>
+              <IoSearchSharp />
             </button>
           </div>
         </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import UserAvatar from "../../components/UseAvatar";
 import { api } from "../../API/Registration";
-import type UserProps from "../../types/UserRead";
+import type { UserProps } from "../../types/UserRead";
 import type { Order, OrderItem } from "../../types/products";
 
 function Order() {

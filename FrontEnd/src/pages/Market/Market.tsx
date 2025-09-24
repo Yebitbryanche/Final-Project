@@ -6,10 +6,10 @@ import Addtocardbutton from "../../components/Addtocardbutton";
 import Buynowbutton from "../../components/Buynowbutton";
 import { useEffect, useState } from "react";
 import { api } from "../../API/Registration";
-import { addToCart } from "../../services/addtoCart";
-import type UserProps from "../../types/UserRead";
+import type {UserProps} from "../../types/UserRead";
 import { Link } from "react-router-dom";
 import Loader from "../../components/Loader";
+import { useCart } from "../../Context/Context";
 
 interface ProductProps {
   average_rating: number;
@@ -34,6 +34,7 @@ function Market() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<UserProps>();
   const [ratings, setRatings] = useState<Record<number, number>>({}); 
+  const { cart, addToCart } = useCart()
 
   // Fetch all products
 useEffect(() => {
@@ -59,6 +60,7 @@ useEffect(() => {
           api
             .get(`/products/${product.id}`)
             .then((res) => {
+              console.log(cart)
               setRatings((prev) => ({
                 ...prev,
                 [product.id]: res.data.average_rating || 0,
@@ -146,7 +148,7 @@ useEffect(() => {
               <Link to={`/product/${product.id}`}>
                 <div className="rounded-lg overflow-hidden">
                   <img
-                    src={`http://127.0.0.1:8000/${product.image}`}
+                    src={`http://127.0.0.1:8000/images/${product.image}`}
                     alt={product.title}
                     className="w-full h-60 object-cover"
                   />
@@ -166,8 +168,11 @@ useEffect(() => {
               <div className="flex justify-between gap-2 mt-2">
                 <Addtocardbutton
                   onClick={() => {
-                    if (!user?.id) console.log("No user logged in");
-                    else addToCart(user.id, product.id);
+                    if (!user?.id) {
+                      console.log("No user logged in");
+                    } else {
+                      addToCart(user.id, product.id);
+                    }
                   }}
                   title="Add to Cart"
                   className="bg-white text-primary px-3 py-2 flex-1 text-sm"
@@ -194,7 +199,7 @@ useEffect(() => {
               <Link to={`/product/${product.id}`}>
                 <div className="rounded-lg overflow-hidden">
                   <img
-                    src={`http://127.0.0.1:8000/${product.image}`}
+                    src={`http://127.0.0.1:8000/images/${product.image}`}
                     alt={product.title}
                     className="w-full h-60 object-cover"
                   />

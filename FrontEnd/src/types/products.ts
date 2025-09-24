@@ -21,4 +21,5 @@ export interface Order {
   status: string;
   items: OrderItem[];
   total_amount:number; 
+  stock:number
 }
