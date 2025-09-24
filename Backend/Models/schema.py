@@ -61,6 +61,7 @@ class UserRead(SQLModel):
 
 class ProductUpdate(BaseModel):
     quantity:int
+    
 class ProductCreate(BaseModel):
     title:str
     description:str
