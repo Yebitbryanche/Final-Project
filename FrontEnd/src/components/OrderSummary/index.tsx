@@ -66,6 +66,7 @@ const OrderSummary = ({ subtotal }: Props) => {
             checkout(user.id);
           }
         }}
+        className="bg-gray-700 text-white cursor-pointer"
       />
     </div>
   );

@@ -4,6 +4,8 @@ import { api } from "../../API/Registration";
 import type ProductProps from "../../types/products";
 import type { Admin, UserProps } from "../../types/UserRead";
 import { useNavigate } from "react-router-dom";
+import Modal from "../../components/Modal";
+
 
 
 function AddProduct() {
@@ -31,6 +33,12 @@ function AddProduct() {
     type: "success",
     visible: false,
   });
+
+  // Modal states for delete
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<ProductProps | null>(null);
+
+  
 
 const handleEdit = async () => {
   if (!editingProduct?.id) return;
@@ -370,14 +378,17 @@ const handleDelete = async (productId: number) => {
             setImageUrl(item.image);
             setDescription(item.description);
           }}
-          className="px-3 py-1 bg-primary text-white text-sm rounded hover:bg-primary/90 transition-colors"
+          className="px-3 py-1 bg-primary text-white text-sm rounded cursor-pointer hover:bg-primary/90 transition-colors"
         >
           Edit
         </button>
 
           <button
-          onClick={() => handleDelete(item.id)}
-            className="px-3 py-1 bg-secondary text-white text-sm rounded hover:bg-secondary/90 transition-colors"
+          onClick={() => {
+                      setProductToDelete(item);
+                      setShowDeleteModal(true);
+                    }}
+            className="px-3 py-1 bg-secondary text-white text-sm rounded cursor-pointer hover:bg-secondary/90 transition-colors"
           >
             Delete
           </button>
@@ -386,8 +397,24 @@ const handleDelete = async (productId: number) => {
     ))}
   </div>
 )}
-
       </div>
+ {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={showDeleteModal}
+        onClose={() => setShowDeleteModal(false)}
+        onConfirm={() => {
+          if (productToDelete) {
+            handleDelete(productToDelete.id);
+            setShowDeleteModal(false);
+            setProductToDelete(null);
+          }
+        }}
+        title="Delete Product"
+        message={`Are you sure you want to delete "${productToDelete?.title}"?`}
+        confirmText="Yes, Delete"
+        cancelText="Cancel"
+      />
+
     </div>
   );
 }

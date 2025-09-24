@@ -3,7 +3,7 @@ import { Globe, ChevronDown } from "lucide-react";
 import images from "../../types/images";
 import { FaFacebook, FaWhatsapp, FaTwitter } from "react-icons/fa";
 import { AiFillInstagram } from "react-icons/ai";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 // ---------------- Translations ----------------
 const translations = {
@@ -205,6 +205,10 @@ function Footer() {
             <NavLink to="/Twitter" className="hover:text-secondary"><FaTwitter size={25} /></NavLink>
           </div>
         </div>
+        <Link to ="/portfolio">
+        <h2 className="font-bold text-lg">Portfolio</h2>
+        </Link>
+        
       </div>
 
       {/* Categories & Contact */}
