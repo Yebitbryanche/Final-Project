@@ -102,7 +102,7 @@ function Statistics() {
               <FaCheckCircle size={24} className="text-secondary"/>
             </div>
             <div className="text-left">
-              <p className="text-sm font-medium opacity-90 text-primary">Total Spent</p>
+              <p className="text-sm font-medium opacity-90 text-primary">Complete Orders</p>
               <p className="text-2xl font-bold text-secondary">{completedOrders}</p>
             </div>
           </div>
