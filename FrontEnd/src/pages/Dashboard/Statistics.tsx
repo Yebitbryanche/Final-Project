@@ -12,14 +12,14 @@ import {
 } from "recharts";
 import { api } from "../../API/Registration";
 import type {UserProps} from "../../types/UserRead";
-import type { Order } from "../../types/products";
+import type { OrderProps } from "../../types/products";
 
 
 function Statistics() {
   const token = localStorage.getItem("token")
   const [user, setUser] = useState<UserProps | undefined>()
   const [error, setError] = useState("")
-  const [orders, setOrders] = useState<Order[]>([])
+  const [orders, setOrders] = useState<OrderProps[]>([])
   const [graphData, setGraphData] = useState<{ week: string; spent: number }[]>([]);
 
 
@@ -45,7 +45,7 @@ function Statistics() {
       setOrders(res.data)
       //
         const dataMap: Record<string, number> = {};
-        res.data.forEach((order: Order) => {
+        res.data.forEach((order: OrderProps) => {
           const date = new Date(order.created_at);
           const month = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`; // e.g., "2025-09"
           if (dataMap[month]) dataMap[month] += order.total_amount;
@@ -102,7 +102,7 @@ function Statistics() {
               <FaCheckCircle size={24} className="text-secondary"/>
             </div>
             <div className="text-left">
-              <p className="text-sm font-medium opacity-90 text-primary">Total Spent</p>
+              <p className="text-sm font-medium opacity-90 text-primary">Complete Orders</p>
               <p className="text-2xl font-bold text-secondary">{completedOrders}</p>
             </div>
           </div>
