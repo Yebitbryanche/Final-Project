@@ -4,7 +4,7 @@ from sqlmodel import Session, select
 from utility.exception import not_found
 from db import get_session
 from Models.schema import ProductCreate, ProductRead, ProductUpdate
-from schema.models import Product
+from schema.models import Product, User
 
 
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -71,3 +71,10 @@ def get_admin_products(admin_id: int, session: Session = Depends(get_session)):
         raise HTTPException(status_code=404, detail="No products found for this admin")
 
     return products
+
+# users
+@router.get("/all")
+def get_all_users(session:Session = Depends(get_session)):
+    users = session.exec(select(User)).all()
+
+    return users

@@ -22,6 +22,7 @@ import { api } from "./API/Registration";
 import type { UserProps } from "./types/UserRead";
 import Portfolio from "./portfolio/Portfolio";
 import Order from "./pages/Dashboard/Order";
+import AdminDashBoard from "./pages/Admin";
 
 function App() {
   const [user, setUser] = useState<UserProps>()
@@ -67,6 +68,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/products/:id/review" element={<ReviewPage />} />
+            <Route path="/admin" element ={ <AdminDashBoard />}/>
           </Routes>
 
           <Footer />
