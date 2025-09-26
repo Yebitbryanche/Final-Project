@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import { api } from "../../API/Registration";
 import type {UserProps} from "../../types/UserRead";
+import { motion } from "framer-motion";
 import type { OrderProps } from "../../types/products";
 
 
@@ -84,54 +85,63 @@ function Statistics() {
           <UserAvatar />
         </div>
 
-        <div className="flex flex-col md:flex-row gap-6">
-          {/* Total Spent */}
-          <div className="bg-white shadow-lg rounded-2xl p-6 flex-1 flex items-center gap-4 text-white transform hover:scale-105 transition-transform">
-            <div className="bg-secondary/20 p-3 rounded-full">
-              <FaCoins size={24} className="text-secondary"/>
-            </div>
-            <div className="text-left">
-              <p className="text-sm font-medium opacity-90 text-primary">Total Spent</p>
-              <p className="text-2xl font-bold text-secondary">{totalSpent} XAF</p>
-            </div>
-          </div>
+{/* card section */}
+<motion.div
+  className="flex flex-col md:flex-row gap-6"
+  initial={{ opacity: 0, y: 50 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: false, amount: 0.3 }}
+  transition={{ duration: 0.8, ease: "easeOut" }}
+>
+  {/* Total Spent */}
+  <div className="bg-white shadow-lg rounded-2xl p-6 flex-1 flex items-center gap-4 text-white transform hover:scale-105 transition-transform">
+    <div className="bg-secondary/20 p-3 rounded-full">
+      <FaCoins size={24} className="text-secondary"/>
+    </div>
+    <div className="text-left">
+      <p className="text-sm font-medium opacity-90 text-primary">Total Spent</p>
+      <p className="text-2xl font-bold text-secondary">{totalSpent} XAF</p>
+    </div>
+  </div>
 
-          {/* Completed Orders */}
-          <div className="bg-white shadow-lg rounded-2xl p-6 flex-1 flex items-center gap-4 text-white transform hover:scale-105 transition-transform">
-            <div className="bg-secondary/20 p-3 rounded-full">
-              <FaCheckCircle size={24} className="text-secondary"/>
-            </div>
-            <div className="text-left">
-              <p className="text-sm font-medium opacity-90 text-primary">Complete Orders</p>
-              <p className="text-2xl font-bold text-secondary">{completedOrders}</p>
-            </div>
-          </div>
+  {/* Completed Orders */}
+  <div className="bg-white shadow-lg rounded-2xl p-6 flex-1 flex items-center gap-4 text-white transform hover:scale-105 transition-transform">
+    <div className="bg-secondary/20 p-3 rounded-full">
+      <FaCheckCircle size={24} className="text-secondary"/>
+    </div>
+    <div className="text-left">
+      <p className="text-sm font-medium opacity-90 text-primary">Completed Orders</p>
+      <p className="text-2xl font-bold text-secondary">{completedOrders}</p>
+    </div>
+  </div>
 
-          {/* Pending Orders */}
-          <div className="bg-white shadow-lg rounded-2xl p-6 flex-1 flex items-center gap-4 text-white transform hover:scale-105 transition-transform">
-            <div className="bg-secondary/20 p-3 rounded-full">
-              <FaClock size={24} className="text-secondary" />
-            </div>
-            <div className="text-left">
-              <p className="text-sm font-medium opacity-90 text-primary">Pending Orders</p>
-              <p className="text-2xl font-bold text-secondary">{pendingOrders}</p>
-            </div>
-          </div>
-        </div>
+  {/* Pending Orders */}
+  <div className="bg-white shadow-lg rounded-2xl p-6 flex-1 flex items-center gap-4 text-white transform hover:scale-105 transition-transform">
+    <div className="bg-secondary/20 p-3 rounded-full">
+      <FaClock size={24} className="text-secondary" />
+    </div>
+    <div className="text-left">
+      <p className="text-sm font-medium opacity-90 text-primary">Pending Orders</p>
+      <p className="text-2xl font-bold text-secondary">{pendingOrders}</p>
+    </div>
+  </div>
+</motion.div>
 
-        {/* line chart */}
-        <div className="bg-white shadow-lg rounded-xl p-6 w-full overflow-x-auto">
-          <p className="font-bold text-gray-700 mb-4">Spending Over Time</p>
-          <ResponsiveContainer width="100%" height={250}>
-            <BarChart data={graphData} margin={{ top: 20, right: 30, bottom: 5, left: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="week" />
-              <YAxis />
-              <Tooltip formatter={(value: number) => `${value} XAF`} />
-              <Bar dataKey="spent" fill="#14452f" barSize={40} />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
+{/* Line/Bar Chart */}
+<div className="bg-white shadow-lg rounded-xl p-6 w-full overflow-x-auto mt-6">
+  <p className="font-bold text-gray-700 mb-4">Spending Over Time</p>
+  <ResponsiveContainer width="100%" height={250}>
+    <BarChart data={graphData} margin={{ top: 20, right: 30, bottom: 5, left: 0 }}>
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="week" />
+      <YAxis />
+      <Tooltip formatter={(value: number) => `${value} XAF`} />
+      <Bar dataKey="spent" fill="#14452f" barSize={40} />
+    </BarChart>
+  </ResponsiveContainer>
+</div>
+
+
     </div>
   );
 }
