@@ -20,17 +20,33 @@ const Home = () => {
   const [ratings, setRatings] = useState<Record<number, number>>({}); 
   const { cart, addToCart } = useCart()
 
+
+    useEffect(() => {
+    api
+      .get("/users/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setUser(res.data);
+      });
+  }, []);
+
   useEffect(() => {
     setLoading(true);
+    if(!user?.id) return
+    
     api
-      .get("/products")
+      .get(`/recommendations/${user?.id}`)
       .then((res) => {
         console.log(cart)
         setProducts(res.data.slice(0, 4));
       })
       .catch((error: any) => console.log(error.message))
       .finally(() => setLoading(false));
-  }, []);
+  }, [user?.id]);
 
   useEffect(() => {
     if (products.length === 0) return;
@@ -50,19 +66,6 @@ const Home = () => {
     });
   }, [products]);
 
-
-  useEffect(() => {
-    api
-      .get("/users/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-        setUser(res.data);
-      });
-  }, []);
 
   if (loading) {
     return (
