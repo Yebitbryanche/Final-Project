@@ -3,8 +3,8 @@ import { FaPlus, FaTrash, FaUserCircle } from "react-icons/fa";
 import { api } from "../../API/Registration";
 import type ProductProps from "../../types/products";
 import type { Admin, UserProps } from "../../types/UserRead";
-import { useNavigate } from "react-router-dom";
 import Modal from "../../components/Modal";
+import { Link } from "react-router-dom";
 
 
 
@@ -98,6 +98,18 @@ console.log(editingProduct?.id)
         setUser(res.data);
       });
   }, []);
+
+  useEffect(() =>{
+    const adminData = localStorage.getItem("user")
+    if(adminData){
+      const userAdmin = JSON.parse(adminData);
+      if (userAdmin.role){
+        setAdmins([ 
+        { id: Date.now(), name: userAdmin.user_name, avatar: userAdmin.avatar || "/Avatar.png", uploadedAt: "Just now", }
+        ]);
+      }
+    }
+  },[])
 
     
   const upload = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -219,14 +231,14 @@ const handleDelete = async (productId: number) => {
         </div>
 
         {/* Admin Activity */}
-        <div className="bg-white rounded-lg p-4 shadow border border-tertiary lg:col-span-1">
+        <Link to="/admin" className="bg-white rounded-lg p-4 shadow border border-tertiary lg:col-span-1">
           <h3 className="font-semibold text-lg mb-3 text-secondary">
             Admin Activity
           </h3>
           <div className="space-y-3">
             {admins.map((admin) => ( <div key={admin.id} className="flex items-center gap-3 border border-tertiary rounded-lg p-2 hover:bg-tertiary/40" > <img src={admin.avatar} alt="" className="w-10 h-10 rounded-full object-cover border-2 border-primary" /> <div> <p className="text-sm font-medium">{admin.name}</p> <p className="text-gray-500 text-xs"> Uploaded {admin.uploadedAt} </p> </div> </div> ))}
           </div>
-        </div>
+        </Link>
 
         {/* Product Form */}
         <form className="lg:col-span-3 bg-white rounded-lg p-6 shadow-xl border border-tertiary"
