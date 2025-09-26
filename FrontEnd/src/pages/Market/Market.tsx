@@ -32,6 +32,28 @@ function Market() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<UserProps>();
   const [ratings, setRatings] = useState<Record<number, number>>({});
+  const [showCategories, setShowCategories] = useState(false);
+
+  const categories = [
+    "All",
+    "perfume",
+    "Flip",
+    "bodywash",
+    "Backpacks",
+    "Jewelries",
+    "Shoes",
+    "Topwear",
+    "Bags",
+    "Belts",
+    "Headwear",
+    "Innerwear",
+    "bottomwear",
+    "Wallets",
+    "Fragrance",
+    "Nails",
+    "Eyewear",
+    "Ties",
+  ];
   const [products, setProducts] = useState<ProductProps[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("All"); // Track selected category
   const { cart, addToCart } = useCart();
@@ -84,7 +106,7 @@ function Market() {
   }, [token]);
 
   const handleFilter = (category: string) => {
-    setSelectedCategory(category); // Update selected category
+    setSelectedCategory(category);
     if (category === "All") setFilteredProducts(allProducts);
     else
       setFilteredProducts(
@@ -92,6 +114,7 @@ function Market() {
           (item) => item.category.toLowerCase() === category.toLowerCase()
         )
       );
+    setShowCategories(false); // Close sidebar after selecting
   };
 
 
@@ -124,77 +147,103 @@ function Market() {
       )}
 
       {/* Categories */}
-      <div className="flex flex-col md:flex-row gap-4 md:gap-5 justify-center items-start md:items-center mt-[4rem]">
-        <p className="text-2xl font-bold text-primary">Categories:</p>
+      <div className="mt-[4rem]">
+        {/* Desktop view */}
+        <div className="hidden md:flex flex-row gap-5 justify-center items-center">
+          <p className="text-2xl font-bold text-primary">Categories:</p>
+          <div
+            className="flex flex-wrap md:flex-nowrap gap-2 overflow-x-auto scroll-smooth"
+            style={{
+              msOverflowStyle: "none",
+              scrollbarWidth: "none",
+            }}
+          >
+            <style>
+              {`
+                div::-webkit-scrollbar {
+                  display: none;
+                }
+              `}
+            </style>
 
-        <div
-          className="flex flex-wrap md:flex-nowrap gap-2 overflow-x-auto scroll-smooth"
-          style={{
-            msOverflowStyle: "none",
-            scrollbarWidth: "none",
-          }}
-        >
-          <style>
-            {`
-              div::-webkit-scrollbar {
-                display: none;
-              }
-            `}
-          </style>
+            {categories.map((cat) => (
+              <Categorybutton
+                key={cat}
+                title={cat}
+                className={`bg-tertiary px-4 py-2 shadow-lg hover:bg-primary hover:text-white transition-colors duration-300 group cursor-pointer font-bold flex-shrink-0 ${
+                  selectedCategory === cat ? "bg-primary text-white" : ""
+                }`}
+                onClick={() => handleFilter(cat)}
+              />
+            ))}
+          </div>
+        </div>
 
-          {[
-            "All",
-            "perfume",
-            "Flip",
-            "bodywash",
-            "Backpacks",
-            "Jewelries",
-            "Shoes",
-            "Topwear",
-            "Bags",
-            "Belts",
-            "Headwear",
-            "Innerwear",
-            "bottomwear",
-            "Wallets",
-            "Fragrance",
-            "Nails",
-            "Eyewear",
-            "Ties",
-          ].map((cat) => (
-            <Categorybutton
-              key={cat}
-              title={cat}
-              className={`bg-tertiary px-4 py-2 shadow-lg hover:bg-primary hover:text-white transition-colors duration-300 group cursor-pointer font-bold flex-shrink-0 ${
-                selectedCategory === cat ? "bg-primary text-white" : ""
+        {/* Mobile view */}
+        <div className="md:hidden">
+          <button
+            onClick={() => setShowCategories(true)}
+            className="px-4 py-2 bg-secondary text-white font-bold rounded-lg flex items-center justify-between w-full max-w-[200px]"
+          >
+            <span>Categories</span>
+            {/* Dropdown Icon with rotation */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className={`w-5 h-5 ml-2 transition-transform duration-300 ${
+                showCategories ? "rotate-180" : ""
               }`}
-              onClick={() => handleFilter(cat)}
-            />
-          ))}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {showCategories && (
+            <div className="fixed inset-0 z-50 flex">
+              {/* Sidebar */}
+              <div className="w-3/4 max-w-xs bg-white shadow-lg p-4 flex flex-col gap-2 animate-slide-in overflow-y-auto max-h-screen">
+                <p className=" font-bold mb-4 text-secondary text-2xl">Select Category</p>
+                {categories.map((cat) => (
+                  <Categorybutton
+                    key={cat}
+                    title={cat}
+                    className={`px-4 py-2 rounded-lg text-left font-bold ${
+                      selectedCategory === cat
+                        ? "bg-primary text-white"
+                        : "bg-tertiary hover:bg-primary hover:text-white"
+                    }`}
+                    onClick={() => handleFilter(cat)}
+                  />
+                ))}
+              </div>
+              {/* Backdrop */}
+              <div
+                className="flex-1 bg-black/40"
+                onClick={() => setShowCategories(false)}
+              />
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Hero Section: Only show when "All" is selected */}
+      {/* Hero Section */}
       {selectedCategory === "All" && (
-        <div className="  w-full  ">
-          <div className="bg-gradient-to-r from-pink-100 via-primary/80 to-primary p-5 flex flex-col md:flex-row  md:items-stretch  gap-5 rounded-xl text-secondary">
-            {/* Text Section */}
+        <div className="w-full">
+          <div className="bg-gradient-to-r from-pink-100 via-primary/80 to-primary p-5 flex flex-col md:flex-row md:items-stretch gap-5 rounded-xl text-secondary">
             <div className="flex-1 flex flex-col gap-4 pt-10 justify-center">
-              <h1 className="text-4xl md:text-5xl font-bold ">
-                Welcome to Our Market
-              </h1>
+              <h1 className="text-4xl md:text-5xl font-bold">Welcome to Our Market</h1>
               <p className="text-lg md:text-xl max-w-md">
                 Discover amazing products, great deals, and exclusive offers just for you.
               </p>
-              
             </div>
-
-            {/* Image Section */}
-            <div className="">
+            <div>
               <img
-                src="images/im.png" // Replace with your image URL
+                src="images/im.png"
                 alt="Hero Image"
-                className="rounded-lg  object-cover w-full md:w-auto "
+                className="rounded-lg object-cover w-full md:w-auto"
               />
             </div>
           </div>
