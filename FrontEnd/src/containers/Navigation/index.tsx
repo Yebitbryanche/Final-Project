@@ -9,7 +9,7 @@ import type { CartResponse } from "../../pages/Cart";
 import { useCart } from "../../Context/Context";
 import { HiOutlineSquaresPlus, HiSquaresPlus } from "react-icons/hi2";
 import { IoSearchSharp } from "react-icons/io5";
-
+import SearchBar from "../../components/SearchBar";
 
 function Navigation() {
   const token = localStorage.getItem("token");
@@ -138,17 +138,11 @@ function Navigation() {
           </Link>
 
           {/* Search */}
-          <div className="flex items-center ml-4">
-            <input
-              type="text"
-              placeholder="Search products..."
-              className="px-4 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:border-primary text-sm w-[200px]"
-            />
-            <button className="px-3 py-2 bg-secondary text-white rounded-r-md font-semibold hover:bg-secondary/90 transition">
-
-              <IoSearchSharp size={21}/>
-            </button>
+          {/* Desktop Search - replaced with SearchBar component */}
+          <div className="ml-4">
+            <SearchBar />
           </div>
+
 
           <button
             aria-label="More options"
@@ -239,16 +233,10 @@ function Navigation() {
           </div>
 
           {/* Mobile Search */}
-          <div className="flex items-center mt-3">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="w-full px-3 py-2 border border-gray-300 rounded-l-md focus:outline-none focus:border-primary text-sm"
-            />
-            <button className="px-3 py-2 bg-primary text-white rounded-r-md font-semibold hover:bg-primary/90 transition">
-              <IoSearchSharp/>
-            </button>
+          <div className="mt-3">
+            <SearchBar />
           </div>
+
         </div>
       </div>
     </nav>
