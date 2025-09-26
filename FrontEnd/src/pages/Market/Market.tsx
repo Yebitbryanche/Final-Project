@@ -106,22 +106,38 @@ useEffect(() => {
       {error?
       <p className="absolute w-100 bottom-5 items-center rounded-sm text-white flex justify-between left-1 p-4 bg-red-500">error</p>:
       null}
-      {/* Categories */}
-      <div className="flex flex-col md:flex-row gap-4 md:gap-5 justify-center items-start md:items-center mt-[4rem]">
-        <p className="text-2xl font-bold text-primary">Categories:</p>
-        <div className="flex flex-wrap md:flex-nowrap gap-2 overflow-x-auto pb-2 md:pb-0">
-          {["All", "perfume", "Flip", "bodywash", "Backpacks", "Jewelries", "Shoes","Topwear","Bags","Belts","Headwear","Innerwear","bottomwear","Wallets","Fragrance","Nails","Eyewear","Ties"].map(
-            (cat) => (
-              <Categorybutton
-                key={cat}
-                title={cat}
-                className="bg-tertiary px-4 py-2 shadow-lg hover:bg-primary hover:text-white transition-colors duration-300 group cursor-pointer font-bold flex-shrink-0"
-                onClick={() => handleFilter(cat)}
-              />
-            )
-          )}
-        </div>
-      </div>
+      
+     {/* Categories */}
+<div className="flex flex-col md:flex-row gap-4 md:gap-5 justify-center items-start md:items-center mt-[4rem]">
+  <p className="text-2xl font-bold text-primary">Categories:</p>
+  <div className="relative w-full overflow-x-auto">
+    <div className="flex gap-2 animate-scroll whitespace-nowrap">
+      {["All", "perfume", "Flip", "bodywash", "Backpacks", "Jewelries", "Shoes","Topwear","Bags","Belts","Headwear","Innerwear","bottomwear","Wallets","Fragrance","Nails","Eyewear","Ties"].map(
+        (cat) => (
+          <Categorybutton
+            key={cat}
+            title={cat}
+            className="bg-tertiary px-4 py-2 shadow-lg hover:bg-primary hover:text-white transition-colors duration-300 group cursor-pointer font-bold flex-shrink-0"
+            onClick={() => handleFilter(cat)}
+          />
+        )
+      )}
+      {/* Duplicate for seamless loop */}
+      {["All", "perfume", "Flip", "bodywash", "Backpacks", "Jewelries", "Shoes","Topwear","Bags","Belts","Headwear","Innerwear","bottomwear","Wallets","Fragrance","Nails","Eyewear","Ties"].map(
+        (cat) => (
+          <Categorybutton
+            key={cat + "-duplicate"}
+            title={cat}
+            className="bg-tertiary px-4 py-2 shadow-lg hover:bg-primary hover:text-white transition-colors duration-300 group cursor-pointer font-bold flex-shrink-0"
+            onClick={() => handleFilter(cat)}
+          />
+        )
+      )}
+    </div>
+  </div>
+</div>
+
+
 
       {/* Recommended Products */}
       <div className="flex flex-col gap-4">
