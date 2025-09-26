@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import UserAvatar from "../../components/UseAvatar";
 import { api } from "../../API/Registration";
 import type { UserProps } from "../../types/UserRead";
-import type { Order, OrderItem } from "../../types/products";
+import { motion } from "framer-motion";
+import type { OrderProps, OrderItem } from "../../types/products";
 
 function Order() {
   const [user, setUser] = useState<UserProps | undefined>();
   const [error, setError] = useState<string | null>(null);
-  const [orders, setOrders] = useState<(Order & { items: OrderItem[] })[]>([]);
+  const [orders, setOrders] = useState<(OrderProps & { items: OrderItem[] })[]>([]);
   const token = localStorage.getItem("token");
 
   // Fetch user
@@ -28,7 +29,7 @@ function Order() {
       .get(`/orders/${user.id}`)
       .then(async (res) => {
         // Take only the last 5 orders
-        const latestOrders: Order[] = res.data.slice(-5).reverse();
+        const latestOrders: OrderProps[] = res.data.slice(-5).reverse();
 
 
         // Fetch items for each order
@@ -59,77 +60,75 @@ function Order() {
         <UserAvatar />
       </div>
 
-      {/* Orders Section */}
-      <div className="flex flex-col gap-6">
-        {error ? (
-          <p className="text-center text-red-500 py-6 text-lg">{error}</p>
-        ) : orders.length === 0 ? (
-          <p className="text-center text-gray-500 py-6 text-lg">No orders found</p>
-        ) : (
-          orders.map((order,index) => (
-            <div
-              key={order.id}
-              className="bg-white rounded-xl shadow-lg p-4 overflow-x-auto"
-            >
-              {/* Order Meta Info */}
-              <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
-                <div>
-                  <h2 className="font-semibold text-lg text-gray-800">
-                    Order #{index+1}
-                  </h2>
-                  <p className="text-sm text-gray-500">
-                    Placed on {new Date(order.created_at).toLocaleDateString()}
-                  </p>
-                </div>
-                <span
-                  className={`px-3 py-1 rounded-full text-sm font-medium ${
-                    order.status === "Completed"
-                      ? "bg-green-100 text-green-700"
-                      : order.status === "Pending"
-                      ? "bg-yellow-100 text-yellow-700"
-                      : "bg-gray-100 text-gray-700"
-                  }`}
-                >
-                  {order.status}
-                </span>
-              </div>
 
-              {/* Items Table */}
-              <table className="min-w-[600px] md:min-w-full w-full table-auto border-collapse rounded-lg overflow-hidden">
-                <thead>
-                  <tr className="bg-tertiary text-secondary">
-                    <th className="p-3 text-left text-sm md:text-base">Product</th>
-                    <th className="p-3 text-left text-sm md:text-base">Price</th>
-                    <th className="p-3 text-left text-sm md:text-base">Quantity</th>
-                    <th className="p-3 text-left text-sm md:text-base">Subtotal</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {order.items.map((item, i) => (
-                    <tr
-                      key={item.product_id}
-                      className={`${
-                        i % 2 === 0 ? "bg-gray-50" : "bg-white"
-                      } hover:bg-indigo-50 transition`}
-                    >
-                      <td className="p-2 md:p-3 text-sm md:text-base">{item.title}</td>
-                      <td className="p-2 md:p-3 text-sm md:text-base">
-                        {item.price} XAF
-                      </td>
-                      <td className="p-2 md:p-3 text-sm md:text-base">
-                        {item.quantity}
-                      </td>
-                      <td className="p-2 md:p-3 text-sm md:text-base">
-                        {item.subtotal}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          ))
-        )}
-      </div>
+      
+      {/* order section */}
+   <div className="flex flex-col gap-6">
+  {error ? (
+    <p className="text-center text-red-500 py-6 text-lg">{error}</p>
+  ) : orders.length === 0 ? (
+    <p className="text-center text-gray-500 py-6 text-lg">No orders found</p>
+  ) : (
+    orders.map((order, index) => (
+      <motion.div
+        key={order.id}
+        className="bg-white rounded-xl shadow-lg p-4 overflow-x-auto"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, amount: 0.3 }}
+        transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.1 }}
+      >
+        {/* Order Meta Info */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+          <div>
+            <h2 className="font-semibold text-lg text-gray-800">
+              Order #{index + 1}
+            </h2>
+            <p className="text-sm text-gray-500">
+              Placed on {new Date(order.created_at).toLocaleDateString()}
+            </p>
+          </div>
+          <span
+            className={`px-3 py-1 rounded-full text-sm font-medium ${
+              order.status === "Completed"
+                ? "bg-green-100 text-green-700"
+                : order.status === "Pending"
+                ? "bg-yellow-100 text-yellow-700"
+                : "bg-gray-100 text-gray-700"
+            }`}
+          >
+            {order.status}
+          </span>
+        </div>
+
+        {/* Items Table */}
+        <table className="min-w-[600px] md:min-w-full w-full table-auto border-collapse rounded-lg overflow-hidden">
+          <thead>
+            <tr className="bg-tertiary text-secondary">
+              <th className="p-3 text-left text-sm md:text-base">Product</th>
+              <th className="p-3 text-left text-sm md:text-base">Price</th>
+              <th className="p-3 text-left text-sm md:text-base">Quantity</th>
+              <th className="p-3 text-left text-sm md:text-base">Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            {order.items.map((item, i) => (
+              <tr
+                key={item.product_id}
+                className={`${i % 2 === 0 ? "bg-gray-50" : "bg-white"} hover:bg-indigo-50 transition`}
+              >
+                <td className="p-2 md:p-3 text-sm md:text-base">{item.title}</td>
+                <td className="p-2 md:p-3 text-sm md:text-base">{item.price} XAF</td>
+                <td className="p-2 md:p-3 text-sm md:text-base">{item.quantity}</td>
+                <td className="p-2 md:p-3 text-sm md:text-base">{item.subtotal}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </motion.div>
+    ))
+  )}
+</div>
     </div>
   );
 }
