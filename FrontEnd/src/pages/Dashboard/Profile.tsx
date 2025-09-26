@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import welcome from "../../assets/images/welcome.png";
 import { PlusIcon } from "@heroicons/react/24/solid";
+import { motion } from "framer-motion";
 
 import axios from "axios";
+
 
 function Profile() {
   const [profilePic, setProfilePic] = useState<string | null>(null);
@@ -71,17 +73,38 @@ function Profile() {
 
       {/* main */}
       
-      {/* welcome card */}
-      <div className="bg-gradient-to-r from-primary/10 to-secondary/10 backdrop-blur-md shadow-xl w-full h-40 md:h-44 rounded-3xl flex flex-row md:flex-row justify-between items-center p-4 md:p-6 border border-white/20 gap-4 md:gap-0">
-        <div className="flex flex-col gap-2 text-center md:text-left">
-          <p className="text-2xl md:text-3xl font-semibold text-secondary">
-            Hi {userData?.user_name || "user ..."} !
-          </p>
-          <span className="text-sm text-gray-600">Welcome back to your profile</span>
-        </div>
-        <img src={welcome} alt="" className="w-40 md:w-62 object-cover" />
-      </div>
+  
+{/* welcome card */}
+<motion.div
+  className="bg-gradient-to-r from-primary/10 to-secondary/10 backdrop-blur-md shadow-xl w-full h-40 md:h-44 rounded-3xl flex flex-row md:flex-row justify-between items-center p-4 md:p-6 border border-white/20 gap-4 md:gap-0"
+  initial="hidden"
+  whileInView="visible"
+  viewport={{ once: false, amount: 0.3 }}
+  transition={{ staggerChildren: 0.2 }}
+>
+  {/* Text section */}
+  <motion.div
+    className="flex flex-col gap-2 text-center md:text-left"
+    initial={{ opacity: 0, x: -100 }}
+    whileInView={{ opacity: 1, x: 0 }}
+    transition={{ type: "spring", stiffness: 120, damping: 15 }}
+  >
+    <p className="text-2xl md:text-3xl font-semibold text-secondary">
+      Hi {userData?.user_name || "user ..."} !
+    </p>
+    <span className="text-sm text-gray-600">Welcome back to your profile</span>
+  </motion.div>
 
+  {/* Image section */}
+  <motion.img
+    src={welcome}
+    alt=""
+    className="w-40 md:w-62 object-cover"
+    initial={{ opacity: 0, x: 100 }}
+    whileInView={{ opacity: 1, x: 0 }}
+    transition={{ type: "spring", stiffness: 120, damping: 15 }}
+  />
+</motion.div>
       {/* profile card */}
       <div className="bg-gradient-to-br from-white/70 to-gray-100/50 backdrop-blur-xl shadow-xl rounded-3xl p-6 md:p-8 max-w-lg md:max-w-xl mx-auto w-full border border-white/20">
         <div className="flex flex-col items-center gap-6">
