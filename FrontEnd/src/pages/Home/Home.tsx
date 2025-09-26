@@ -7,18 +7,19 @@ import Addtocardbutton from "../../components/Addtocardbutton";
 import Buynowbutton from "../../components/Buynowbutton";
 import { useEffect, useState } from "react";
 import { api } from "../../API/Registration";
-import type {UserProps} from "../../types/UserRead";
+import type { UserProps } from "../../types/UserRead";
 import type ProductProps from "../../types/products";
 import Loader from "../../components/Loader";
 import { useCart } from "../../Context/Context";
+import { motion } from "framer-motion";
 
 const Home = () => {
   const token = localStorage.getItem("token");
   const [user, setUser] = useState<UserProps>();
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState<ProductProps[]>([]);
-  const [ratings, setRatings] = useState<Record<number, number>>({}); 
-  const { cart, addToCart } = useCart()
+  const [ratings, setRatings] = useState<Record<number, number>>({});
+  const { cart, addToCart } = useCart();
 
 
     useEffect(() => {
@@ -41,7 +42,7 @@ const Home = () => {
     api
       .get(`/recommendations/${user?.id}`)
       .then((res) => {
-        console.log(cart)
+        console.log(cart);
         setProducts(res.data.slice(0, 4));
       })
       .catch((error: any) => console.log(error.message))
@@ -66,35 +67,51 @@ const Home = () => {
     });
   }, [products]);
 
+  useEffect(() => {
+    api
+      .get("/users/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setUser(res.data);
+      });
+  }, []);
 
   if (loading) {
-    return (
-          <Loader/>
-    );
+    return <Loader />;
   }
 
   return (
     <div className="p-4 md:p-10 flex flex-col items-center gap-15 md:gap-30">
-      {/* hero section with carousel */}
+
+      {/* Hero Section */}
       <div className="flex flex-col lg:flex-row justify-between mt-[4rem]">
-        <div className="flex flex-col gap-20">
-          {/* first text */}
+        {/* Left Side */}
+        <motion.div
+          className="flex flex-col gap-20"
+          initial={{ opacity: 0, x: -100 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: false, amount: 0.3 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+        >
           <p className="text-primary text-3xl md:text-5xl font-bold">
             Shop Any where Any Time
           </p>
 
-          {/* Promo Section */}
           <div className="flex flex-col gap-6">
             <div className="flex flex-col items-center md:flex-row justify-between gap-6">
               <p className="text-xl sm:text-2xl md:text-4xl text-center md:text-left">
                 Back To School Promo <br />
                 <span className="text-secondary">15% Discount</span>
               </p>
-              <Link to={'/market'}>
+              <Link to={"/market"}>
                 <Herobutton
-                title="Shop Now"
-                className="bg-secondary text-white py-2 px-5 rounded-lg cursor-pointer"
-              />            
+                  title="Shop Now"
+                  className="bg-secondary text-white py-2 px-5 rounded-lg cursor-pointer"
+                />
               </Link>
             </div>
 
@@ -130,149 +147,156 @@ const Home = () => {
               ))}
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        {/* Carousel */}
-        <div className="w-full lg:w-2/5">
+        {/* Right Side - Carousel */}
+        <motion.div
+          className="w-full lg:w-2/5"
+          initial={{ opacity: 0, x: 100 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: false, amount: 0.3 }}
+          transition={{ duration: 1, ease: "easeOut" }}
+        >
           <Carousel />
-        </div>
-      </div> 
-
-      {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full">
-        {products.map((product) => ( 
-            <div
-              className="p-2 bg-tertiary rounded-lg flex flex-col gap-3"
-            >
-             <Link to={`/product/${product.id}`} key={product.id}>
-              <div className="rounded-lg overflow-hidden">
-                <img
-                  src={`http://127.0.0.1:8000/images/${product.image}`}
-                  alt={product.title}
-                  className="w-full h-52 object-cover"
-                />
-              </div>
-              </Link>
-
-              <div className="flex justify-between items-center">
-                <p className="font-bold text-lg">{product.title}</p>
-                <p className="text-primary">
-                  {product.price} <span className="pl-1">XAF</span>
-                </p>
-              </div>
-
-              <p className="text-sm line-clamp-2">{product.description}</p>
-
-              <div className="flex justify-between items-center">
-                <Rating rating={ratings[product.id]} />
-                <p className="bg-secondary text-white px-2 py-1 rounded-sm text-xs">
-                  {product.category}
-                </p>
-              </div>
-
-              <div className="flex justify-between gap-2">
-                <Addtocardbutton
-                  title="Add to Cart"
-                  className="bg-white text-primary px-3 py-2 flex-1 text-sm"
-                  onClick={() => {
-                    if (!user?.id) {
-                      console.log("No user logged in");
-                    } else {
-                      addToCart(user.id, product.id);
-                    }
-                  }}
-                />
-                <Buynowbutton
-                  title="Buy now"
-                  className="bg-secondary text-white px-3 py-2 flex-1 text-sm"
-                  onClick={() => {
-                    if (!user?.id) console.log("No user logged in");
-                    else addToCart(user.id, product.id);
-                  }}
-                />
-              </div>
-            </div>
-        ))}
+        </motion.div>
       </div>
-{/* rounded image section */} <div> {/* big text */} <p className="justify-center items-center flex text-xl md:text-5xl font-bold text-black">Why Choose Us</p> </div> {/* rounded images with text */} <div className="flex flex-col lg:flex-row justify-between lg:items-start gap-5 md:gap-10 "> {/* text */} <div className="flex flex-col gap-5 mt-10 lg:mt-50 text-center lg:text-left"> <p className="text-lg sm:text-5xl text-primary font-bold">Mola We Got you Covered</p> <p className="text-xl sm:text-4xl text-black font-bold">Active 24/7 pour le <span>Continent</span></p> <p className="text-lg sm:text-5xl text-primary font-bold">237 4 Life</p> </div> {/* rounded images */} <div className="flex flex-col sm:flex-row lg:flex-row gap-5 items-center lg:items-start"> <div className="w-40 sm:w-50 h-40 sm:h-150 overflow-hidden"> <img src={images.mola1} alt="" className="w-full h-full rounded-t-full rounded-b-full object-cover"/> </div> <div className="w-40 sm:w-50 h-40 sm:h-100 overflow-hidden mt-5 sm:mt-20"> <img src={images.mola2} alt="" className="w-full h-full rounded-t-full rounded-b-full object-cover" /> </div> <div className="w-40 sm:w-50 h-40 sm:h-150 overflow-hidden"> <img src={images.mola3} alt="" className="w-full h-full rounded-t-full rounded-b-full object-cover"/> </div> </div> </div>
+
+  {/* Product Grid */}
+<motion.div
+  className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full mt-10"
+  initial={{ opacity: 0, x: 100 }}
+  whileInView={{ opacity: 1, x: 0 }}
+  viewport={{ once: false, amount: 0.3 }}
+  transition={{ duration: 1, ease: "easeOut" }}
+>
+  {products.map((product) => (
+    <div key={product.id} className="p-2 bg-tertiary rounded-lg flex flex-col gap-3">
+      <Link to={`/product/${product.id}`}>
+        <div className="rounded-lg overflow-hidden">
+          <img
+            src={`http://127.0.0.1:8000/images/${product.image}`}
+            alt={product.title}
+            className="w-full h-52 object-cover"
+          />
+        </div>
+      </Link>
+
+      <div className="flex justify-between items-center">
+        <p className="font-bold text-lg">{product.title}</p>
+        <p className="text-primary">
+          {product.price} <span className="pl-1">XAF</span>
+        </p>
+      </div>
+
+      <p className="text-sm line-clamp-2">{product.description}</p>
+
+      <div className="flex justify-between items-center">
+        <Rating rating={ratings[product.id]} />
+        <p className="bg-secondary text-white px-2 py-1 rounded-sm text-xs">
+          {product.category}
+        </p>
+      </div>
+
+      <div className="flex justify-between gap-2">
+        <Addtocardbutton
+          title="Add to Cart"
+          className="bg-white text-primary px-3 py-2 flex-1 text-sm"
+          onClick={() => {
+            if (!user?.id) console.log("No user logged in");
+            else addToCart(user.id, product.id);
+          }}
+        />
+        <Buynowbutton
+          title="Buy now"
+          className="bg-secondary text-white px-3 py-2 flex-1 text-sm"
+          onClick={() => {
+            if (!user?.id) console.log("No user logged in");
+            else addToCart(user.id, product.id);
+          }}
+        />
+      </div>
+    </div>
+  ))}
+</motion.div>
+
+
+      {/* Rounded Image Section */}
+      <motion.div
+        className="flex flex-col lg:flex-row justify-between lg:items-start gap-5 md:gap-10 mt-16"
+        initial={{ opacity: 0, y: 50 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: false, amount: 0.3 }}
+        transition={{ duration: 1, ease: "easeOut" }}
+      >
+        {/* Text */}
+        <div className="flex flex-col gap-5 mt-10 lg:mt-50 text-center lg:text-left">
+          <p className="text-lg sm:text-5xl text-primary font-bold">Mola We Got you Covered</p>
+          <p className="text-xl sm:text-4xl text-black font-bold">Active 24/7 pour le <span>Continent</span></p>
+          <p className="text-lg sm:text-5xl text-primary font-bold">237 4 Life</p>
+        </div>
+
+        {/* Rounded Images */}
+        <div className="flex flex-col sm:flex-row lg:flex-row gap-5 items-center lg:items-start">
+          <div className="w-40 sm:w-50 h-40 sm:h-150 overflow-hidden">
+            <img src={images.mola1} alt="" className="w-full h-full rounded-t-full rounded-b-full object-cover"/>
+          </div>
+          <div className="w-40 sm:w-50 h-40 sm:h-100 overflow-hidden mt-5 sm:mt-20">
+            <img src={images.mola2} alt="" className="w-full h-full rounded-t-full rounded-b-full object-cover" />
+          </div>
+          <div className="w-40 sm:w-50 h-40 sm:h-150 overflow-hidden">
+            <img src={images.mola3} alt="" className="w-full h-full rounded-t-full rounded-b-full object-cover"/>
+          </div>
+        </div>
+      </motion.div>
+
       {/* Icon Cards */}
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full">
+<motion.div
+  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full mt-10"
+  initial={{ opacity: 0, y: 50 }}
+  whileInView={{ opacity: 1, y: 0 }}
+  viewport={{ once: false, amount: 0.3 }}
+  transition={{ duration: 1, ease: "easeOut" }}
+>
   {[
-    {
-      imgDefault: images.icon1orange,
-      imgHover: images.icon1white,
-      label: "Quick Delivery",
-    },
-    {
-      imgDefault: images.icon2orange,
-      imgHover: images.icon2white,
-      label: "Best Quality",
-    },
-    {
-      imgDefault: images.icon3orange,
-      imgHover: images.icon3white,
-      label: "Affordable Prices",
-    },
-    {
-      imgDefault: images.icon4orange,
-      imgHover: images.icon4white,
-      label: "Customer Support",
-    },
+    { imgDefault: images.icon1orange, imgHover: images.icon1white, label: "Quick Delivery" },
+    { imgDefault: images.icon2orange, imgHover: images.icon2white, label: "Best Quality" },
+    { imgDefault: images.icon3orange, imgHover: images.icon3white, label: "Affordable Prices" },
+    { imgDefault: images.icon4orange, imgHover: images.icon4white, label: "Customer Support" },
   ].map((item, idx) => (
     <div
       key={idx}
-      className="group bg-white p-6 shadow-lg rounded-xl flex flex-col items-center text-center 
-                 hover:bg-primary hover:text-white transition duration-300 cursor-pointer"
+      className="group bg-white p-6 shadow-lg rounded-xl flex flex-col items-center text-center hover:bg-primary hover:text-white transition duration-300 cursor-pointer"
     >
-      {/* swap icon on hover */}
-      <img
-        src={item.imgDefault}
-        alt={item.label}
-        className="w-12 h-12 mb-2 block group-hover:hidden"
-      />
-      <img
-        src={item.imgHover}
-        alt={item.label}
-        className="w-12 h-12 mb-2 hidden group-hover:block"
-      />
-
-      {/* text */}
-      <p className="text-sm font-bold text-primary group-hover:text-white transition">
-        {item.label}
-      </p>
+      <img src={item.imgDefault} alt={item.label} className="w-12 h-12 mb-2 block group-hover:hidden" />
+      <img src={item.imgHover} alt={item.label} className="w-12 h-12 mb-2 hidden group-hover:block" />
+      <p className="text-sm font-bold text-primary group-hover:text-white transition">{item.label}</p>
     </div>
   ))}
-</div>
+</motion.div>
 
 
       {/* Description */}
-      <div className="text-center max-w-3xl">
+      <div className="text-center max-w-3xl mt-10">
         <p className="leading-relaxed text-lg sm:text-xl">
           <span className="text-3xl font-bold">At</span>{" "}
           <span className="text-primary font-semibold text-3xl">MboaKako</span>
           <br />
           <span className="text-2xl sm:text-3xl font-bold">
-            we believe shopping should be{" "}
-            <span className="text-primary">simple</span>, affordable, and
-            stress-free.
+            we believe shopping should be <span className="text-primary">simple</span>, affordable, and stress-free.
           </span>
           <br />
-          That’s why we bring you fresh products, quick deliveries, and
-          unbeatable prices.
+          That’s why we bring you fresh products, quick deliveries, and unbeatable prices.
         </p>
       </div>
 
       {/* Redirect to Market */}
-      <div className="relative w-full max-w-2xl h-14 bg-secondary flex items-center justify-center rounded-full">
+      <div className="relative w-full max-w-2xl h-14 bg-secondary flex items-center justify-center rounded-full mt-10">
         <Link to="/market" className="text-white font-bold text-lg">
           Go To Marketplace
         </Link>
-        <img
-          src={images.chevron}
-          alt=""
-          className="absolute right-5 w-6 h-6"
-        />
+        <img src={images.chevron} alt="" className="absolute right-5 w-6 h-6" />
       </div>
+
     </div>
   );
 };

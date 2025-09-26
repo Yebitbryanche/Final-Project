@@ -5,3 +5,16 @@
   --color-secondary: #14452f;
   --color-tertiary: #e6e3e1;
 }
+
+/* scroll for category */
+@keyframes scroll {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-scroll {
+  display: inline-flex;
+  gap: 0.5rem;
+  animation: scroll 40s linear infinite;
+}
+
