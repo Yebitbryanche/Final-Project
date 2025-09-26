@@ -1,7 +1,7 @@
 from fastapi import FastAPI,Depends, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from routers import users, admin, cart, Order, products, review
+from routers import users, admin, cart, Order, recommendation, review
 from db import engine, create_db_and_tables
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import Depends
@@ -35,6 +35,6 @@ app.include_router(cart.router)
 ## order functionalities
 app.include_router(Order.router)
 ## products
-app.include_router(products.router)
+app.include_router(recommendation.router)
 
 app.include_router(review.router)
