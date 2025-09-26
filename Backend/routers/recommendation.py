@@ -12,7 +12,7 @@ from utility.recommendaton import ContentRecommenderWithReviews  # <-- import th
 router = APIRouter()
 
 # Instantiate recommender (load products once)
-recommender = ContentRecommenderWithReviews()
+recommender = ContentRecommenderWithReviews() 
 
 @router.get("/products", response_model=List[ProductRead])
 def get_all_products(session: Session = Depends(get_session)):
@@ -33,3 +33,13 @@ def get_all_products(session: Session = Depends(get_session)):
         products.append(product_dict)
 
     return products
+
+
+@router.get("/recommendations/{user_id}", response_model=List[ProductRead])
+def recommend_products(user_id: int, session: Session = Depends(get_session)):
+    recommendations = recommender.recommend_for_user(user_id)
+    if not recommendations:
+        raise not_found("No recommendations available for this user")
+
+    return recommendations
+

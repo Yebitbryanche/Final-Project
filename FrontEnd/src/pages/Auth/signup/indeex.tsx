@@ -18,7 +18,7 @@ function Signup() {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const usernameRegex = /^[a-zA-Z0-9._]{3,20}$/;
   const passwordRegex =
-    /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    /^(?=.*[A-Z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   // Validate inputs
   const validateInputs = () => {
@@ -184,17 +184,6 @@ function Signup() {
                   className="mr-2"
                 />
                 <label className="text-sm text-gray-600">Show password</label>
-              </div>
-
-              {/* Role toggle */}
-              <div className="flex items-center mb-4">
-                <input
-                  type="checkbox"
-                  checked={role}
-                  onChange={() => setRole(!role)}
-                  className="mr-2 bg-secondary"
-                />
-                <label className="text-sm text-gray-600">Register as Admin</label>
               </div>
             </div>
 

@@ -5,7 +5,7 @@ export default interface ProductProps{
   price:number;
   image:string;
   category:string;
-  stock:number;
+  stock:number
 }
 export interface OrderItem {
   product_id: number;
@@ -15,7 +15,7 @@ export interface OrderItem {
   subtotal: number;
 }
 
-export interface Order {
+export interface OrderProps {
   id: number;
   user_id: number;
   created_at: string;
