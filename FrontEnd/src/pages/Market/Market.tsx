@@ -365,7 +365,7 @@ function Market() {
 
       {/* ✅ Floating WhatsApp Button */}
       <a
-        href="https://wa.me/237671355671"
+        href="https://wa.me/237651138159"
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-5 right-5 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition transform hover:scale-110 animate-bounce"

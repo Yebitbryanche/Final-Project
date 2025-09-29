@@ -7,6 +7,7 @@ import { BsCartDash, BsCartPlus } from "react-icons/bs";
 import { Link } from "react-router-dom";
 import images from "../../types/images";
 import Modal from "../../components/Modal";
+import { FaWhatsapp } from "react-icons/fa";
 
 export interface CartItem {
   cart_item_id: number;
@@ -233,6 +234,14 @@ const handleQuantityChange = (productId: number, newQuantity: number) => {
         confirmText="Yes, Remove"
         cancelText="Cancel"
       />
+        <a
+              href="https://wa.me/237651138159"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="fixed bottom-5 right-5 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition transform hover:scale-110 animate-bounce"
+            >
+              <FaWhatsapp size={28} />
+            </a>
     </div>
   );
 };

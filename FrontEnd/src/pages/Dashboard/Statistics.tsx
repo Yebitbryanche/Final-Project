@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import UserAvatar from "../../components/UseAvatar";
 import { FaCoins, FaCheckCircle, FaClock } from "react-icons/fa";
+
 import {
   Tooltip,
   ResponsiveContainer,
