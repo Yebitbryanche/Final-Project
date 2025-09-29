@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-
+import { FaWhatsapp } from "react-icons/fa";
 export default function PaymentSuccess() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50 px-4 sm:px-6 lg:px-8">
@@ -36,6 +36,14 @@ export default function PaymentSuccess() {
           </button>
         </Link>
       </div>
+        <a
+        href="https://wa.me/237651138159"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-5 right-5 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition transform hover:scale-110 animate-bounce"
+      >
+        <FaWhatsapp size={28} />
+      </a>
     </div>
   );
 }

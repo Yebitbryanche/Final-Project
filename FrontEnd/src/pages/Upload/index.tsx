@@ -5,14 +5,14 @@ import type ProductProps from "../../types/products";
 import type { Admin, UserProps } from "../../types/UserRead";
 import Modal from "../../components/Modal";
 import { Link } from "react-router-dom";
-
+import { FaWhatsapp } from "react-icons/fa";
 
 
 function AddProduct() {
 
   const token = localStorage.getItem("token")
   const [user, setUser] = useState<UserProps>()
-  const categories = ["All", "Perfume", "Flip", "bodywash", "Backpacks", "Jewelries", "Shoes","Topwear","Bags","Belts","Headwear","Innerwear","bottomwear","Wallets","Fragrance","Nails","Eyewear","Ties","Gadget","Furniture"]
+  const categories = ["All", "Perfume", "Flip", "bodywash", "Backpacks", "Jewelries", "Shoes","Topwear","Bags","Belts","Headwear","Innerwear","bottomwear","Wallets","Fragrance","Nails","Eyewear","Ties","Gadget","Furniture","Afro"]
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [stock, setStock] = useState<number | "">("");
@@ -418,6 +418,15 @@ const handleDelete = async (productId: number) => {
         confirmText="Yes, Delete"
         cancelText="Cancel"
       />
+
+       <a
+        href="https://wa.me/237651138159"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-5 right-5 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition transform hover:scale-110 animate-bounce"
+      >
+        <FaWhatsapp size={28} />
+      </a>
 
     </div>
   );

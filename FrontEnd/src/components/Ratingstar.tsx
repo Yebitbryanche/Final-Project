@@ -16,7 +16,7 @@ const Rating: React.FC<RatingProps> = ({ rating, totalStars = 5, editable = fals
   };
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-1 ">
       {Array.from({ length: totalStars }, (_, idx) => {
         const starValue = idx + 1;
         return starValue <= (hovered || rating) ? (
