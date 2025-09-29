@@ -22,7 +22,7 @@ oauth2_bearer = OAuth2PasswordBearer(tokenUrl='login')
 ## function to create JWT access token
 def create_access_token(data:dict, expires_delta: Optional[timedelta] = None):
     to_encode = data.copy()
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=15))
+    expire = datetime.utcnow() + (expires_delta or timedelta(days=1))
     to_encode.update({"exp":expire})
     return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
