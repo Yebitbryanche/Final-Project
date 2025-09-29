@@ -5,6 +5,7 @@ import statisticsIcon from "../../assets/images/statistics.svg";
 import profileIcon from "../../assets/images/profile.svg";
 import { LogOut, LayoutDashboard } from "lucide-react";
 import Modal from "../../components/Modal";
+import { FaWhatsapp } from "react-icons/fa";
 
 export default function DashboardLayout() {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -89,6 +90,14 @@ export default function DashboardLayout() {
         confirmText="Yes, Logout"
         cancelText="Cancel"
       />
+      <a
+        href="https://wa.me/237651138159"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-5 right-5 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition transform hover:scale-110 animate-bounce"
+      >
+        <FaWhatsapp size={28} />
+      </a>
     </div>
   );
 }

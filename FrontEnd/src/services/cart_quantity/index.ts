@@ -1,6 +1,7 @@
 import { loadStripe } from "@stripe/stripe-js";
 import { api } from "../../API/Registration";
 
+
 // Load your Stripe publishable key
 const stripePromise = loadStripe("pk_test_51S7yy7LN8y6tjoNtlEJmsDHHHOq2I4UHYfwdna46IwcQHptvFsjgJK4SBivlnz4SHvz4By0s5YxdKkIwbibdJHDk00o9IXaaBz");
 
