@@ -54,7 +54,7 @@ function Order() {
           <h1 className="font-bold text-xl md:text-3xl text-gray-800">Orders</h1>
           <p className="text-sm md:text-base text-primary">
             Last 5 Orders
-            <hr className="text-primary w-24 md:w-36 mt-1" />
+            <hr className="text-primary w-23 md:w-25 mt-1" />
           </p>
         </div>
         <UserAvatar />
