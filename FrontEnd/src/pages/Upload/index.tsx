@@ -12,7 +12,7 @@ function AddProduct() {
 
   const token = localStorage.getItem("token")
   const [user, setUser] = useState<UserProps>()
-  const categories = ["All", "perfume", "Flip", "bodywash", "Backpacks", "Jewelries", "Shoes","Topwear","Bags","Belts","Headwear","Innerwear","bottomwear","Wallets","Fragrance","Nails","Eyewear","Ties","Afro"]
+  const categories = ["All", "Perfume", "Flip", "bodywash", "Backpacks", "Jewelries", "Shoes","Topwear","Bags","Belts","Headwear","Innerwear","bottomwear","Wallets","Fragrance","Nails","Eyewear","Ties","Gadget","Furniture","Afro"]
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [stock, setStock] = useState<number | "">("");
