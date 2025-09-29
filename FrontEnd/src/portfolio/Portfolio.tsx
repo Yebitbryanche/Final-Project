@@ -5,6 +5,7 @@ import solomon from '../assets/images/solomon.jpeg'
 import princess from "../assets/images/princess.jpeg"
 import portfolio from "../assets/images/portfolio.png"
 import darius from "../assets/images/Darius.jpeg"
+import { FaWhatsapp } from "react-icons/fa";
 
 function Portfolio() {
   return (
@@ -74,6 +75,14 @@ function Portfolio() {
           Powered By, <span className="text-primary">Mboa <span className="text-secondary">Kako</span></span>
         </p>
       </div>
+        <a
+        href="https://wa.me/237651138159"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-5 right-5 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition transform hover:scale-110 animate-bounce"
+      >
+        <FaWhatsapp size={28} />
+      </a>
     </div>
   )
 }

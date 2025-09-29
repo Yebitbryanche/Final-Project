@@ -21,6 +21,8 @@ export const addToCart = async (user_id: number, product_id: number) => {
     console.error("Not added to cart:", err.response?.data || err.message);
     return { error: err.response?.data || err.message };
   }
+  
 };
+
 
 
