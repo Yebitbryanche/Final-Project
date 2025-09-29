@@ -4,6 +4,7 @@ import { GiDeliveryDrone } from "react-icons/gi"
 import { GrDeliver } from "react-icons/gr"
 import { IoPeople } from "react-icons/io5"
 import { MdDeliveryDining } from "react-icons/md"
+import { FaWhatsapp } from "react-icons/fa";
 
 function Checkout() {
   return (
@@ -127,6 +128,14 @@ function Checkout() {
           </div>
         </div>
       </div>
+      <a
+        href="https://wa.me/237651138159"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-5 right-5 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition transform hover:scale-110 animate-bounce"
+      >
+        <FaWhatsapp size={28} />
+      </a>
     </div>
   )
 }

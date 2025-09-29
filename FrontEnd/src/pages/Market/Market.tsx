@@ -9,6 +9,7 @@ import type { UserProps } from "../../types/UserRead";
 import { Link } from "react-router-dom";
 import Loader from "../../components/Loader";
 import { useCart } from "../../Context/Context";
+import { FaWhatsapp } from "react-icons/fa";
 
 interface ProductProps {
   average_rating: number;
@@ -54,10 +55,11 @@ function Market() {
     "Eyewear",
     "Ties",
     "Gadget",
-    "Furniture"
+    "Furniture",
+    "Afro"
   ];
   const [products, setProducts] = useState<ProductProps[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("All"); // Track selected category
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const { cart, addToCart } = useCart();
 
   // Fetch all products
@@ -90,7 +92,9 @@ function Market() {
                 [product.id]: res.data.average_rating || 0,
               }));
             })
-            .catch(() => console.log(`Failed to load rating for product ${product.id}`));
+            .catch(() =>
+              console.log(`Failed to load rating for product ${product.id}`)
+            );
         });
       })
       .catch((error: any) => setError(error.message))
@@ -119,15 +123,14 @@ function Market() {
     setShowCategories(false); // Close sidebar after selecting
   };
 
-
-    useEffect(() => {
+  // Recommended products
+  useEffect(() => {
     setLoading(true);
-    if(!user?.id) return
-    
+    if (!user?.id) return;
+
     api
       .get(`/recommendations/${user?.id}`)
       .then((res) => {
-        console.log(cart)
         setProducts(res.data.slice(0, 8));
       })
       .catch((error: any) => console.log(error.message))
@@ -274,8 +277,7 @@ function Market() {
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {products?
-          products.map((product)=>(
+          {products?.map((product) => (
             <div key={product.id} className="p-2 bg-tertiary rounded-lg flex flex-col gap-3">
               <Link to={`/product/${product.id}`}>
                 <div className="rounded-lg overflow-hidden">
@@ -300,7 +302,7 @@ function Market() {
               <div className="flex justify-between gap-2 mt-2">
                 <Addtocardbutton
                   onClick={() => {
-                    if (!user?.id) console.log("No user logged in");
+                    if (!user?.id) alert("No user logged in");
                     else addToCart(user.id, product.id);
                   }}
                   title="Add to Cart"
@@ -310,55 +312,7 @@ function Market() {
                   title="Buy now"
                   className="bg-secondary text-white px-3 py-2 flex-1 text-sm"
                   onClick={() => {
-                    if (!user?.id) console.log("No user logged in");
-                    else addToCart(user.id, product.id);
-                  }}
-                />
-              </div>
-            </div>    
-        )):
-        null}
-        </div>
-
-        {/* Product Grid */}
-        <p className="text-2xl md:text-3xl font-bold text-secondary">Allproducts</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {filteredProducts.map((product) => (
-            <div key={product.id} className="p-2 bg-tertiary rounded-lg flex flex-col gap-3">
-              <Link to={`/product/${product.id}`}>
-                <div className="rounded-lg overflow-hidden">
-                  <img
-                    src={`http://127.0.0.1:8000/images/${product.image}`}
-                    alt={product.title}
-                    className="w-full h-60 object-cover"
-                  />
-                </div>
-              </Link>
-              <div className="flex justify-between items-center">
-                <p className="font-bold text-lg truncate">{product.title}</p>
-                <p className="text-primary">{product.price} XAF</p>
-              </div>
-              <p className="text-sm line-clamp-2">{product.description}</p>
-              <div className="flex justify-between items-center">
-                <Rating rating={ratings[product.id] || 0} />
-                <p className="bg-secondary/50 text-black rounded-lg px-2 py-1 text-xs">
-                  {product.category}
-                </p>
-              </div>
-              <div className="flex justify-between gap-2 mt-2">
-                <Addtocardbutton
-                  onClick={() => {
-                    if (!user?.id) console.log("No user logged in");
-                    else addToCart(user.id, product.id);
-                  }}
-                  title="Add to Cart"
-                  className="bg-white text-primary px-3 py-2 flex-1 text-sm"
-                />
-                <Buynowbutton
-                  title="Buy now"
-                  className="bg-secondary text-white px-3 py-2 flex-1 text-sm"
-                  onClick={() => {
-                    if (!user?.id) console.log("No user logged in");
+                    if (!user?.id) alert("No user logged in");
                     else addToCart(user.id, product.id);
                   }}
                 />
@@ -367,6 +321,63 @@ function Market() {
           ))}
         </div>
       </div>
+
+      {/* All Products */}
+      <p className="text-2xl md:text-3xl font-bold text-secondary">All Products</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {filteredProducts.map((product) => (
+          <div key={product.id} className="p-2 bg-tertiary rounded-lg flex flex-col gap-3">
+            <Link to={`/product/${product.id}`}>
+              <div className="rounded-lg overflow-hidden">
+                <img
+                  src={`http://127.0.0.1:8000/images/${product.image}`}
+                  alt={product.title}
+                  className="w-full h-60 object-cover"
+                />
+              </div>
+            </Link>
+            <div className="flex justify-between items-center">
+              <p className="font-bold text-lg truncate">{product.title}</p>
+              <p className="text-primary">{product.price} XAF</p>
+            </div>
+            <p className="text-sm line-clamp-2">{product.description}</p>
+            <div className="flex justify-between items-center">
+              <Rating rating={ratings[product.id] || 0} />
+              <p className="bg-secondary/50 text-black rounded-lg px-2 py-1 text-xs">
+                {product.category}
+              </p>
+            </div>
+            <div className="flex justify-between gap-2 mt-2">
+              <Addtocardbutton
+                onClick={() => {
+                  if (!user?.id) alert("No user logged in");
+                  else addToCart(user.id, product.id);
+                }}
+                title="Add to Cart"
+                className="bg-white text-primary px-3 py-2 flex-1 text-sm"
+              />
+              <Buynowbutton
+                title="Buy now"
+                className="bg-secondary text-white px-3 py-2 flex-1 text-sm"
+                onClick={() => {
+                  if (!user?.id) alert("No user logged in");
+                  else addToCart(user.id, product.id);
+                }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ✅ Floating WhatsApp Button */}
+      <a
+        href="https://wa.me/237651138159"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-5 right-5 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition transform hover:scale-110 animate-bounce"
+      >
+        <FaWhatsapp size={28} />
+      </a>
     </div>
   );
 }
