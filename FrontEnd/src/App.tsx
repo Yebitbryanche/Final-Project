@@ -23,6 +23,7 @@ import type { UserProps } from "./types/UserRead";
 import Portfolio from "./portfolio/Portfolio";
 import Order from "./pages/Dashboard/Order";
 import AdminDashBoard from "./pages/Admin";
+import ScrollToTop from "./components/Scrolltotop";
 
 function App() {
   const [user, setUser] = useState<UserProps>()
@@ -41,9 +42,11 @@ function App() {
     <div>
       <CartProvider userId={user?.id}>
         <BrowserRouter>
+        <ScrollToTop />
           <Navigation />
 
           <Routes>
+            
             <Route path="/" element={<Home />}/>
             <Route path="/cart" element={<Cart />}/>
             <Route path="/checkout" element={<Checkout/>}/>
