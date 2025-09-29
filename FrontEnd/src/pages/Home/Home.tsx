@@ -202,7 +202,7 @@ const Home = () => {
           title="Add to Cart"
           className="bg-white text-primary px-3 py-2 flex-1 text-sm"
           onClick={() => {
-            if (!user?.id) console.log("No user logged in");
+            if (!user?.id) alert("No user logged in");
             else addToCart(user.id, product.id);
           }}
         />
@@ -210,7 +210,7 @@ const Home = () => {
           title="Buy now"
           className="bg-secondary text-white px-3 py-2 flex-1 text-sm"
           onClick={() => {
-            if (!user?.id) console.log("No user logged in");
+            if (!user?.id) alert("No user logged in");
             else addToCart(user.id, product.id);
           }}
         />

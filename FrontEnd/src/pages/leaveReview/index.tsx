@@ -53,7 +53,7 @@ function ReviewPage() {
   };
 
   return (
-    <div className="max-w-3xl mx-auto p-6 mt-[8rem] mb-[2rem] bg-white rounded-lg shadow-lg">
+    <div className="max-w-3xl mx-auto p-6 mt-[8rem] mb-[2rem] rounded-lg shadow-lg bg-secondary/30">
       <h1 className="text-2xl md:text-3xl font-bold mb-4 text-center text-secondary">
         Leave a Review
       </h1>

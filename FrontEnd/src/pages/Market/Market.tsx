@@ -9,6 +9,7 @@ import type { UserProps } from "../../types/UserRead";
 import { Link } from "react-router-dom";
 import Loader from "../../components/Loader";
 import { useCart } from "../../Context/Context";
+import { FaWhatsapp } from "react-icons/fa";
 
 interface ProductProps {
   average_rating: number;
@@ -32,8 +33,32 @@ function Market() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<UserProps>();
   const [ratings, setRatings] = useState<Record<number, number>>({});
+  const [showCategories, setShowCategories] = useState(false);
+
+  const categories = [
+    "All",
+    "perfume",
+    "Flip",
+    "bodywash",
+    "Backpacks",
+    "Jewelries",
+    "Shoes",
+    "Topwear",
+    "Bags",
+    "Belts",
+    "Headwear",
+    "Innerwear",
+    "bottomwear",
+    "Wallets",
+    "Fragrance",
+    "Nails",
+    "Eyewear",
+    "Ties",
+    "Afro",
+  ];
+
   const [products, setProducts] = useState<ProductProps[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>("All"); // Track selected category
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const { cart, addToCart } = useCart();
 
   // Fetch all products
@@ -66,7 +91,9 @@ function Market() {
                 [product.id]: res.data.average_rating || 0,
               }));
             })
-            .catch(() => console.log(`Failed to load rating for product ${product.id}`));
+            .catch(() =>
+              console.log(`Failed to load rating for product ${product.id}`)
+            );
         });
       })
       .catch((error: any) => setError(error.message))
@@ -84,7 +111,7 @@ function Market() {
   }, [token]);
 
   const handleFilter = (category: string) => {
-    setSelectedCategory(category); // Update selected category
+    setSelectedCategory(category);
     if (category === "All") setFilteredProducts(allProducts);
     else
       setFilteredProducts(
@@ -92,17 +119,17 @@ function Market() {
           (item) => item.category.toLowerCase() === category.toLowerCase()
         )
       );
+    setShowCategories(false);
   };
 
-
-    useEffect(() => {
+  // Recommended products
+  useEffect(() => {
     setLoading(true);
-    if(!user?.id) return
-    
+    if (!user?.id) return;
+
     api
       .get(`/recommendations/${user?.id}`)
       .then((res) => {
-        console.log(cart)
         setProducts(res.data.slice(0, 8));
       })
       .catch((error: any) => console.log(error.message))
@@ -124,77 +151,98 @@ function Market() {
       )}
 
       {/* Categories */}
-      <div className="flex flex-col md:flex-row gap-4 md:gap-5 justify-center items-start md:items-center mt-[4rem]">
-        <p className="text-2xl font-bold text-primary">Categories:</p>
+      <div className="mt-[4rem]">
+        <div className="hidden md:flex flex-row gap-5 justify-center items-center">
+          <p className="text-2xl font-bold text-primary">Categories:</p>
+          <div
+            className="flex flex-wrap md:flex-nowrap gap-2 overflow-x-auto scroll-smooth"
+            style={{
+              msOverflowStyle: "none",
+              scrollbarWidth: "none",
+            }}
+          >
+            <style>
+              {`
+                div::-webkit-scrollbar {
+                  display: none;
+                }
+              `}
+            </style>
 
-        <div
-          className="flex flex-wrap md:flex-nowrap gap-2 overflow-x-auto scroll-smooth"
-          style={{
-            msOverflowStyle: "none",
-            scrollbarWidth: "none",
-          }}
-        >
-          <style>
-            {`
-              div::-webkit-scrollbar {
-                display: none;
-              }
-            `}
-          </style>
+            {categories.map((cat) => (
+              <Categorybutton
+                key={cat}
+                title={cat}
+                className={`bg-tertiary px-4 py-2 shadow-lg hover:bg-primary hover:text-white transition-colors duration-300 group cursor-pointer flex-shrink-0 font-bold ${
+                  selectedCategory === cat ? "bg-primary text-white" : ""
+                }`}
+                onClick={() => handleFilter(cat)}
+              />
+            ))}
+          </div>
+        </div>
 
-          {[
-            "All",
-            "perfume",
-            "Flip",
-            "bodywash",
-            "Backpacks",
-            "Jewelries",
-            "Shoes",
-            "Topwear",
-            "Bags",
-            "Belts",
-            "Headwear",
-            "Innerwear",
-            "bottomwear",
-            "Wallets",
-            "Fragrance",
-            "Nails",
-            "Eyewear",
-            "Ties",
-          ].map((cat) => (
-            <Categorybutton
-              key={cat}
-              title={cat}
-              className={`bg-tertiary px-4 py-2 shadow-lg hover:bg-primary hover:text-white transition-colors duration-300 group cursor-pointer font-bold flex-shrink-0 ${
-                selectedCategory === cat ? "bg-primary text-white" : ""
+        <div className="md:hidden">
+          <button
+            onClick={() => setShowCategories(true)}
+            className="px-4 py-2 bg-secondary text-white font-bold rounded-lg flex items-center justify-between w-full max-w-[200px]"
+          >
+            <span>Categories</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className={`w-5 h-5 ml-2 transition-transform duration-300 ${
+                showCategories ? "rotate-180" : ""
               }`}
-              onClick={() => handleFilter(cat)}
-            />
-          ))}
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+
+          {showCategories && (
+            <div className="fixed inset-0 z-50 flex">
+              <div className="w-3/4 max-w-xs bg-white shadow-lg p-4 flex flex-col gap-2 animate-slide-in overflow-y-auto max-h-screen">
+                <p className="font-bold mb-4 text-secondary text-2xl">Select Category</p>
+                {categories.map((cat) => (
+                  <Categorybutton
+                    key={cat}
+                    title={cat}
+                    className={`px-4 py-2 rounded-lg text-left font-bold ${
+                      selectedCategory === cat
+                        ? "bg-primary text-white"
+                        : "bg-tertiary hover:bg-primary hover:text-white"
+                    }`}
+                    onClick={() => handleFilter(cat)}
+                  />
+                ))}
+              </div>
+              <div
+                className="flex-1 bg-black/40"
+                onClick={() => setShowCategories(false)}
+              />
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Hero Section: Only show when "All" is selected */}
+      {/* Hero Section */}
       {selectedCategory === "All" && (
-        <div className="  w-full  ">
-          <div className="bg-gradient-to-r from-pink-100 via-primary/80 to-primary p-5 flex flex-col md:flex-row  md:items-stretch  gap-5 rounded-xl text-secondary">
-            {/* Text Section */}
+        <div className="w-full">
+          <div className="bg-gradient-to-r from-pink-100 via-primary/80 to-primary p-5 flex flex-col md:flex-row md:items-stretch gap-5 rounded-xl text-secondary">
             <div className="flex-1 flex flex-col gap-4 pt-10 justify-center">
-              <h1 className="text-4xl md:text-5xl font-bold ">
-                Welcome to Our Market
-              </h1>
+              <h1 className="text-4xl md:text-5xl font-bold">Welcome to Our Market</h1>
               <p className="text-lg md:text-xl max-w-md">
                 Discover amazing products, great deals, and exclusive offers just for you.
               </p>
-              
             </div>
-
-            {/* Image Section */}
-            <div className="">
+            <div>
               <img
-                src="images/im.png" // Replace with your image URL
+                src="images/im.png"
                 alt="Hero Image"
-                className="rounded-lg  object-cover w-full md:w-auto "
+                className="rounded-lg object-cover w-full md:w-auto"
               />
             </div>
           </div>
@@ -223,8 +271,7 @@ function Market() {
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {products?
-          products.map((product)=>(
+          {products?.map((product) => (
             <div key={product.id} className="p-2 bg-tertiary rounded-lg flex flex-col gap-3">
               <Link to={`/product/${product.id}`}>
                 <div className="rounded-lg overflow-hidden">
@@ -249,7 +296,7 @@ function Market() {
               <div className="flex justify-between gap-2 mt-2">
                 <Addtocardbutton
                   onClick={() => {
-                    if (!user?.id) console.log("No user logged in");
+                    if (!user?.id) alert("No user logged in");
                     else addToCart(user.id, product.id);
                   }}
                   title="Add to Cart"
@@ -259,55 +306,7 @@ function Market() {
                   title="Buy now"
                   className="bg-secondary text-white px-3 py-2 flex-1 text-sm"
                   onClick={() => {
-                    if (!user?.id) console.log("No user logged in");
-                    else addToCart(user.id, product.id);
-                  }}
-                />
-              </div>
-            </div>    
-        )):
-        null}
-        </div>
-
-        {/* Product Grid */}
-        <p className="text-2xl md:text-3xl font-bold text-secondary">Allproducts</p>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {filteredProducts.map((product) => (
-            <div key={product.id} className="p-2 bg-tertiary rounded-lg flex flex-col gap-3">
-              <Link to={`/product/${product.id}`}>
-                <div className="rounded-lg overflow-hidden">
-                  <img
-                    src={`http://127.0.0.1:8000/images/${product.image}`}
-                    alt={product.title}
-                    className="w-full h-60 object-cover"
-                  />
-                </div>
-              </Link>
-              <div className="flex justify-between items-center">
-                <p className="font-bold text-lg truncate">{product.title}</p>
-                <p className="text-primary">{product.price} XAF</p>
-              </div>
-              <p className="text-sm line-clamp-2">{product.description}</p>
-              <div className="flex justify-between items-center">
-                <Rating rating={ratings[product.id] || 0} />
-                <p className="bg-secondary/50 text-black rounded-lg px-2 py-1 text-xs">
-                  {product.category}
-                </p>
-              </div>
-              <div className="flex justify-between gap-2 mt-2">
-                <Addtocardbutton
-                  onClick={() => {
-                    if (!user?.id) console.log("No user logged in");
-                    else addToCart(user.id, product.id);
-                  }}
-                  title="Add to Cart"
-                  className="bg-white text-primary px-3 py-2 flex-1 text-sm"
-                />
-                <Buynowbutton
-                  title="Buy now"
-                  className="bg-secondary text-white px-3 py-2 flex-1 text-sm"
-                  onClick={() => {
-                    if (!user?.id) console.log("No user logged in");
+                    if (!user?.id) alert("No user logged in");
                     else addToCart(user.id, product.id);
                   }}
                 />
@@ -316,6 +315,63 @@ function Market() {
           ))}
         </div>
       </div>
+
+      {/* All Products */}
+      <p className="text-2xl md:text-3xl font-bold text-secondary">All Products</p>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {filteredProducts.map((product) => (
+          <div key={product.id} className="p-2 bg-tertiary rounded-lg flex flex-col gap-3">
+            <Link to={`/product/${product.id}`}>
+              <div className="rounded-lg overflow-hidden">
+                <img
+                  src={`http://127.0.0.1:8000/images/${product.image}`}
+                  alt={product.title}
+                  className="w-full h-60 object-cover"
+                />
+              </div>
+            </Link>
+            <div className="flex justify-between items-center">
+              <p className="font-bold text-lg truncate">{product.title}</p>
+              <p className="text-primary">{product.price} XAF</p>
+            </div>
+            <p className="text-sm line-clamp-2">{product.description}</p>
+            <div className="flex justify-between items-center">
+              <Rating rating={ratings[product.id] || 0} />
+              <p className="bg-secondary/50 text-black rounded-lg px-2 py-1 text-xs">
+                {product.category}
+              </p>
+            </div>
+            <div className="flex justify-between gap-2 mt-2">
+              <Addtocardbutton
+                onClick={() => {
+                  if (!user?.id) alert("No user logged in");
+                  else addToCart(user.id, product.id);
+                }}
+                title="Add to Cart"
+                className="bg-white text-primary px-3 py-2 flex-1 text-sm"
+              />
+              <Buynowbutton
+                title="Buy now"
+                className="bg-secondary text-white px-3 py-2 flex-1 text-sm"
+                onClick={() => {
+                  if (!user?.id) alert("No user logged in");
+                  else addToCart(user.id, product.id);
+                }}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ✅ Floating WhatsApp Button */}
+      <a
+        href="https://wa.me/237671355671"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fixed bottom-5 right-5 bg-green-500 text-white p-4 rounded-full shadow-lg hover:bg-green-600 transition transform hover:scale-110 animate-bounce"
+      >
+        <FaWhatsapp size={28} />
+      </a>
     </div>
   );
 }
