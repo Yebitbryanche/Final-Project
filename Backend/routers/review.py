@@ -3,7 +3,7 @@ from sqlmodel import Session, select
 
 from Models.schema import CreateReview
 from db import get_session
-from schema.models import Product, Review
+from schema.models import Product, Review, User
 from utility.exception import not_found
 
 router = APIRouter()
@@ -66,3 +66,20 @@ def get_product_review(product_id:int,session:Session = Depends(get_session)):
         "average_rating": avrage_rating,
         "review_count": review_count,
     }   
+
+@router.get("/product/reviews")
+def get_all_reviews(session: Session = Depends(get_session)):
+    query = select(Review, User).join(User, Review.user_id == User.id)
+    results = session.exec(query).all()
+
+    reviews = []
+    users = []
+
+    for review, user in results:
+        reviews.append(review)
+        users.append(user)
+
+    return {
+        "reviews": reviews,
+        "users": users
+    }
