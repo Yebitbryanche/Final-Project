@@ -53,6 +53,8 @@ function Market() {
     "Nails",
     "Eyewear",
     "Ties",
+    "Gadget",
+    "Furniture"
   ];
   const [products, setProducts] = useState<ProductProps[]>([]);
   const [selectedCategory, setSelectedCategory] = useState<string>("All"); // Track selected category
@@ -253,7 +255,7 @@ function Market() {
       {/* Recommended Products */}
       <div className="flex flex-col gap-4">
         <div className="flex justify-between items-center">
-          <p className="text-2xl md:text-3xl font-bold text-secondary">Recommended for you</p>
+          {products.length === 0 ?<p></p>:<p className="text-2xl md:text-3xl font-bold text-secondary">Recommended for you</p>}
           <div className="relative">
             <Filterbutton
               title=" "
