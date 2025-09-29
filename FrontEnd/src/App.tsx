@@ -49,7 +49,7 @@ function App() {
             <Route path="/checkout" element={<Checkout/>}/>
             <Route path="/market" element={<Market />}/>
             <Route path="/success" element={<PaymentSuccess />} />
-            <Route path="/error" element={<PaymentError />} />
+            <Route path="/cancel" element={<PaymentError />} />
             <Route path="/upload" element={<AddProduct />} />
             <Route path="/portfolio" element={<Portfolio />} />
 
