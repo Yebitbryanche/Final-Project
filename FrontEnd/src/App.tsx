@@ -24,6 +24,7 @@ import Portfolio from "./portfolio/Portfolio";
 import Order from "./pages/Dashboard/Order";
 import AdminDashBoard from "./pages/Admin";
 import FAQ from "./pages/FAQ";
+import ScrollToTop from "./services/topScroll";
 
 function App() {
   const [user, setUser] = useState<UserProps>()
@@ -43,7 +44,7 @@ function App() {
       <CartProvider userId={user?.id}>
         <BrowserRouter>
           <Navigation />
-
+          <ScrollToTop />
           <Routes>
             <Route path="/" element={<Home />}/>
             <Route path="/cart" element={<Cart />}/>
