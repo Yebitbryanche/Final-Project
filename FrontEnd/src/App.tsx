@@ -25,6 +25,7 @@ import Order from "./pages/Dashboard/Order";
 import AdminDashBoard from "./pages/Admin";
 import ScrollToTop from "./components/Scrolltotop";
 import FAQ from "./pages/FAQ";
+import ScrollToTop from "./services/topScroll";
 
 function App() {
   const [user, setUser] = useState<UserProps>()
@@ -45,7 +46,7 @@ function App() {
         <BrowserRouter>
         <ScrollToTop />
           <Navigation />
-
+          <ScrollToTop />
           <Routes>
             
             <Route path="/" element={<Home />}/>
