@@ -23,6 +23,7 @@ import type { UserProps } from "./types/UserRead";
 import Portfolio from "./portfolio/Portfolio";
 import Order from "./pages/Dashboard/Order";
 import AdminDashBoard from "./pages/Admin";
+import FAQ from "./pages/FAQ";
 
 function App() {
   const [user, setUser] = useState<UserProps>()
@@ -69,6 +70,7 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/products/:id/review" element={<ReviewPage />} />
             <Route path="/admin" element ={ <AdminDashBoard />}/>
+            <Route path="/faqs" element ={ <FAQ/>}/>
           </Routes>
 
           <Footer />

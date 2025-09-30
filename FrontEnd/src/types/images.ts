@@ -24,6 +24,11 @@ import chevron from "../assets/images/chevron.png"
 import google from "../assets/images/search.png"
 import logo from "../assets/images/Logo.png";
 import empty_card from "../assets/images/empty-cart.png"
+import register from "../assets/images/register.png"
+import order from "../assets/images/placeOrder.png"
+import mail from "../assets/images/mail.png"
+import deliver from "../assets/images/delivery.png"
+import trackpurchase from "../assets/images/track purchase.png"
 
 
 export default{
@@ -51,5 +56,10 @@ icon4white,
 chevron,
 google,
 logo,
-empty_card
+empty_card,
+register,
+order,
+mail,
+deliver,
+trackpurchase
 }

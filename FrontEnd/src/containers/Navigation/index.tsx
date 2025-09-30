@@ -88,6 +88,19 @@ function Navigation() {
 
           <li>
             <NavLink
+              to="/faqs"
+              className={({ isActive }) =>
+                isActive
+                  ? "text-primary font-semibold border-b-2 border-primary pb-1"
+                  : "text-secondary font-medium hover:text-primary transition"
+              }
+            >
+              FAQ
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
               to="/dashboard"
               className={({ isActive }) =>
                 isActive
