@@ -4,6 +4,7 @@ import { api } from "../../API/Registration";
 import type { UserProps } from "../../types/UserRead";
 import { motion } from "framer-motion";
 import type { OrderProps, OrderItem } from "../../types/products";
+import { FaWhatsapp } from "react-icons/fa";
 
 function Order() {
   const [user, setUser] = useState<UserProps | undefined>();

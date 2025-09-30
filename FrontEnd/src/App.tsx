@@ -24,6 +24,7 @@ import Portfolio from "./portfolio/Portfolio";
 import Order from "./pages/Dashboard/Order";
 import AdminDashBoard from "./pages/Admin";
 import ScrollToTop from "./components/Scrolltotop";
+import FAQ from "./pages/FAQ";
 
 function App() {
   const [user, setUser] = useState<UserProps>()
@@ -52,7 +53,7 @@ function App() {
             <Route path="/checkout" element={<Checkout/>}/>
             <Route path="/market" element={<Market />}/>
             <Route path="/success" element={<PaymentSuccess />} />
-            <Route path="/error" element={<PaymentError />} />
+            <Route path="/cancel" element={<PaymentError />} />
             <Route path="/upload" element={<AddProduct />} />
             <Route path="/portfolio" element={<Portfolio />} />
 
@@ -72,6 +73,7 @@ function App() {
             <Route path="/signup" element={<Signup />} />
             <Route path="/products/:id/review" element={<ReviewPage />} />
             <Route path="/admin" element ={ <AdminDashBoard />}/>
+            <Route path="/faqs" element ={ <FAQ/>}/>
           </Routes>
 
           <Footer />
