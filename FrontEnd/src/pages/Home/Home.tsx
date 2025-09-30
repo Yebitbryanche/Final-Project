@@ -22,29 +22,33 @@ const Home = () => {
   const [ratings, setRatings] = useState<Record<number, number>>({});
   const { cart, addToCart } = useCart();
 
-  // Fetch user info
   useEffect(() => {
     api
       .get("/users/me", {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
-      .then((res) => setUser(res.data))
-      .catch(() => console.log("Failed to fetch user"));
+      .then((res) => {
+        console.log(res.data);
+        setUser(res.data);
+      });
   }, []);
 
-  // Fetch recommended products
   useEffect(() => {
-    if (!user?.id) return;
     setLoading(true);
+    if (!user?.id) return;
 
     api
-      .get(`/recommendations/${user.id}`)
-      .then((res) => setProducts(res.data.slice(0, 4)))
+      .get(`/recommendations/${user?.id}`)
+      .then((res) => {
+        console.log(cart);
+        setProducts(res.data.slice(0, 4));
+      })
       .catch((error: any) => console.log(error.message))
       .finally(() => setLoading(false));
   }, [user?.id]);
 
-  // Fetch ratings for each product
   useEffect(() => {
     if (products.length === 0) return;
 
@@ -63,7 +67,22 @@ const Home = () => {
     });
   }, [products]);
 
-  if (loading) return <Loader />;
+  useEffect(() => {
+    api
+      .get("/users/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setUser(res.data);
+      });
+  }, []);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="p-4 md:p-10 flex flex-col items-center gap-15 md:gap-30 overflow-x-hidden">
@@ -72,20 +91,20 @@ const Home = () => {
         {/* Left Side */}
         <motion.div
           className="flex flex-col gap-20"
-          initial={{ opacity: 0, x: -50 }}
+          initial={{ opacity: 0, x: -50 }} // reduced motion for mobile
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: false, amount: 0.3 }}
           transition={{ duration: 1, ease: "easeOut" }}
         >
           <p className="text-primary text-3xl md:text-5xl font-bold">
-            Shop Anywhere, Anytime
+            Shop Any where Any Time
           </p>
 
           <div className="flex flex-col gap-6">
             <div className="flex flex-col items-center md:flex-row justify-between gap-6">
               <p className="text-xl sm:text-2xl md:text-4xl text-center md:text-left">
                 Discover Local Treasures <br />
-                <span className="text-secondary">Shop With Pride</span>
+                <span className="text-secondary">Shop With pride</span>
               </p>
               <Link to={"/market"}>
                 <Herobutton
@@ -132,7 +151,7 @@ const Home = () => {
         {/* Right Side - Carousel */}
         <motion.div
           className="w-full lg:w-2/5"
-          initial={{ opacity: 0, x: 50 }}
+          initial={{ opacity: 0, x: 50 }} // reduced motion for mobile
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: false, amount: 0.3 }}
           transition={{ duration: 1, ease: "easeOut" }}
@@ -144,7 +163,7 @@ const Home = () => {
       {/* Product Grid */}
       <motion.div
         className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full mt-10"
-        initial={{ opacity: 0, y: 50 }}
+        initial={{ opacity: 0, y: 50 }} // vertical motion for mobile
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: false, amount: 0.3 }}
         transition={{ duration: 1, ease: "easeOut" }}
@@ -173,40 +192,39 @@ const Home = () => {
 
             <p className="text-sm line-clamp-2">{product.description}</p>
 
-            <div className="flex justify-between items-center">
-              <Rating rating={ratings[product.id]} />
-              <p className="bg-secondary text-white px-2 py-1 rounded-sm text-xs">
-                {product.category}
-              </p>
-            </div>
+      <div className="flex justify-between items-center">
+        <Rating rating={ratings[product.id]} />
+        <p className="bg-secondary text-white px-2 py-1 rounded-sm text-xs">
+          {product.category}
+        </p>
+      </div>
 
-            <div className="flex justify-between gap-2">
-              <Addtocardbutton
-                title="Add to Cart"
-                className="bg-white text-primary px-3 py-2 flex-1 text-sm"
-                onClick={() => {
-                  if (!user?.id) alert("No user logged in");
-                  else addToCart(user.id, product.id);
-                }}
-              />
-              <Buynowbutton
-                title="Buy now"
-                className="bg-secondary text-white px-3 py-2 flex-1 text-sm"
-                onClick={() => {
-                  if (!user?.id) alert("No user logged in");
-                  else addToCart(user.id, product.id);
-                }}
-              />
-            </div>
-          </div>
-        ))}
-      </motion.div>
+      <div className="flex justify-between gap-2">
+        <Addtocardbutton
+          title="Add to Cart"
+          className="bg-white text-primary px-3 py-2 flex-1 text-sm"
+          onClick={() => {
+            if (!user?.id) alert("No user logged in");
+            else addToCart(user.id, product.id);
+          }}
+        />
+        <Buynowbutton
+          title="Buy now"
+          className="bg-secondary text-white px-3 py-2 flex-1 text-sm"
+          onClick={() => {
+            if (!user?.id) alert("No user logged in");
+            else addToCart(user.id, product.id);
+          }}
+        />
+      </div>
+    </div>
+  ))}
+</motion.div>
 
-      {/* Why Choose Us */}
-      <h1 className="flex justify-center items-center font-bold text-3xl sm:text-4xl md:text-6xl mt-16">
+      {/* Rounded Image Section */}
+      <h1 className="flex justify-center items-center font-bold text-3xl sm:text-4xl md:text-6xl ">
         Why choose us
       </h1>
-
       <motion.div
         className="flex flex-col lg:flex-row justify-between lg:items-start gap-5 md:gap-10 mt-16"
         initial={{ opacity: 0, y: 50 }}
@@ -215,7 +233,7 @@ const Home = () => {
         transition={{ duration: 1, ease: "easeOut" }}
       >
         {/* Text */}
-        <div className="flex flex-col gap-5 mt-10 text-center lg:text-left">
+        <div className="flex flex-col gap-5 mt-10 lg:mt-50 text-center lg:text-left">
           <p className="text-lg sm:text-5xl text-primary font-bold">
             Mola We Got you Covered
           </p>
@@ -227,25 +245,25 @@ const Home = () => {
 
         {/* Rounded Images */}
         <div className="flex flex-col sm:flex-row lg:flex-row gap-5 items-center lg:items-start">
-          <div className="w-40 h-40 overflow-hidden">
+          <div className="w-40 sm:w-50 h-40 sm:h-150 overflow-hidden">
             <img
               src={images.mola1}
               alt=""
-              className="w-full h-full rounded-full object-cover"
+              className="w-full h-full rounded-t-full rounded-b-full object-cover"
             />
           </div>
-          <div className="w-40 h-40 overflow-hidden mt-5 sm:mt-20">
+          <div className="w-40 sm:w-50 h-40 sm:h-100 overflow-hidden mt-5 sm:mt-20">
             <img
               src={images.mola2}
               alt=""
-              className="w-full h-full rounded-full object-cover"
+              className="w-full h-full rounded-t-full rounded-b-full object-cover"
             />
           </div>
-          <div className="w-40 h-40 overflow-hidden">
+          <div className="w-40 sm:w-50 h-40 sm:h-150 overflow-hidden">
             <img
               src={images.mola3}
               alt=""
-              className="w-full h-full rounded-full object-cover"
+              className="w-full h-full rounded-t-full rounded-b-full object-cover"
             />
           </div>
         </div>
@@ -260,10 +278,26 @@ const Home = () => {
         transition={{ duration: 1, ease: "easeOut" }}
       >
         {[
-          { imgDefault: images.icon1orange, imgHover: images.icon1white, label: "Quick Delivery" },
-          { imgDefault: images.icon2orange, imgHover: images.icon2white, label: "Best Quality" },
-          { imgDefault: images.icon3orange, imgHover: images.icon3white, label: "Affordable Prices" },
-          { imgDefault: images.icon4orange, imgHover: images.icon4white, label: "Customer Support" },
+          {
+            imgDefault: images.icon1orange,
+            imgHover: images.icon1white,
+            label: "Quick Delivery",
+          },
+          {
+            imgDefault: images.icon2orange,
+            imgHover: images.icon2white,
+            label: "Best Quality",
+          },
+          {
+            imgDefault: images.icon3orange,
+            imgHover: images.icon3white,
+            label: "Affordable Prices",
+          },
+          {
+            imgDefault: images.icon4orange,
+            imgHover: images.icon4white,
+            label: "Customer Support",
+          },
         ].map((item, idx) => (
           <div
             key={idx}
@@ -294,10 +328,12 @@ const Home = () => {
           <br />
           <span className="text-2xl sm:text-3xl font-bold">
             we believe shopping should be{" "}
-            <span className="text-primary">simple</span>, affordable, and stress-free.
+            <span className="text-primary">simple</span>, affordable, and
+            stress-free.
           </span>
           <br />
-          That’s why we bring you fresh products, quick deliveries, and unbeatable prices.
+          That’s why we bring you fresh products, quick deliveries, and
+          unbeatable prices.
         </p>
       </div>
 
@@ -309,8 +345,7 @@ const Home = () => {
         <img src={images.chevron} alt="" className="absolute right-5 w-6 h-6" />
       </div>
 
-      {/* Floating WhatsApp Button */}
-      <a
+  <a
         href="https://wa.me/237651138159"
         target="_blank"
         rel="noopener noreferrer"
@@ -318,6 +353,7 @@ const Home = () => {
       >
         <FaWhatsapp size={28} />
       </a>
+
     </div>
   );
 };
