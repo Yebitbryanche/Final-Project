@@ -93,7 +93,7 @@ function Market() {
               }));
             })
             .catch(() =>
-              console.log(`Failed to load rating for product ${product.id}`)
+              console.log(`Failed to load rating for product ${product.id}`,cart)
             );
         });
       })
@@ -277,7 +277,7 @@ function Market() {
           </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products?.map((product) => (
+          {[...products].reverse()?.map((product) => (
             <div key={product.id} className="p-2 bg-tertiary rounded-lg flex flex-col gap-3">
               <Link to={`/product/${product.id}`}>
                 <div className="rounded-lg overflow-hidden">
@@ -325,7 +325,7 @@ function Market() {
       {/* All Products */}
       <p className="text-2xl md:text-3xl font-bold text-secondary">All Products</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredProducts.map((product) => (
+        {[...filteredProducts].reverse().map((product) => (
           <div key={product.id} className="p-2 bg-tertiary rounded-lg flex flex-col gap-3">
             <Link to={`/product/${product.id}`}>
               <div className="rounded-lg overflow-hidden">

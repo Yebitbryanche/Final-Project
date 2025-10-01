@@ -28,6 +28,7 @@ function Navigation() {
       })
       .then((res) => {
         setUser(res.data);
+        console.log(cartItems)
       })
       .catch(() => setError("Failed to fetch user"));
   }, []);

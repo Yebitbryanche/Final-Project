@@ -351,7 +351,7 @@ const handleDelete = async (productId: number) => {
   </p>
 ) : (
   <div className="space-y-4">
-    {products.map((item) => (
+    {[...products].reverse().map((item) => (
       <div
         key={item.id}
         className="flex items-center bg-tertiary justify-between rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 p-4"

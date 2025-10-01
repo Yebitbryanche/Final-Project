@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import welcome from "../../assets/images/welcome.png";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { motion } from "framer-motion";
-import { FaWhatsapp } from "react-icons/fa";
 import axios from "axios";
 
 
