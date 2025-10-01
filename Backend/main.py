@@ -3,11 +3,12 @@ from db import create_db_and_tables
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from routers import users, admin, cart, Order, recommendation, review
+import uvicorn
+import os
 
-
-
-
-
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port)
 
 app = FastAPI()
 

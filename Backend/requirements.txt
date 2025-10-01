@@ -1,8 +1,12 @@
-"fastapi[standard]"
-"python-jopse[cryptography]
+fastapi[standard]
+python-jose[cryptography]
 sqlmodel
-pydantic_settings
+pydantic-settings
 stripe>=12.0.0
-scikit-learn=1.7.2
-pandas =  2.3.2
-pip install pymysql
+scikit-learn>=1.7.2
+pandas>=2.3.2
+pymysql
+uvicorn[standard]
+alembic
+python-dotenv
+aiofiles
