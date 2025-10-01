@@ -27,7 +27,7 @@ export default function DashboardLayout() {
           <p className="font-bold text-xl mt-1">Dashboard</p>
         </div>
 
-        <div className="flex flex-row  md:flex-col gap-4  md:gap-6 ">
+        <div className="flex grid grid-cols-3 md:grid-cols-1 gap-4  md:gap-6 ">
           <NavLink
             to="/dashboard/order"
             className={({ isActive }) =>

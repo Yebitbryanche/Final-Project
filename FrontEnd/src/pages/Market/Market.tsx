@@ -146,7 +146,7 @@ function Market() {
   return (
     <div className="p-4 md:p-10 flex flex-col gap-10">
       {error && (
-        <p className="absolute w-100 bottom-5 items-center rounded-sm text-white flex justify-between left-1 p-4 bg-red-500">
+        <p className="fixed bottom-5 left-1/2 transform -translate-x-1/2 w-[95%] sm:w-[90%] md:w-[70%] lg:w-[50%] rounded-md text-white flex items-center justify-between p-4 bg-red-500 shadow-lg text-sm sm:text-base">
           {error}
         </p>
       )}
