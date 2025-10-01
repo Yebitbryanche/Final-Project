@@ -38,7 +38,7 @@ function Login() {
             setMessage("Wrong password")
         } 
         setTimeout(()=>{
-            navigate("/dashboard")
+            navigate("/")
         },2000)
       }
     catch(err:any){
