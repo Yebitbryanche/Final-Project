@@ -31,7 +31,7 @@ class User(SQLModel, table=True):
 class Product(SQLModel, table=True):
     __tablename__ = "Product"
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id:int = Field(primary_key=True, default=None)
     title:str = Field(index=True)
     description: str = Field(index=True)
     price: float = Field(index=True)
