@@ -44,7 +44,7 @@ function PrroductDetails() {
         {/* Left: Product Image */}
         <div className="flex-shrink-0 w-full md:w-1/2 lg:w-2/5">
           <img
-            src={`http://127.0.0.1:8000/images/${product.image}`}
+            src={`https://tranquil-charm-production-08e8.up.railway.app/images/${product.image}`}
             alt={product.title}
             className="w-full max-h-[500px] rounded-2xl shadow-lg object-cover"
           />

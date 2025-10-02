@@ -157,7 +157,7 @@ const handleQuantityChange = (productId: number, newQuantity: number) => {
                 <div className="flex items-center gap-4">
                   <img
                     className="w-20 h-20 object-cover rounded-sm"
-                    src={`http://127.0.0.1:8000/images/${item.image}`}
+                    src={`https://tranquil-charm-production-08e8.up.railway.app/images/${item.image}`}
                     alt={item.title}
                   />
                   <div>

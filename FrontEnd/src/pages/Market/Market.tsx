@@ -282,7 +282,7 @@ function Market() {
               <Link to={`/product/${product.id}`}>
                 <div className="rounded-lg overflow-hidden">
                   <img
-                    src={`http://127.0.0.1:8000/images/${product.image}`}
+                    src={`https://tranquil-charm-production-08e8.up.railway.app/images/${product.image}`}
                     alt={product.title}
                     className="w-full h-60 object-cover"
                   />
@@ -330,7 +330,7 @@ function Market() {
             <Link to={`/product/${product.id}`}>
               <div className="rounded-lg overflow-hidden">
                 <img
-                  src={`http://127.0.0.1:8000/images/${product.image}`}
+                  src={`https://tranquil-charm-production-08e8.up.railway.app/images/${product.image}`}
                   alt={product.title}
                   className="w-full h-60 object-cover"
                 />
