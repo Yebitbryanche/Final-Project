@@ -4,7 +4,7 @@ from pydantic import BaseModel, EmailStr
 from passlib.context import CryptContext
 from datetime import datetime
 
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated='auto')
+pwd_context = CryptContext(schemes=["argon2"], deprecated='auto')
 
 
 class User(SQLModel, table=True):
