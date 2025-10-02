@@ -31,7 +31,7 @@ def login(request:LoginRequest, session:Session = Depends(get_session),):
     access_token = create_access_token(data={"sub":user.user_name},
                                        expires_delta=timedelta(minutes = settings.ACCESS_TOKEN_EXPIRE_MINUTES)
                                        )
-    return {"access_token":access_token, "token_type":"bearer"}\
+    return {"access_token":access_token, "token_type":"bearer"}
     
 @router.get("/users/me", response_model=UserRead)
 def read_users_me(current_user: User = Depends(get_current_user)):
