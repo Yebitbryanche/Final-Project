@@ -12,7 +12,7 @@ if __name__ == "__main__":
 
 app = FastAPI()
 
-origin = "http://localhost:5173"
+origin = "*"
 
 app.add_middleware(
     CORSMiddleware,
