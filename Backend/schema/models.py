@@ -5,7 +5,7 @@ from passlib.context import CryptContext
 from datetime import datetime
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated='auto')
-
+MAX_BCRYPT_LEN = 72
 
 class User(SQLModel, table=True):
     __tablename__="User"
@@ -21,11 +21,13 @@ class User(SQLModel, table=True):
         self.role = role
 
     def set_password(self, password:str):
-        self.password_hash = pwd_context.hash(password)
+        truncated = password[:MAX_BCRYPT_LEN]
+        self.password_hash = pwd_context.hash(truncated)
      
      #code block to verify user password during login
     def check_password(self, password:str) -> bool:
-        return pwd_context.verify(password, self.password_hash)
+        truncated = password[:MAX_BCRYPT_LEN]
+        return pwd_context.verify(truncated, self.password_hash)
     
 ## product table
 class Product(SQLModel, table=True):
