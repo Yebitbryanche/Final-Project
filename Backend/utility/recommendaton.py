@@ -12,7 +12,7 @@ class ContentRecommenderWithReviews:
             products = session.exec(select(Product)).all()
             self.df = pd.DataFrame([p.dict() for p in products])
 
-        self.df["description"] = self.df["description"].fillna("")
+        # self.df["description"] = self.df["description"].fillna("")
 
         # Precompute global TF-IDF for product descriptions
         self.vectorizer = TfidfVectorizer(stop_words="english")
