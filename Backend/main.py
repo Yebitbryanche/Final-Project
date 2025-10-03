@@ -12,7 +12,7 @@ if __name__ == "__main__":
 
 app = FastAPI()
 
-origin = 'https://mboacaco-am50kh3u9-bryans-projects-81e57f9d.vercel.app/'
+origin = 'https://mboacaco-git-master-bryans-projects-81e57f9d.vercel.app'
 
 app.add_middleware(
     CORSMiddleware,
