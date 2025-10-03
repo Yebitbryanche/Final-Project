@@ -146,72 +146,77 @@ const handleQuantityChange = (productId: number, newQuantity: number) => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       
                 {/* Cart Items */}
-        <div className="bg-white p-6 rounded shadow overflow-y-auto flex flex-col max-h-[500px]">
-          {cartItems?.items.length ? (
-            (cartItems.items || []).map((item) => (
-              <div
-                key={item.cart_item_id}
-                className="flex items-center justify-between p-3 rounded-md my-3 bg-secondary/5 shadow-sm"
-              >
-                {/* Left: image + details */}
-                <div className="flex items-center gap-4">
-                  <img
-                    className="w-20 h-20 object-cover rounded-sm"
-                    src={`https://tranquil-charm-production-08e8.up.railway.app/images/${item.image}`}
-                    alt={item.title}
-                  />
-                  <div>
-                    <p className="font-medium">{item.title}</p>
-                    <p className="font-bold text-black/60">
-                      {(item.subtotal || item.price * item.quantity).toLocaleString()} FCFA
-                    </p>
-                  </div>
-                </div>
-
-                {/* Right: actions */}
-                <div className="flex items-center gap-x-4">
-                  <div className="flex gap-x-4 items-center">
-                    <BsCartPlus
-                      size={25}
-                      className="cursor-pointer text-black/50 hover:text-primary/70"
-                      onClick={() => handleQuantityChange(item.product_id, item.quantity + 1)}
-                    />
-                    <p className="text-sm text-secondary/80 font-medium">{item.quantity}</p>
-                    <BsCartDash
-                      size={25}
-                      className="cursor-pointer text-black/50 hover:text-primary/70"
-                      onClick={() => handleQuantityChange(item.product_id, item.quantity - 1)}
-                    />
-                  </div>
-                  <MdDelete
-                    size={25}
-                    className="cursor-pointer text-secondary hover:text-red-400"
-                    onClick={() => {
-                      setCartItemToDelete(item);
-                      setShowDeleteModal(true);
-                    }}
-                  />
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="flex flex-col items-center justify-center mt-16">
-              <img
-                src={images.empty_card} // replace with your image path
-                alt="Empty cart"
-                className="w-60 h-60 object-contain mb-4"
-              />
-              <p className="text-gray-400 text-lg font-medium">Your cart is empty!</p>
-              <p className="text-gray-300 text-sm">Start adding some products to see them here.</p>
-              <Link
-                to="/market"
-                className="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary/90 transition"
-              >
-                Shop Now
-              </Link>
-            </div>
-          )}
+        <div className="bg-white p-4 sm:p-6 rounded shadow overflow-y-auto flex flex-col max-h-[500px]">
+  {cartItems?.items.length ? (
+    (cartItems.items || []).map((item) => (
+      <div
+        key={item.cart_item_id}
+        className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-3 rounded-md my-3 bg-secondary/5 shadow-sm gap-4 sm:gap-0"
+      >
+        {/* Left: image + details */}
+        <div className="flex items-start sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
+          <img
+            className="w-16 h-16 sm:w-20 sm:h-20 object-cover rounded-sm flex-shrink-0"
+            src={`https://tranquil-charm-production-08e8.up.railway.app/images/${item.image}`}
+            alt={item.title}
+          />
+          <div className="flex flex-col">
+            <p className="font-medium text-sm sm:text-base break-words max-w-[200px] sm:max-w-xs">
+              {item.title}
+            </p>
+            <p className="font-bold text-black/60 text-sm sm:text-base mt-1">
+              {(item.subtotal || item.price * item.quantity).toLocaleString()} FCFA
+            </p>
+          </div>
         </div>
+
+        {/* Right: actions */}
+        <div className="flex items-center gap-x-3 sm:gap-x-4 w-full sm:w-auto justify-between sm:justify-end">
+          <div className="flex gap-x-3 sm:gap-x-4 items-center">
+            <BsCartPlus
+              size={22}
+              className="cursor-pointer text-black/50 hover:text-primary/70"
+              onClick={() => handleQuantityChange(item.product_id, item.quantity + 1)}
+            />
+            <p className="text-xs sm:text-sm text-secondary/80 font-medium">{item.quantity}</p>
+            <BsCartDash
+              size={22}
+              className="cursor-pointer text-black/50 hover:text-primary/70"
+              onClick={() => handleQuantityChange(item.product_id, item.quantity - 1)}
+            />
+          </div>
+          <MdDelete
+            size={22}
+            className="cursor-pointer text-secondary hover:text-red-400"
+            onClick={() => {
+              setCartItemToDelete(item);
+              setShowDeleteModal(true);
+            }}
+          />
+        </div>
+      </div>
+    ))
+  ) : (
+    <div className="flex flex-col items-center justify-center mt-10 sm:mt-16 text-center px-4">
+      <img
+        src={images.empty_card}
+        alt="Empty cart"
+        className="w-40 h-40 sm:w-60 sm:h-60 object-contain mb-4"
+      />
+      <p className="text-gray-400 text-base sm:text-lg font-medium">Your cart is empty!</p>
+      <p className="text-gray-300 text-xs sm:text-sm">
+        Start adding some products to see them here.
+      </p>
+      <Link
+        to="/market"
+        className="mt-4 px-3 sm:px-4 py-2 bg-primary text-white rounded hover:bg-primary/90 transition text-sm sm:text-base"
+      >
+        Shop Now
+      </Link>
+    </div>
+  )}
+</div>
+
 
 
         {/* Order Summary */}
